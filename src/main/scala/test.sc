@@ -14,8 +14,8 @@ case class Project(name: String, devs: Array[String]) {
       print(d + " ")
     }
   }
-
 }
+println("hallo")
 
 val p = Project("dog", Array("Ismail", "Josef"))
 p.printProject()
