@@ -17,7 +17,7 @@ case class Project(name: String, devs: Array[String]) {
   }
 }
 
-println("hallihallo")
+println("moin")
 
 val p = Project("dog", Array("Ismail", "Josef"))
 p.printProject()
