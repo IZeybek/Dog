@@ -29,7 +29,7 @@ class Board() {
 
 }
 
-case class Board() {
+case class BoardUtility() {
   def jump(): Unit = {
     val r = scala.util.Random
     printf("jumping %d fields", r.nextInt(5) + 1)
@@ -52,7 +52,7 @@ case class Board() {
 }
 
 val field = Array.ofDim[String](3, 3)
-val p = Board()
+val p = BoardUtility()
 p.fillArray(field)
 p.printArray(field)
 p.jump()
