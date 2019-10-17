@@ -14,3 +14,14 @@ Denn den Sieg fährt man nur gemeinsam ein. Einfach spannend und ein toller Spa�
 So wird das Spiel nicht aussehen. Aber ähnlich.. zumindest peilen wir das so an...
 
 Falls Sie nach dem richtigen Spiel suchen sollten und sich auf github verirrt haben, [hier](https://www.amazon.de/Schmidt-Spiele-49201-Dog/dp/B01INZMDM6 "Hier dürfen Sie klicken") der Link
+
+# Entwicklung
+
+Hinter diesem Projekt stecken zwei Studenten der [HTWG Konstanz](https://www.htwg-konstanz.de/ "Keine Angst, die Seite beißt nicht")
+Der eine heißt Ismail Zeybek und der andere nennt sich Josef Müller. Beide mit verrückten Ideen im Kopf, aber immer demselben Ziel: Das ultimative Scala Projekt. Ach ja, unser Spiel ist in Scala programmiert. Falls Sie gerade eben das erste Mal von dieser Programmiersprache gehört haben, schauen Sie Mal [hier](https://www.scala-lang.org/ "Ist klickbar, vertrauen Sie uns") vorbei.
+
+# FAQ
+
+Da bis jetzt noch nicht viel entwickelt wurde, behalten wir uns vor hier noch nichts zu schreiben
+
+Schauen Sie gerne öfter Mal vorbei. Wir freuen uns auf Sie.
