@@ -1,12 +1,15 @@
 import scala.io.Source
 
 class Game {
+
+  val parse = (x: String) => parser(x)
+
   def gameStart: Unit = {
   }
 
   def readText(fileName: String) = {
     for (line <- Source.fromFile(fileName).getLines()) {
-      line.split(" ")
+      line.split(" ").foreach(parse)
     }
   }
 
