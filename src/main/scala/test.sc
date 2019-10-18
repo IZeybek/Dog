@@ -1,8 +1,8 @@
-import scala.io.StdIn.{readLine, readInt}
-import scala.math._
-import scala.collection.mutable.ArrayBuffer
 import java.io.PrintWriter
+
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
+import scala.math._
 /*
 case class Project(name: String, devs: Array[String]) {
   def printProject(): Unit = {
@@ -28,11 +28,8 @@ val p = Project("dog", Array("Ismail", "Josef"))
 p.printProject()
 */
 
+
 //Testing a project
-
-class Board() {
-
-}
 
 case class BoardUtility() {
   def jump(): Unit = {

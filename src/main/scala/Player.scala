@@ -1,15 +1,19 @@
 class Player(name: String, handCards: Array[String]) {
   private var position = 0
-  def printName: Unit = {
+  def printName(): Unit = {
     print(name)
   }
 
-  def printPosition: Unit = {
+  def printPosition(): Unit = {
     print(position)
   }
 
   def getPosition: Integer = {
     position
+  }
+
+  def getName: String = {
+    name
   }
 
   def movePlayer(moveby: Int): Unit = {
