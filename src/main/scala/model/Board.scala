@@ -1,4 +1,11 @@
 package model
 
-case class Board(field: Array[Array[String]]) {
+case class Board(field: Array[Array[Cell]]) {
+  val fill = (f: String, p: Int) => {
+    if (f contains 0) {
+      field()
+    }
+
+  }
+
 }
