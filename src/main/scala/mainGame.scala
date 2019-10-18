@@ -1,3 +1,5 @@
+import model.Player
+
 import scala.io.Source
 
 case class mainGame(players: Array[Player]) {

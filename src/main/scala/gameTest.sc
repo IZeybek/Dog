@@ -1,3 +1,0 @@
-
-val g = new mainGame();
-
