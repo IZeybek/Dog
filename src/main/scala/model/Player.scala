@@ -1,6 +1,6 @@
 package model
 
 case class Player(name: String) {
-  override def toString: String = name //returns playername
+  override def toString: String = name
 }
 

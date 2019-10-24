@@ -1,11 +1,6 @@
 package model
 
 case class Board(field: Array[Array[Cell]]) {
-  val fill = (f: String, p: Int) => {
-    if (f contains 0) {
-      field()
-    }
-
-  }
+  def fill: Cell => Any = (c: Cell,) => c.xy()
 
 }
