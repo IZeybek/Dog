@@ -13,7 +13,7 @@ object Base {
       System.out.print(">> ")
       input = readLine
       tui.print(input)
-      tui.input(input)
+      println(f"ur commands result is: ${tui.input(input)}")
     } while (input != "exit")
   }
 }
