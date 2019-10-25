@@ -46,7 +46,7 @@ def prettyPrint(c: Array[Cell], dim: Array[Int]): Unit = {
         print("i")
         h += 1
       } else
-        print("0")
+        print(" ")
     }
     println("")
     j = 0
