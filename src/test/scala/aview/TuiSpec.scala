@@ -1,5 +1,6 @@
+package aview
 
-import aview.Tui
+
 import org.scalatest._
 
 class TuiSpec extends WordSpec with Matchers {
