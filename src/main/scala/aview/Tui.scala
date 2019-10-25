@@ -2,8 +2,8 @@ package aview
 
 case class Tui() {
 
-  def println(input: String) {
-    System.out.println(f"I'm impressed! u can write! Let me guess...it was: $input")
+  def print(input: String) {
+    println(f"I'm impressed! u can write! Let me guess...it was: $input")
   }
 
 
@@ -15,7 +15,7 @@ case class Tui() {
       case "set" => result = "Player set"
       case "p" => result = "board printed"
       case "s" => result = "player cell can not be found since its not created yet"
-      case _ => println(input)
+      case _ => System.out.println("wrong command! try again")
     }
     if (result != "") println(f"ur commands result is: $result")
   }

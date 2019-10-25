@@ -1,6 +1,6 @@
 package aview
 
-import scala.io.StdIn
+import scala.io.StdIn.readLine
 
 object Base {
 
@@ -11,7 +11,8 @@ object Base {
     do {
       print("say something ")
       System.out.print(">> ")
-      input = StdIn.readLine()
+      input = readLine
+      tui.print(input)
       tui.input(input)
     } while (input != "exit")
   }
