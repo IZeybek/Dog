@@ -1,5 +1,7 @@
 package aview
 
-class Tui {
-
+object Tui {
+  def main(args: Array[String]) {
+    println("Hallo, Welt!")
+  }
 }
