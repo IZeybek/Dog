@@ -7,7 +7,7 @@ case class Tui() {
   }
 
 
-  def input(input: String): Unit = {
+  def input(input: String): String = {
     val commands = input.split("\\s+")
     var result = ""
     commands(0) match {
@@ -17,7 +17,7 @@ case class Tui() {
       case "s" => result = "player cell can not be found since its not created yet"
       case _ => System.out.println("wrong command! try again")
     }
-    if (result != "") println(f"ur commands result is: $result")
+    result
   }
 }
 

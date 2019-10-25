@@ -4,12 +4,11 @@ import org.scalatest._
 
 class TuiSpec extends WordSpec with Matchers {
 
-  "A Base" when {
-    "started" should {
+  "Tui" when {
+    "executed" should {
       val tui = Tui()
-      val input = "create"
       "have a sentence" in {
-        tui.input("create") should be ()
+        tui.input("create") should be ("empty board created")
       }
     }
   }
