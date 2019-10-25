@@ -7,7 +7,7 @@ class TuiSpec extends WordSpec with Matchers {
 
   "Tui" when {
     "executed" should {
-      val tui = Tui()
+      val tui = new Tui
       "created" in {
         tui.input("create") should be("empty board created")
       }

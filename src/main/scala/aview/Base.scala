@@ -5,15 +5,15 @@ import scala.io.StdIn.readLine
 object Base {
 
   def main(args: Array[String]): Unit = {
-    val tui = Tui()
+    val tui = new Tui
     var input = ""
     //    tui.printMenu()
-    do {
+   // do {
       print("say something ")
       System.out.print(">> ")
-      input = readLine
-      tui.print(input)
+      input = "create"
+//      tui.print(input)
       println(f"ur commands result is: ${tui.input(input)}")
-    } while (input != "exit")
+    //} while (input != "exit")
   }
 }
