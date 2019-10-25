@@ -1,10 +1,6 @@
 package aview
 
-case class Tui() {
-
-  def print(input: String) {
-    println(f"I'm impressed! u can write! Let me guess...it was: $input")
-  }
+class Tui() {
 
 
   def input(input: String): String = {
