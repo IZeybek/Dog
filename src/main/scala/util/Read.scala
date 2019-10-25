@@ -4,9 +4,9 @@ import model.{Board, Cell}
 
 import scala.io.Source
 
-case class Read() {
+case class Read(b: Board) {
 
-  def prettyPrint(b: Board): Unit = {
+  def prettyPrint(): Unit = {
     //@TODO write Board Class with all components like the Array[Cell] but also Dimension -> possible to use only Board as parameter
     val x = b.dim(0);
     val y = b.dim(1)
@@ -29,7 +29,7 @@ case class Read() {
   }
 
 
-  def readIn(path: String, b: Board): Board = {
+  def readIn(path: String): Board = {
     val cells = scala.collection.mutable.ArrayBuffer.empty[Cell]
     val file = Source.fromFile(path)
     var x = 0;

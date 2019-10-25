@@ -6,10 +6,10 @@ import org.scalatest.{Matchers, WordSpec}
 class ReadSpec extends WordSpec with Matchers {
   "Read" should {
     val b = Board()
-    val r = Read()
+    val r = Read(b)
     "create a new Board" in {
-      r.readIn("src/feld.txt", b) should be(b)
-      r.prettyPrint(b)
+      r.readIn("src/feld.txt") should be(b)
+      r.prettyPrint()
     }
   }
 }
