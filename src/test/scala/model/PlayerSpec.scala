@@ -10,6 +10,9 @@ class PlayerSpec extends WordSpec with Matchers {
       "have a name" in {
         player.name should not be empty
       }
+      "toString" in {
+        player.toString should be(player.name)
+      }
     }
   }
 }

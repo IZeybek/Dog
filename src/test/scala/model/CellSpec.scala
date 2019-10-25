@@ -15,6 +15,12 @@ class CellSpec extends WordSpec with Matchers {
       "be given an Array" in {
         assert(createdCell.xy(0) >= 0 && createdCell.xy(0) <= 25 && createdCell.xy(1) >= 0 && createdCell.xy(1) <= 25)
       }
+      "isFilled" in {
+        createdCell.isFilled should be(true)
+      }
+      "fill" in {
+        createdCell.fill(false) should be(false)
+      }
     }
   }
 }
