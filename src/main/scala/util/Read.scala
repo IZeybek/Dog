@@ -29,7 +29,7 @@ case class Read() {
   }
 
 
-  def readIn(path: String): Array[Cell] = {
+  def readIn(path: String, b: Board): Board = {
     val cells = scala.collection.mutable.ArrayBuffer.empty[Cell]
     val file = Source.fromFile(path)
     var x = 0;
@@ -46,7 +46,10 @@ case class Read() {
       }
       y += 1
     }
-    cells.toArray
+    b.cells = cells.toArray
+    b.dim(0) = x
+    b.dim(1) = y
+    b
   }
 
 }
