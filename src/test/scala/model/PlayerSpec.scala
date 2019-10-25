@@ -6,8 +6,9 @@ class PlayerSpec extends WordSpec with Matchers {
   "A player" when {
     "created" should {
       val player = Player("PlayerSpec")
+      val isNotEmpty = (s: String) => s != null
       "have a name" in {
-        player.name in be(String)
+        player.name should not be empty
       }
     }
   }
