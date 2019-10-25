@@ -2,7 +2,7 @@ package aview
 
 object Tui {
 
-  def println(input: String) {
+  def print(input: String) {
     println(f"I'm impressed! u can write! Let me guess...it was: $input")
   }
 
