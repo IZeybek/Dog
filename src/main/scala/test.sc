@@ -366,7 +366,7 @@ println(s"${whiskers.getName} with id ${whiskers.id} says ${whiskers.getSound}")
 
 println(whiskers.toString)
 
-val spike = new Dog("Spike", "Woof", "Grrrr")
+val spike = new MyGame("Spike", "Woof", "Grrrr")
 
 spike.setName("Spike")
 println(spike.toString)
