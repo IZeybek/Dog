@@ -1,14 +1,15 @@
 
-import aview.Base
+import aview.Tui
 import org.scalatest._
 
 class TuiSpec extends WordSpec with Matchers {
 
   "A Base" when {
     "started" should {
-      val base = Base
+      val tui = Tui
+      val input = "create"
       "have a sentence" in {
-        base should be (base)
+        tui.input("create") should be ()
       }
     }
   }
