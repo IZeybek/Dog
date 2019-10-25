@@ -1,14 +1,15 @@
 package util
 
-import model.Cell
+import model.{Board, Cell}
 
 import scala.io.Source
 
 case class Read() {
-  def prettyPrint(c: Array[Cell], dim: Array[Int]): Unit = {
+
+  def prettyPrint(b: Board): Unit = {
     //@TODO write Board Class with all components like the Array[Cell] but also Dimension -> possible to use only Board as parameter
-    val x = dim(0);
-    val y = dim(1)
+    val x = b.dim(0);
+    val y = b.dim(1)
     var j = 0;
     var h = 0
 
@@ -16,7 +17,7 @@ case class Read() {
 
     for (i <- 0 until y) {
       for (j <- 0 until x) {
-        if (c.last.absPos + 1 != h && checkPos(i, j, c)) {
+        if (b.cells.last.absPos + 1 != h && checkPos(i, j, b.cells)) {
           print("i")
           h += 1
         } else
