@@ -1,6 +1,6 @@
 package controller
 
-import model.Player
+import model.Main.Player
 
 trait ControllerTrait {
 

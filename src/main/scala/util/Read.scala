@@ -1,15 +1,14 @@
 package util
 
-import model.{Board, Cell}
+import model.Main.{Board, Cell}
 
 import scala.io.Source
 
-case class Read(b: Board) {
+case class Read(b: Board) extends ReadTrait {
 
   def prettyPrint(): Unit = {
-    //@TODO write Board Class with all components like the Array[Cell] but also Dimension -> possible to use only Board as parameter
-    val x = b.dim(0);
-    val y = b.dim(1)
+    val x = b.xy(0);
+    val y = b.xy(1)
     var j = 0;
     var h = 0
 
@@ -18,7 +17,7 @@ case class Read(b: Board) {
     for (i <- 0 until y) {
       for (j <- 0 until x) {
         if (b.cells.last.absPos + 1 != h && checkPos(i, j, b.cells)) {
-          print("i")
+          print(Console.BLUE + "i" + Console.WHITE)
           h += 1
         } else
           print(" ")
@@ -46,9 +45,9 @@ case class Read(b: Board) {
       }
       y += 1
     }
-    b.cells = cells.toArray
-    b.dim(0) = x
-    b.dim(1) = y
+    cells.copyToArray(b.cells)
+    b.xy(0) = x
+    b.xy(1) = y
     b
   }
 

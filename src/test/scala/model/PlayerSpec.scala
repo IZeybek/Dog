@@ -1,5 +1,6 @@
 package model
 
+import model.Main.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class PlayerSpec extends WordSpec with Matchers {

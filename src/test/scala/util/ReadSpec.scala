@@ -1,6 +1,5 @@
 package util
 
-import model.Board
 import org.scalatest.{Matchers, WordSpec}
 
 class ReadSpec extends WordSpec with Matchers {

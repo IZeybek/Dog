@@ -1,4 +1,4 @@
-import model.Player
+import model.Main.Player
 
 object Dog {
 
