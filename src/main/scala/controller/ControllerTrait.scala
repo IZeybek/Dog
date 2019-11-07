@@ -4,8 +4,8 @@ import model.Main.Player
 
 trait ControllerTrait {
 
-  def create(): Boolean
+  def createBoard(): Boolean
 
-  def setPlayer(player : Player): Boolean
+  def setPlayer(): Boolean
 
 }

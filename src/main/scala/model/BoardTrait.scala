@@ -1,5 +1,8 @@
 package model
 
-trait BoardTrait {
+import model.Main.Cell
 
+trait BoardTrait {
+  val xy: Array[Int]
+  val cells: Array[Cell]
 }

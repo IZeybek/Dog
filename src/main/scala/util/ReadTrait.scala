@@ -1,12 +1,13 @@
 package util
 
+import model.BoardTrait
 import model.Main.Board
 
 trait ReadTrait {
   /**
    * prints the field
    */
-  def prettyPrint(): Unit
+  def prettyPrint(b: BoardTrait): Unit
 
   /**
    * reads ins field from path

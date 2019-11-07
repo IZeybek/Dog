@@ -1,13 +1,15 @@
 package util
 
+import model.BoardTrait
 import model.Main.{Board, Cell}
 
 import scala.io.Source
 
-case class Read(b: Board) extends ReadTrait {
+case class Read() extends ReadTrait {
 
-  def prettyPrint(): Unit = {
-    val x = b.xy(0);
+
+  def prettyPrint(b: BoardTrait): Unit = {
+    val x = b.xy(0)
     val y = b.xy(1)
     var j = 0;
     var h = 0
@@ -45,10 +47,7 @@ case class Read(b: Board) extends ReadTrait {
       }
       y += 1
     }
-    cells.copyToArray(b.cells)
-    b.xy(0) = x
-    b.xy(1) = y
-    b
+    new Board(Array(x, y), cells.toArray)
   }
 
 }

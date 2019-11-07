@@ -13,6 +13,7 @@ object Base {
       System.out.print(">> ")
       input = "create"
 //      tui.print(input)
+      tui.initGame()
       println(f"ur commands result is: ${tui.input(input)}")
     //} while (input != "exit")
   }
