@@ -20,6 +20,12 @@ class TuiSpec extends WordSpec with Matchers {
       "searched" in {
         tui.input("s") should be("player cell can not be found since its not created yet")
       }
+      "initBoard" in{
+        tui.initGame() should be (true)
+      }
+      "wrong input" in{
+        tui.input("") should be ("wrong command! try again")
+      }
     }
   }
 
