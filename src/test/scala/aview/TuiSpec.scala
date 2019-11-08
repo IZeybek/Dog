@@ -9,19 +9,16 @@ class TuiSpec extends WordSpec with Matchers {
     "executed" should {
       val tui = new Tui
       "created" in {
-        tui.input("create") should be("empty board created")
+        tui.input("create") should be()
       }
       "set" in {
-        tui.input("set") should be("Player set")
+        tui.input("set") should be("developed")
       }
       "printed" in {
         tui.input("p") should be("board printed")
       }
       "searched" in {
         tui.input("s") should be("player cell can not be found since its not created yet")
-      }
-      "initBoard" in{
-        tui.initGame() should be (true)
       }
       "wrong input" in{
         tui.input("") should be ("wrong command! try again")

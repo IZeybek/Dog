@@ -3,6 +3,10 @@ package aview
 import controller.{Controller, ControllerTrait}
 
 class Tui() {
+  def print(input: String): Unit = {
+    println(input)
+  }
+
 
   val controller: ControllerTrait = new Controller
 
@@ -10,19 +14,17 @@ class Tui() {
     val commands = input.split("\\s+")
     var result = ""
 
-
     commands(0) match {
-      case "create" => result = "empty board created"
-      case "set" => result = "Player set"
-      case "p" => result = "board printed"
-      case "s" => result = "player cell can not be found since its not created yet"
-      case _ => result = "wrong command! try again"
+      case "set" => result = "not developed"
+      case "p" =>
+        result = "print your board"
+        controller.printBoard()
+      case "s" => result = "search for a cell?"
+      case _ => result = "do absolutely nothing"
     }
     result
   }
-  def initGame() : Boolean ={
-    controller.createBoard()
-  }
+
 }
 
 

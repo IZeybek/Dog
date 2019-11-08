@@ -1,13 +1,13 @@
 package controller
 
+import model.Main.Model
+import model.ModelTrait
+
 class Controller extends ControllerTrait{
 
+  val model: ModelTrait = Model()
 
-  override def createBoard(): Boolean = {
-   true
-  }
-
-  override def setPlayer(): Boolean = {
-    true
+  override def printBoard(): Unit = {
+    model.getBoard.prettyPrint()
   }
 }
