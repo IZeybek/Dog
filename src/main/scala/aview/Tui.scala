@@ -1,14 +1,12 @@
 package aview
 
-import controller.{Controller, ControllerTrait}
+import controller.controllerComponent.Controller
 
-class Tui() {
+class Tui(controller: Controller) {
   def print(input: String): Unit = {
     println(input)
   }
 
-
-  val controller: ControllerTrait = new Controller
 
   def input(input: String): String = {
     val commands = input.split("\\s+")
@@ -19,6 +17,9 @@ class Tui() {
       case "p" =>
         result = "print your board"
         controller.printBoard()
+      case "create" =>
+        result = "create a new board"
+        controller.createBoard()
       case "s" => result = "search for a cell?"
       case _ => result = "do absolutely nothing"
     }

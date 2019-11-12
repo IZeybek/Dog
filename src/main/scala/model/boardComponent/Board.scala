@@ -1,4 +1,6 @@
-package model.Main
+package model.boardComponent
+
+import model.playerComponent.Player
 
 import scala.io.Source
 
@@ -35,20 +37,25 @@ object Read {
   def readIn(path: String): Board = {
     val cells = scala.collection.mutable.ArrayBuffer.empty[Cell]
     val file = Source.fromFile(path)
-    var x = 0;
-    var y = 0;
     var z = 0
-    for (line <- file.getLines()) {
-      x = 0
-      for (e <- line) {
-        if (e == '1') {
-          cells += Cell(z, Array(x, y), true)
-          z += 1
-        }
-        x += 1
+    var x = 0
+    var y = 0
+
+    val buildArray = (c: Char) => {
+      if (c == '1') {
+        cells += Cell(z, Array(x, y), true)
+        z += 1
       }
+      x += 1
+    }
+
+    val forEachString = (s: String) => {
+      x = 0
+      s.foreach(buildArray)
       y += 1
     }
+
+    file.getLines().foreach(forEachString)
     Board(Array(x, y), cells.toArray, null)
   }
 }

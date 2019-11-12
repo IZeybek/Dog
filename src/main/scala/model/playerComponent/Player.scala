@@ -1,4 +1,4 @@
-package model.Main
+package model.playerComponent
 
 case class Player(name: String, cards: Array[Card]) {
   override def toString: String = name

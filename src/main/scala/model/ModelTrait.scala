@@ -1,10 +1,12 @@
 package model
 
-import model.Main.Board
+import model.boardComponent.Board
 
 trait ModelTrait {
 
-  def createBoard: Boolean
+  var board: Board
+
+  def createBoard: Unit
 
   def getBoard: Board
 }

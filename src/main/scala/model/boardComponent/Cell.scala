@@ -1,4 +1,4 @@
-package model.Main
+package model.boardComponent
 
 case class Cell(absPos: Int, xy: Array[Int], filled: Boolean = false) {
 

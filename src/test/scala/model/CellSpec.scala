@@ -1,6 +1,6 @@
 package model
 
-import model.Main.Cell
+import model.boardComponent.Cell
 import org.scalatest.{Matchers, WordSpec}
 
 class CellSpec extends WordSpec with Matchers {

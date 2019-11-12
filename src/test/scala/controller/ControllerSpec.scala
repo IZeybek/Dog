@@ -1,5 +1,6 @@
 package controller
 
+import controller.controllerComponent.Controller
 import org.scalatest.{Matchers, WordSpec}
 
 class ControllerSpec extends WordSpec with Matchers {
