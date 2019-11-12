@@ -2,8 +2,11 @@ package model.Main
 
 import scala.io.Source
 
-case class Board(xy: Array[Int], cells: Array[Cell]) {
+case class Board(xy: Array[Int], cells: Array[Cell], player: Array[Player]) {
 
+  def replaceCell(pos: Int, cell: Cell): Board = {
+    copy(xy, cells.updated(pos, cell))
+  }
 
   def prettyPrint(): Unit = {
     val x = xy(0)
@@ -28,6 +31,7 @@ case class Board(xy: Array[Int], cells: Array[Cell]) {
 }
 
 object Read {
+
   def readIn(path: String): Board = {
     val cells = scala.collection.mutable.ArrayBuffer.empty[Cell]
     val file = Source.fromFile(path)
@@ -45,6 +49,6 @@ object Read {
       }
       y += 1
     }
-    Board(Array(x, y), cells.toArray)
+    Board(Array(x, y), cells.toArray, null)
   }
 }

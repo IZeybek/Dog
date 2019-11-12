@@ -1,3 +1,4 @@
+
 import scala.io.Source
 
 case class Cell(absPos: Int, xy: Array[Int], filled: Boolean) {
@@ -31,26 +32,40 @@ val c = cells.toArray
  * @param c   is a 1D Array that consists of Cells
  * @param dim is the dimension of the Field
  */
-def prettyPrint(c: Array[Cell], dim: Array[Int]): Unit = {
-  //@TODO write Board Class with all components like the Array[Cell] but also Dimension -> possible to use only Board as parameter
-  val x = dim(0);
+def prettyPrint(c: Map[Int, Cell], dim: Array[Int]): String = {
+
+  val x = dim(0)
   val y = dim(1)
-  var j = 0;
+
   var h = 0
-
   val checkPos = (i: Int, j: Int, c: Array[Cell]) => i == c(h).xy(1) && j == c(h).xy(0)
+  val str = ""
 
-  for (i <- 0 until y) {
-    for (j <- 0 until x) {
-      if (c.last.absPos + 1 != h && checkPos(i, j, c)) {
-        print("i")
-        h += 1
-      } else
-        print(" ")
+  val check: String = (cell: Cell) => {
+    if (lastPos + 1 != cellPos && checkPos) {
+      "i"
+    } else {
+      " "
     }
-    println("")
-    j = 0
   }
+
+  for (i <- 0 until y;
+       j <- 0 until x) {
+    if (c.last.absPos + 1 != h && checkPos(i, j, c)) {
+      StringC(str, "i")
+      h += 1
+    } else {
+      StringC(str, " ")
+    }
+    StringC(str, "\n")
+  }
+  StringC(str, "").s
+}
+
+case class StringC(oldString: String, newString: String) {
+  val s = copy(oldString, newString)
+
+  def copy(oldString: String, newString: String): String = new String(oldString.concat(newString))
 }
 
 prettyPrint(c, Array(25, 25))

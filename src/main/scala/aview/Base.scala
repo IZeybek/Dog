@@ -8,7 +8,7 @@ object Base {
     val tui = new Tui
     var input = ""
     print("Your name is ")
-    val player = Player(scala.io.StdIn.readLine())
+    val player = Player(scala.io.StdIn.readLine(), null)
     print(f"Welcome ${Console.UNDERLINED}${player.toString()}${Console.RESET}! ")
     do {
 
