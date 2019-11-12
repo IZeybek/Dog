@@ -3,10 +3,6 @@ package aview
 import controller.controllerComponent.Controller
 
 class Tui(controller: Controller) {
-  def print(input: String): Unit = {
-    println(input)
-  }
-
 
   def input(input: String): String = {
     val commands = input.split("\\s+")
@@ -21,10 +17,11 @@ class Tui(controller: Controller) {
         result = "create a new board"
         controller.createBoard()
       case "s" => result = "search for a cell?"
-      case _ => result = "do absolutely nothing"
+      case _ => result = ""
     }
     result
   }
+
 
 }
 
