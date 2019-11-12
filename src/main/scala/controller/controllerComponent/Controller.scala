@@ -3,7 +3,7 @@ package controller.controllerComponent
 import controller.ControllerTrait
 import model.{Model, ModelTrait}
 
-class Controller extends ControllerTrait{
+class Controller extends ControllerTrait {
 
   val model: ModelTrait = Model()
 

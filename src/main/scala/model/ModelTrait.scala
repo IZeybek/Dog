@@ -8,7 +8,7 @@ trait ModelTrait {
   var board: Board
   var player: Player
 
-  def createBoard: Unit
+  def createBoard: Board
   def getBoard: Board
 
   var getCards: Array[CardTrait]

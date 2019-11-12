@@ -8,23 +8,17 @@ class TuiSpec extends WordSpec with Matchers {
 
   "Tui" when {
     "executed" should {
-      "have a Controller" in {
+      "have a Controller" can {
         val controller = new Controller()
         val tui = new Tui(controller)
-        "created" in {
-          tui.input("create") should be()
+        "create" in {
+          tui.input("create") should be("create a new board")
         }
-        "set" in {
-          tui.input("set") should be("developed")
+        "print" in {
+          tui.input("p") should be("print your board")
         }
-        "printed" in {
-          tui.input("p") should be("board printed")
-        }
-        "searched" in {
-          tui.input("s") should be("player cell can not be found since its not created yet")
-        }
-        "wrong input" in {
-          tui.input("") should be("wrong command! try again")
+        "get a wrong input" in {
+          tui.input("") should be("")
         }
       }
     }

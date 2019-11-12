@@ -1,18 +1,23 @@
 package model.playerComponent
 
 import model.Player
+import model.playerComponent.card.CardTrait
+import model.playerComponent.card.cardAdvancedImpl.{ChangeCard, JokerCard, SevenCard}
 import org.scalatest.{Matchers, WordSpec}
 
 class PlayerSpec extends WordSpec with Matchers {
   "A player" when {
     "created" should {
-      val player = Player("PlayerSpec", null, null)
-      val isNotEmpty = (s: String) => s != null
+      val cards: Array[CardTrait] = Array(SevenCard(), JokerCard(), ChangeCard())
+      val player = Player("PlayerSpec", cards, null)
       "have a name" in {
         player.name should not be empty
       }
-      "toString" in {
+      "be printed" in {
         player.toString should be(player.name)
+      }
+      "have cards" in {
+        player.getCards should be(player.cards)
       }
     }
   }

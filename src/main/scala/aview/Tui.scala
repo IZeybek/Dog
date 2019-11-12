@@ -9,14 +9,12 @@ class Tui(controller: Controller) {
     var result = ""
 
     commands(0) match {
-      case "set" => result = "not developed"
       case "p" =>
         result = "print your board"
         controller.printBoard()
       case "create" =>
         result = "create a new board"
         controller.createBoard()
-      case "s" => result = "search for a cell?"
       case _ => result = ""
     }
     result

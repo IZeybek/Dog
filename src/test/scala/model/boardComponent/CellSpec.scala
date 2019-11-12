@@ -19,7 +19,7 @@ class CellSpec extends WordSpec with Matchers {
         createdCell.isFilled should be(true)
       }
       "fill" in {
-        createdCell.fill(false) should be(false)
+        createdCell.fill(false) should not be (true)
       }
     }
   }

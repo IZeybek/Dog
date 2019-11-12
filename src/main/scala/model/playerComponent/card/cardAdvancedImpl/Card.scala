@@ -21,5 +21,6 @@ case class SevenCard() extends CardTrait {
 case class JokerCard() extends CardTrait {
 
   override def cardFunc(p: Player): Unit = ???
+
 }
 

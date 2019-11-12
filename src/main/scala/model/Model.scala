@@ -8,9 +8,10 @@ case class Model() extends ModelTrait {
   override var board: Board = _
   override var player: Player = _
 
-  override def createBoard: Unit = {
+  override def createBoard: Board = {
     if (board == null)
       board = Read.readIn("src/feld.txt")
+    board
   }
 
   override def getBoard: Board = board
