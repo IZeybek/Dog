@@ -1,4 +1,4 @@
-package model
+package model.playerComponent
 
 import org.scalatest.{Matchers, WordSpec}
 

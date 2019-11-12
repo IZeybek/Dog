@@ -1,12 +1,12 @@
-package model
+package model.playerComponent
 
-import model.playerComponent.Player
+import model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class PlayerSpec extends WordSpec with Matchers {
   "A player" when {
     "created" should {
-      val player = Player("PlayerSpec", null)
+      val player = Player("PlayerSpec", null, null)
       val isNotEmpty = (s: String) => s != null
       "have a name" in {
         player.name should not be empty

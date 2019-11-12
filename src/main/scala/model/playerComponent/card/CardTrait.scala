@@ -1,6 +1,6 @@
 package model.playerComponent.card
 
-import model.playerComponent.Player
+import model.Player
 
 trait CardTrait {
 

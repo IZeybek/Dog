@@ -1,10 +1,8 @@
 package model.boardComponent
 
-import model.playerComponent.Player
-
 import scala.io.Source
 
-case class Board(xy: Array[Int], cells: Array[Cell], player: Array[Player]) {
+case class Board(xy: Array[Int], cells: Array[Cell]) {
 
   def replaceCell(pos: Int, cell: Cell): Board = {
     copy(xy, cells.updated(pos, cell))
@@ -56,6 +54,6 @@ object Read {
     }
 
     file.getLines().foreach(forEachString)
-    Board(Array(x, y), cells.toArray, null)
+    Board(Array(x, y), cells.toArray)
   }
 }
