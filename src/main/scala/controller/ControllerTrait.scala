@@ -9,4 +9,8 @@ trait ControllerTrait {
   def createBoard(): Unit
 
   def dragCard(): CardTrait
+
+  def printCards(): Unit
+
+  def createPlayer(s: String): Unit
 }

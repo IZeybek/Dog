@@ -1,7 +1,6 @@
-package model.playerComponent.card.cardAdvancedImpl
+package model.playerComponent.card
 
 import model.Player
-import model.playerComponent.card.CardTrait
 
 case class ChangeCard() extends CardTrait {
 
@@ -14,6 +13,8 @@ case class ChangeCard() extends CardTrait {
 case class SevenCard() extends CardTrait {
 
   override def cardFunc(p: Player): Unit = ???
+
+  override def toString: String = "///////////.////////\n////////////////////\n/.//////////////////\n///////.........////\n/.///../..//.../////\n////////////.///////\n//////////..////////\n//////......////////\n///////...//////////\n///////..///////////\n//////...///////////\n//////..////////////\n////////////////////\n////////////////////\n////////////////////"
 
 }
 

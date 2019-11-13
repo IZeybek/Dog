@@ -1,7 +1,6 @@
 package model.boardComponent
 
-import model.playerComponent.card.CardTrait
-import model.playerComponent.card.cardAdvancedImpl._
+import model.playerComponent.card._
 
 import scala.io.Source
 import scala.util.Random
@@ -14,12 +13,10 @@ case class Board(xy: Array[Int], cells: Array[Cell]) {
 
   def createRandomCard(): CardTrait = {
     Random.nextInt(2) match {
-      case 0 =>
-        ChangeCard()
-      case 1 =>
-        JokerCard()
-      case 2 =>
-        SevenCard()
+      case 0 => ChangeCard()
+      case 1 => JokerCard()
+      case 2 => SevenCard()
+      case _ => null
     }
   }
 

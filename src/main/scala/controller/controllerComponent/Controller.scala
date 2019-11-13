@@ -8,15 +8,23 @@ class Controller extends ControllerTrait {
 
   val model: ModelTrait = Model()
 
-  override def printBoard(): Unit = {
-    model.getBoard.prettyPrint
+  override def createPlayer(s: String): Unit = {
+    model.createPlayer(s)
   }
 
   override def createBoard(): Unit = {
     model.createBoard
   }
 
+  override def printBoard(): Unit = {
+    model.getBoard.prettyPrint
+  }
+
   override def dragCard(): CardTrait = {
-    model.dragCard()
+    model.dragCard
+  }
+
+  override def printCards(): Unit = {
+    model.printCard
   }
 }

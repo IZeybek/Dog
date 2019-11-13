@@ -1,8 +1,7 @@
 package model.playerComponent
 
 import model.Player
-import model.playerComponent.card.CardTrait
-import model.playerComponent.card.cardAdvancedImpl.{ChangeCard, JokerCard, SevenCard}
+import model.playerComponent.card.{CardTrait, ChangeCard, JokerCard, SevenCard}
 import org.scalatest.{Matchers, WordSpec}
 
 class PlayerSpec extends WordSpec with Matchers {
