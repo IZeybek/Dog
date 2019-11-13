@@ -8,13 +8,19 @@ case class Model() extends ModelTrait {
   override var board: Board = _
   override var player: Player = _
 
+  override var cards: Array[CardTrait] = _
+
   override def createBoard: Board = {
     if (board == null)
       board = Read.readIn("src/feld.txt")
     board
   }
 
+  override def getCards: Array[CardTrait] = cards
+
   override def getBoard: Board = board
 
-  override var getCards: Array[CardTrait] = _
+  override def dragCard: CardTrait = {
+
+  }
 }

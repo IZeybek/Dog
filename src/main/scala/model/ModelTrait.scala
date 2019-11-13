@@ -4,12 +4,14 @@ import model.boardComponent.Board
 import model.playerComponent.card.CardTrait
 
 trait ModelTrait {
-
-  var board: Board
   var player: Player
+  var cards: Array[CardTrait]
+  var board: Board
 
   def createBoard: Board
   def getBoard: Board
 
-  var getCards: Array[CardTrait]
+  def getCards: Array[CardTrait]
+
+  def dragCard: CardTrait
 }

@@ -1,6 +1,7 @@
 package controller.controllerComponent
 
 import controller.ControllerTrait
+import model.playerComponent.card.CardTrait
 import model.{Model, ModelTrait}
 
 class Controller extends ControllerTrait {
@@ -15,4 +16,7 @@ class Controller extends ControllerTrait {
     model.createBoard
   }
 
+  override def dragCard(): CardTrait = {
+    model.dragCard()
+  }
 }

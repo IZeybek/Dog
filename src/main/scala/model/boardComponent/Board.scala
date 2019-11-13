@@ -1,11 +1,26 @@
 package model.boardComponent
 
+import model.playerComponent.card.CardTrait
+import model.playerComponent.card.cardAdvancedImpl.{ChangeCard, JokerCard, SevenCard}
+
 import scala.io.Source
+import scala.util.Random
 
 case class Board(xy: Array[Int], cells: Array[Cell]) {
 
   def replaceCell(pos: Int, cell: Cell): Board = {
     copy(xy, cells.updated(pos, cell))
+  }
+
+  def createRandomCard(): CardTrait = {
+    Random.nextInt(2) match {
+      case 0 =>
+        ChangeCard()
+      case 1 =>
+        JokerCard()
+      case 2 =>
+        SevenCard()
+    }
   }
 
   def prettyPrint(): Unit = {
@@ -28,6 +43,7 @@ case class Board(xy: Array[Int], cells: Array[Cell]) {
       j = 0
     }
   }
+
 }
 
 object Read {
