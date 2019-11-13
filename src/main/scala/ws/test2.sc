@@ -1,12 +1,7 @@
-package model.boardComponent
-
-import model.playerComponent.card._
-
-import scala.util.Random
+import model.boardComponent.Cell
 
 case class Board(size:Int) {
-
-   val boardMap: Map[Int, Cell] = createBoard(size)
+  val boardMap: Map[Int, Cell] = createBoard(size)
 
   def createBoard(size: Int): Map[Int, Cell] = {
 
@@ -48,30 +43,13 @@ case class Board(size:Int) {
   }
 
 
-
-//  def replaceCell(pos: Int, cell: Cell): Board = {
-//    copy(xy, cells.updated(pos, cell))
-//  }
-
-  def createRandomCard(): CardTrait = {
-    Random.nextInt(2) match {
-      case 0 => ChangeCard()
-      case 1 => JokerCard()
-      case 2 => SevenCard()
-      case _ => null
-    }
-  }
-
- def getBoardMap : Map[Int,Cell] = boardMap
-
-
   override def toString(): String = {
-    val blocknum = 2;
+    val blocknum = 25;
     val lineseparator = ("+-" + ("--" * blocknum)) * blocknum + "+\n"
     val line = ("| " + ("x " * blocknum)) * blocknum + "|\n"
     var box = "\n" + (lineseparator + (line * blocknum)) * blocknum + lineseparator
     for {
-      i <- 0 until size
+      i <- 0 until 64
 
     } box += box.replaceFirst("x", boardMap.get(i).toString)
     box

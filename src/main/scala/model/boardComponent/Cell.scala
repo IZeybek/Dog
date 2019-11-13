@@ -1,6 +1,6 @@
 package model.boardComponent
 
-case class Cell(absPos: Int, xy: Array[Int], filled: Boolean = false) {
+case class Cell(filled: Boolean ) {
 
   def isFilled: Boolean = filled
 
@@ -9,19 +9,18 @@ case class Cell(absPos: Int, xy: Array[Int], filled: Boolean = false) {
     true
   }
 
-  def canEqual(a: Any): Boolean = a.isInstanceOf[Cell]
+  //  def canEqual(a: Any): Boolean = a.isInstanceOf[Cell]
+  //
+  //  override def equals(that: Any): Boolean = {
+  //    that match {
+  //      case that: Cell => {
+  //        that.canEqual(this) &&
+  //          this.row == that.row && this.col  == that.col
+  //      }
+  //      case _ => false
+  //    }
+  //  }
 
-  override def equals(that: Any): Boolean = {
-    that match {
-      case that: Cell => {
-        that.canEqual(this) &&
-          this.xy == that.xy &&
-          this.absPos == that.absPos
-      }
-      case _ => false
-    }
-  }
-
-  override def toString: String = "[" + (if (filled) absPos.toString.replace(absPos.toChar, 'X')  else  absPos.toString) + "]"
+  override def toString: String = "[" + (if (filled) 'X'  else  "0") + "]"
 
 }

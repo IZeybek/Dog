@@ -1,11 +1,13 @@
 package aview
 
+import controller.ControllerTrait
 import controller.controllerComponent.Controller
 
 object Dog {
 
   def main(args: Array[String]): Unit = {
-    val controller = new Controller()
+    val controller:ControllerTrait = new Controller
+
     val tui = new Tui(controller)
     var input = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! ")

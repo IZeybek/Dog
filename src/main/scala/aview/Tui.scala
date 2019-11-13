@@ -1,25 +1,27 @@
 package aview
 
+import controller.{ControllerTrait}
 import controller.controllerComponent.Controller
 
 import scala.io.StdIn
 
-class Tui(controller: Controller) {
+class Tui(controller:ControllerTrait) {
+
 
   def input(input: String): String = {
-    val commands = input.split(" ")
+    val commands = input.split("\\s+")
     var result = ""
 
     commands(0) match {
-      case "board" =>
+      case "print" =>
         result = "print board"
-        controller.printBoard()
+        controller.printBoard
       case "create" =>
         if (commands.length > 1) {
           commands(1) match {
             case "board" =>
               result = "create a new board"
-              controller.createBoard
+              controller.createBoard(4)
             case "player" => {
               result = "create a new player\n"
               print("What's your name?\n")
@@ -30,7 +32,7 @@ class Tui(controller: Controller) {
         }
       case "cards" =>
         result = "print your hand cards"
-        controller.printCards
+        controller.printCard
       case "drag" =>
         result = "drag a card"
         controller.dragCard

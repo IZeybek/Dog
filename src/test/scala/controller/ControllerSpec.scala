@@ -10,12 +10,12 @@ class ControllerSpec extends WordSpec with Matchers {
       val controller: ControllerTrait = new Controller()
       "print Board" when {
         "Board is created" in {
-          controller.createBoard()
-          controller.printBoard()
+          controller.createBoard(4)
+
         }
       }
       "create Board" in {
-        controller.createBoard()
+        controller.createBoard(4)
       }
     }
   }

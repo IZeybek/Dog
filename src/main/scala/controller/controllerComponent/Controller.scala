@@ -1,7 +1,7 @@
 package controller.controllerComponent
 
 import controller.ControllerTrait
-import model.boardComponent.{Board, Read}
+import model.boardComponent.{Board, Cell}
 import model.playerComponent.card.CardTrait
 import model.Player
 
@@ -9,15 +9,11 @@ import scala.collection.mutable
 
 class Controller extends ControllerTrait {
 
-  override var board: Board = _
+  override val board: Board = createBoard(4)
   override var player: Player = _
 
+  override def createBoard(size: Int): Board = Board(size)
 
-  override def createBoard: Board = {
-    if (board == null)
-      board = Read.createBoard("src/feld.txt")
-    board
-  }
 
   override def generateRandomCards(): Array[CardTrait] = {
     val array = mutable.ArrayBuffer.empty[CardTrait]
@@ -34,7 +30,7 @@ class Controller extends ControllerTrait {
 
   override def getCards: Array[CardTrait] = player.cards
 
-  override def getBoard: Board = board
+
 
   override def dragCard: CardTrait = {
     board.createRandomCard()
@@ -42,11 +38,13 @@ class Controller extends ControllerTrait {
 
 
   override def printBoard(): Unit = {
-    getBoard.toString
+    print(board.toString)
   }
 
 
-  override def printCards(): Unit = {
+  override def printCard(): Unit = {
     printCard
   }
+
+
 }
