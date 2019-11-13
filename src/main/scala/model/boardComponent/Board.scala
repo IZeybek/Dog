@@ -20,7 +20,7 @@ case class Board(xy: Array[Int], cells: Array[Cell]) {
     }
   }
 
-  def prettyPrint(): Unit = {
+  override def toString(): String = {
     val x = xy(0)
     val y = xy(1)
     var j = 0
@@ -45,7 +45,7 @@ case class Board(xy: Array[Int], cells: Array[Cell]) {
 
 object Read {
 
-  def readIn(path: String): Board = {
+  def createBoard(path: String): Board = {
     val cells = scala.collection.mutable.ArrayBuffer.empty[Cell]
     val file = Source.fromFile(path)
     var z = 0

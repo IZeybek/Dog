@@ -21,4 +21,7 @@ case class Cell(absPos: Int, xy: Array[Int], filled: Boolean = false) {
       case _ => false
     }
   }
+
+  override def toString: String = "[" + (if (filled) absPos.toString.replace(absPos.toChar, 'X')  else  absPos.toString) + "]"
+
 }

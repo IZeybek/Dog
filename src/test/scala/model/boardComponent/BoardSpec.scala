@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 class BoardSpec extends WordSpec with Matchers {
   "A Board" when {
     "initialized" should {
-      val b: Board = Read.readIn("src/feld.txt")
+      val b: Board = Read.createBoard("src/feld.txt")
       "have an Array" in {
         b.cells should not be null
       }

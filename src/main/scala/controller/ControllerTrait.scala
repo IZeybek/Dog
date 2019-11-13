@@ -1,16 +1,25 @@
 package controller
 
+import model.Player
+import model.boardComponent.Board
 import model.playerComponent.card.CardTrait
 
 trait ControllerTrait {
 
-  def printBoard(): Unit
+  var player: Player
+  var board: Board
 
-  def createBoard(): Unit
+  def createBoard: Board
+  def getBoard: Board
+  def getCards: Array[CardTrait]
+  def dragCard: CardTrait
 
-  def dragCard(): CardTrait
+  def createPlayer(name: String): Player
 
-  def printCards(): Unit
+  def generateRandomCards(): Array[CardTrait]
 
-  def createPlayer(s: String): Unit
+  def printCard: Unit = {
+    player.cards.foreach(x => x.toString)
+  }
+
 }

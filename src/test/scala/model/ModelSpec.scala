@@ -7,7 +7,7 @@ class ModelSpec extends WordSpec with Matchers {
   "A Model" when {
     "initialized" should {
       val m: ModelTrait = Model()
-      val b: Board = Read.readIn("src/feld.txt")
+      val b: Board = Read.createBoard("src/feld.txt")
       "have an uninitialized board" in {
         m.board should be(null)
       }

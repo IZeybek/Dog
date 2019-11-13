@@ -1,30 +1,52 @@
 package controller.controllerComponent
 
 import controller.ControllerTrait
+import model.boardComponent.{Board, Read}
 import model.playerComponent.card.CardTrait
-import model.{Model, ModelTrait}
+import model.Player
+
+import scala.collection.mutable
 
 class Controller extends ControllerTrait {
 
-  val model: ModelTrait = Model()
+  override var board: Board = _
+  override var player: Player = _
 
-  override def createPlayer(s: String): Unit = {
-    model.createPlayer(s)
+
+  override def createBoard: Board = {
+    if (board == null)
+      board = Read.createBoard("src/feld.txt")
+    board
   }
 
-  override def createBoard(): Unit = {
-    model.createBoard
+  override def generateRandomCards(): Array[CardTrait] = {
+    val array = mutable.ArrayBuffer.empty[CardTrait]
+    for (_ <- 0 until 8) {
+      array += board.createRandomCard()
+    }
+    array.toArray
   }
+
+  override def createPlayer(name: String): Player = {
+    player = Player(name, generateRandomCards(), null)
+    player
+  }
+
+  override def getCards: Array[CardTrait] = player.cards
+
+  override def getBoard: Board = board
+
+  override def dragCard: CardTrait = {
+    board.createRandomCard()
+  }
+
 
   override def printBoard(): Unit = {
-    model.getBoard.prettyPrint
+    getBoard.toString
   }
 
-  override def dragCard(): CardTrait = {
-    model.dragCard
-  }
 
   override def printCards(): Unit = {
-    model.printCard
+    printCard
   }
 }
