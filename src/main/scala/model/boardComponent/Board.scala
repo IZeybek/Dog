@@ -1,7 +1,7 @@
 package model.boardComponent
 
 import model.playerComponent.card.CardTrait
-import model.playerComponent.card.cardAdvancedImpl.{ChangeCard, JokerCard, SevenCard}
+import model.playerComponent.card.cardAdvancedImpl._
 
 import scala.io.Source
 import scala.util.Random
