@@ -10,7 +10,8 @@ object Dog {
 
     val tui = new Tui(controller)
     var input = ""
-    print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! ")
+    print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
+    tui.input("print")
     do {
       System.out.println("What dou you want to do? >> ")
       input = scala.io.StdIn.readLine()
