@@ -10,7 +10,7 @@ case class Board(size: Int) {
 
 
   val boardMap: Map[Int, Cell] = createBoard(size)
-  val file = Source.fromFile("C:\\Users\\ismoz\\Documents\\00_GitHub\\Dog\\src\\feld.txt")
+  val file = Source.fromFile("src/feld.txt")
   val arrayOutput = initArrayOutput
 
   def createBoard(size: Int): Map[Int, Cell] = {
