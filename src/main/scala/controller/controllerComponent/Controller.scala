@@ -7,15 +7,15 @@ import model.{Piece, Player}
 
 import scala.collection.mutable
 
-class Controller extends ControllerTrait {
+class Controller {
 
-  override val board: Board = createBoard(4)
-  override var player: Array[Player] = createPlayer(Array("Jo", "isy", "me", "Tead"))
+  val board: Board = createBoard(4)
+  var player: Array[Player] = createPlayer(Array("Jo", "isy", "me", "Tead"))
 
-  override def createBoard(size: Int): Board = Board(size)
+  def createBoard(size: Int): Board = Board(size)
 
 
-  override def generateRandomCards(): Array[CardTrait] = {
+  def generateRandomCards(): Array[CardTrait] = {
     val array = mutable.ArrayBuffer.empty[CardTrait]
     for (_ <- 0 until 8) {
       array += board.createRandomCard()
@@ -23,29 +23,34 @@ class Controller extends ControllerTrait {
     array.toArray
   }
 
-  override def createPlayer(name: Array[String]): Array[Player] = {
-    println(name(0))
+  def createPlayer(name: Array[String]): Array[Player] = {
+    val player = new Array[Player](4)
+    player(0) = new Player(name(0), Piece(Array(1, 2, 3, 4), "gelb"))
+    player(1) = new Player(name(1), Piece(Array(1, 2, 3, 4), "blau"))
+    player(2) = new Player(name(2), Piece(Array(1, 2, 3, 4), "black"))
+    player(3) = new Player(name(3), Piece(Array(1, 2, 3, 4), "rot"))
+
     player
   }
 
-  //  override def getCards: Array[CardTrait] = player.cards
+  //   def getCards: Array[CardTrait] = player.cards
 
 
   //
-  //  override def dragCard: CardTrait = {
+  //   def dragCard: CardTrait = {
   //    board.createRandomCard()
   //  }
 
 
-  override def printBoard(): Unit = {
+  def printBoard(): Unit = {
     print(board.toString)
   }
 
 
-  //  override def printCard(): Unit = {
+  //   def printCard(): Unit = {
   //    printCard
   //  }
-  override def move(player: Player, moveIndex: Int): Boolean = {
+  def move(player: Player, moveIndex: Int): Boolean = {
     true
   }
 }

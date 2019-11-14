@@ -1,6 +1,9 @@
 package aview
 
+import controller.{ControllerTrait}
 import controller.controllerComponent.Controller
+
+import scala.io.StdIn
 
 class Tui(controller: Controller) {
 
@@ -22,7 +25,7 @@ class Tui(controller: Controller) {
             case "player" => {
               result = "create a new player\n"
               print("What's your name?\n")
-//              controller.createPlayer(StdIn.readLine().split("\\s+")(0))
+//             controller.createPlayer(StdIn.readLine().split("\\s+"))
             }
             case _ => result = "create nothing"
           }
