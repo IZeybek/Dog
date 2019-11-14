@@ -1,11 +1,8 @@
 package aview
 
-import controller.{ControllerTrait}
 import controller.controllerComponent.Controller
 
-import scala.io.StdIn
-
-class Tui(controller:ControllerTrait) {
+class Tui(controller: Controller) {
 
 
   def input(input: String): String = {

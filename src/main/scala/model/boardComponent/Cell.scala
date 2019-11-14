@@ -1,10 +1,8 @@
 package model.boardComponent
 
-import model.Player
+case class Cell(filled: Boolean) {
 
-case class Cell(filled: Boolean ) {
-
-
+  val filling: String = ???
 
   def isFilled: Boolean = filled
 
@@ -13,18 +11,6 @@ case class Cell(filled: Boolean ) {
     true
   }
 
-  //  def canEqual(a: Any): Boolean = a.isInstanceOf[Cell]
-  //
-  //  override def equals(that: Any): Boolean = {
-  //    that match {
-  //      case that: Cell => {
-  //        that.canEqual(this) &&
-  //          this.row == that.row && this.col  == that.col
-  //      }
-  //      case _ => false
-  //    }
-  //  }
-
-  override def toString: String = "[" + (if (filled) "g1"  else  "  ") + "]"
+  override def toString: String = "[" + (if (filled) "" else "  ") + "]"
 
 }

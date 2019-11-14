@@ -7,7 +7,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
   "A Controller" when {
     "created" should {
-      val controller: ControllerTrait = new Controller()
+      val controller: Controller = new Controller()
       "print Board" when {
         "Board is created" in {
           controller.createBoard(4)

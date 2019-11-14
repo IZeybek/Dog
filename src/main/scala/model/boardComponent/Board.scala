@@ -2,7 +2,6 @@ package model.boardComponent
 
 import model.playerComponent.card._
 
-import scala.collection.mutable
 import scala.io.Source
 import scala.util.Random
 
@@ -10,7 +9,7 @@ case class Board(size: Int) {
 
 
   val boardMap: Map[Int, Cell] = createBoard(size)
-  val file = Source.fromFile("C:\\Users\\ismoz\\Documents\\00_GitHub\\Dog\\src\\feld.txt")
+  val file = Source.fromFile("src/feld.txt")
   val arrayOutput = initArrayOutput
 
   def createBoard(size: Int): Map[Int, Cell] = {
@@ -20,7 +19,6 @@ case class Board(size: Int) {
     for {
       i <- 0 until (size * 16)
     } boardMap += (i -> Cell(false))
-
 
     boardMap
   }
@@ -63,7 +61,6 @@ case class Board(size: Int) {
 
 
   override def toString(): String = {
-
 
     //output as an array!
     for (i <- 0 to 20) {
