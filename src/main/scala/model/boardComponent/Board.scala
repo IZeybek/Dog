@@ -73,12 +73,12 @@ case class Board(size: Int) {
     for (y <- 6 to 0 by -1) {
       print(" . " * 6)
       for (x <- 7 to 0 by -1) {
-        if (board1(y)(x) != -1) print("[" + "*"  + "]")
+        if (board1(y)(x) != -1) print("[" + getBoardMap.get(board1(y)(x)).toString + "]")
         else print(" . ")
       }
       if (y != 0) print(" . " * 7 + "\n")
       else {for (y <- 0 to 6) {
-        if (board2(y)(7) != -1) print("[" + "*"  + "]")
+        if (board2(y)(7) != -1) print("[" + getBoardMap.get(board2(y)(7)).toString  + "]")
         else print(" . ")
       }
         println()
@@ -88,20 +88,20 @@ case class Board(size: Int) {
     for (x <- 0 to 7) {
 
       for (y <- 6 to 0 by -1) {
-        if (board4(y)(x) != -1) print("[" + "*"  + "]")
+        if (board4(y)(x) != -1) print("[" +  getBoardMap.get(board4(y)(x)).toString  + "]")
         else print(" . ")
       }
 
       if (x != 7) {
         print(" . " * 7)
         for (y <- 0 to 6) {
-          if (x < 7 && board2(y)(6 - x) != -1) print("[" + "*"  + "]")
+          if (x < 7 && board2(y)(6 - x) != -1) print("[" + getBoardMap.get(board2(y)(6 - x)).toString  + "]")
           else print(" . ")
         }
       } else {
 
         for(x <- 0 to 7) {
-          if (board3(0)(x) != -1) print("[" + "*"  + "]")
+          if (board3(0)(x) != -1) print("[" + getBoardMap.get(board3(0)(x)).toString + "]")
           else print(" . ")
         }
         println(" . " * 6)
@@ -112,7 +112,7 @@ case class Board(size: Int) {
     for (y <- 1 to 6) {
       print(" . " * 7)
       for (x <- 0 to 7) {
-        if (board3(y)(x) != -1) print("[" + "*" + "]")
+        if (board3(y)(x) != -1) print("[" + getBoardMap.get(board3(y)(x)).toString + "]")
         else print(" . ")
       }
       print(" . " * 6 + "\n")

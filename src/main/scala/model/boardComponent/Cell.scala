@@ -21,6 +21,6 @@ case class Cell(filled: Boolean ) {
   //    }
   //  }
 
-  override def toString: String = "[" + (if (filled) 'X'  else  "0") + "]"
+  override def toString: String = "[" + (if (true) "g1"  else  "  ") + "]"
 
 }
