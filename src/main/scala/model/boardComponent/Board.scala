@@ -64,7 +64,6 @@ case class Board(size: Int) {
   }
 
   override def toString(): String = {
-    val array = Array.ofDim[String](21, 21)
 
     val board1 = onePlayerBoard(0)
     val board2 = onePlayerBoard(16)
@@ -75,11 +74,14 @@ case class Board(size: Int) {
       print(" . " * 6)
       for (x <- 7 to 0 by -1) {
         if (board1(y)(x) != -1) print("[" + "*"  + "]")
-        else print("   ")
+        else print(" . ")
       }
-      if (y != 0) print(" . " * 6 + "\n")
-      else for (y <- 0 to 6) {
-        if (board2(y)(7) != -1) print("[" + "*"  + "]\n")
+      if (y != 0) print(" . " * 7 + "\n")
+      else {for (y <- 0 to 6) {
+        if (board2(y)(7) != -1) print("[" + "*"  + "]")
+        else print(" . ")
+      }
+        println()
       }
     }
 
@@ -87,20 +89,22 @@ case class Board(size: Int) {
 
       for (y <- 6 to 0 by -1) {
         if (board4(y)(x) != -1) print("[" + "*"  + "]")
-        else print("   ")
+        else print(" . ")
       }
 
       if (x != 7) {
         print(" . " * 7)
         for (y <- 0 to 6) {
           if (x < 7 && board2(y)(6 - x) != -1) print("[" + "*"  + "]")
-          else print("   ")
+          else print(" . ")
         }
       } else {
-        print(" . " * 7)
+
         for(x <- 0 to 7) {
-          if (board3(0)(x) != -1) print("[" + "*"  + "]\n")
+          if (board3(0)(x) != -1) print("[" + "*"  + "]")
+          else print(" . ")
         }
+        println(" . " * 6)
       }
       if(x != 7)println(" ")
     }
@@ -109,12 +113,10 @@ case class Board(size: Int) {
       print(" . " * 7)
       for (x <- 0 to 7) {
         if (board3(y)(x) != -1) print("[" + "*" + "]")
-        else print("   ")
+        else print(" . ")
       }
       print(" . " * 6 + "\n")
     }
-
-
     ""
   }
 }
