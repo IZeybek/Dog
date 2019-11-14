@@ -1,7 +1,7 @@
 package model
 
 
-case class Player(name: String, piece: Piece) {
+class Player(name: String, piece: Piece) {
 
   var piecesOnBoard: Int = 0
   var piecesOnStandby: Int = 4

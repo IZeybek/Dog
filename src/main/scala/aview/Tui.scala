@@ -5,7 +5,7 @@ import controller.controllerComponent.Controller
 
 import scala.io.StdIn
 
-class Tui(controller:ControllerTrait) {
+class Tui(controller: Controller) {
 
 
   def input(input: String): String = {
@@ -25,7 +25,7 @@ class Tui(controller:ControllerTrait) {
             case "player" => {
               result = "create a new player\n"
               print("What's your name?\n")
-//              controller.createPlayer(StdIn.readLine().split("\\s+")(0))
+//             controller.createPlayer(StdIn.readLine().split("\\s+"))
             }
             case _ => result = "create nothing"
           }

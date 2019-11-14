@@ -6,7 +6,7 @@ import controller.controllerComponent.Controller
 object Dog {
 
   def main(args: Array[String]): Unit = {
-    val controller:ControllerTrait = new Controller
+    val controller = new Controller
 
     val tui = new Tui(controller)
     var input = ""
