@@ -21,21 +21,21 @@ class Tui(controller:ControllerTrait) {
           commands(1) match {
             case "board" =>
               result = "create a new board"
-              controller.createBoard(4)
+//              controller.createBoard(4)
             case "player" => {
               result = "create a new player\n"
               print("What's your name?\n")
-              controller.createPlayer(StdIn.readLine().split("\\s+")(0))
+//              controller.createPlayer(StdIn.readLine().split("\\s+")(0))
             }
             case _ => result = "create nothing"
           }
         }
       case "cards" =>
         result = "print your hand cards"
-        controller.printCard
+//        controller.printCard
       case "drag" =>
         result = "drag a card"
-        controller.dragCard
+//        controller.dragCard
       case _ => result = ""
     }
     result

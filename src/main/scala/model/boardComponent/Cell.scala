@@ -1,6 +1,10 @@
 package model.boardComponent
 
+import model.Player
+
 case class Cell(filled: Boolean ) {
+
+
 
   def isFilled: Boolean = filled
 
@@ -21,6 +25,6 @@ case class Cell(filled: Boolean ) {
   //    }
   //  }
 
-  override def toString: String = "[" + (if (true) "g1"  else  "  ") + "]"
+  override def toString: String = "[" + (if (filled) "g1"  else  "  ") + "]"
 
 }

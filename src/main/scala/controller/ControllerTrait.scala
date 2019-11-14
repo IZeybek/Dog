@@ -6,20 +6,23 @@ import model.playerComponent.card.CardTrait
 
 trait ControllerTrait {
 
-  var player: Player
+  var player: Array[Player]
   val board: Board
 
-  def createBoard(size:Int):  Board
+  def move(player : Player, moveIndex:Int) : Boolean
 
-  def getCards: Array[CardTrait]
-  def dragCard: CardTrait
-  def printBoard : Unit
-  def createPlayer(name: String): Player
+  def createBoard(size: Int): Board
+
+  //  def getCards: Array[CardTrait]
+  //  def dragCard: CardTrait
+  def printBoard: Unit
+
+  def createPlayer(name: Array[String]): Array[Player]
 
   def generateRandomCards(): Array[CardTrait]
 
-  def printCard: Unit = {
-    player.cards.foreach(x => x.toString)
-  }
+  //  def printCard: Unit = {
+  //    player.cards.foreach(x => x.toString)
+  //  }
 
 }

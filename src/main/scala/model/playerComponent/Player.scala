@@ -1,16 +1,20 @@
 package model
 
-import model.playerComponent.card.CardTrait
 
-case class Player(name: String, cards: Array[CardTrait], piece: Array[Piece]) {
+case class Player(name: String, piece: Piece) {
 
-  var piecesOnBoard: Int = _
-  var piecesOnStandby: Int = _
+  var piecesOnBoard: Int = 0
+  var piecesOnStandby: Int = 4
 
   override def toString: String = name
-
-  def getCards: Array[CardTrait] = cards
-
+  def getPiece : Piece = piece
 }
 
-case class Piece(xy: Array[Int])
+case class Piece(piece: Array[Int], color: String) {
+  def getPieces: Array[Int] = piece
+
+
+
+  def getColor: String = color
+}
+

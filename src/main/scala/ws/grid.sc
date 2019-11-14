@@ -1,72 +1,71 @@
-
+import scala.collection.mutable
 import scala.io.Source
 
-case class Cell(absPos: Int, xy: Array[Int], filled: Boolean) {
+case class Cell(xy: Array[Int], filled: Boolean) {
   def isFilled: Boolean = filled
+
   def fill(filled: Boolean): Boolean = filled
 }
 
-
 //read 2D Board in 1D array
-val cells = scala.collection.mutable.ArrayBuffer.empty[Cell]
-val file = Source.fromFile("C:\\Users\\Josef\\Documents\\Dog\\src\\feld.txt")
+val cells = mutable.SortedMap[Integer, Cell]()
+val file = Source.fromFile("C:\\Users\\ismoz\\Documents\\00_GitHub\\Dog\\src\\feld.txt")
 var x = 0;
 var y = 0;
 var z = 0
-for (line <- file.getLines()) {
-  x = 0
-  for (e <- line) {
-    if (e == '1') {
-      cells += Cell(z, Array(x, y), true)
-      z += 1
-    }
-    x += 1
+
+val buildMap = (c: Char) => {
+  if (c == '1') {
+    cells.put(z, Cell(Array(x, y), true))
+    print(f"($z ${cells(z).xy(0)} ${cells(z).xy(1)})\t")
+    z += 1
   }
+  x += 1
+}
+
+val forEachString = (s: String) => {
+  x = 0
+
   y += 1
 }
-val c = cells.toArray
+for (line <- file.getLines) {
+  var s = line.split("\\s+")
+  for (myVlaue <- s) {
+    if (myVlaue.size > 2 ) {
+      x += myVlaue.size - 1
+    }else{
 
-
-/** prints 2D Board from 1D array
- *
- * @param c   is a 1D Array that consists of Cells
- * @param dim is the dimension of the Field
- */
-def prettyPrint(c: Map[Int, Cell], dim: Array[Int]): String = {
-
-  val x = dim(0)
-  val y = dim(1)
-
-  var h = 0
-  val checkPos = (i: Int, j: Int, c: Array[Cell]) => i == c(h).xy(1) && j == c(h).xy(0)
-  val str = ""
-
-  val check: String = (cell: Cell) => {
-    if (lastPos + 1 != cellPos && checkPos) {
-      "i"
-    } else {
-      " "
     }
   }
 
-  for (i <- 0 until y;
-       j <- 0 until x) {
-    if (c.last.absPos + 1 != h && checkPos(i, j, c)) {
-      StringC(str, "i")
-      h += 1
-    } else {
-      StringC(str, " ")
-    }
-    StringC(str, "\n")
+}
+val c = cells.toMap
+
+//val m = Map(0 -> Cell(Array(0, 0), false), 1 -> Cell(Array(0, 1), false), 2 -> Cell(Array(1, 0), false), 3 -> Cell(Array(1, 1), false))
+
+
+val lineseparator = "+" + ("-" * 5) * 5 + "+\n"
+val line = "|" + (" " * 5) * 5 + "|\n"
+var box = lineseparator + (line * 5) * 5 + lineseparator
+
+def rowLineToIndex(row: Int, line: Int): Integer = {
+  row * 28 + line
+}
+
+z = 0
+
+def replace(row: Integer, line: Integer): String = {
+  if (z < 72 && c(z).xy(0) == row && c(z).xy(1) == line) {
+    val i = rowLineToIndex(row, line)
+    box = box.substring(0, i) + "x" + box.substring(i + 1)
+    z += 1
   }
-  StringC(str, "").s
+  box
 }
 
-case class StringC(oldString: String, newString: String) {
-  val s = copy(oldString, newString)
+for {
+  line <- 0 until 28
+  row <- 0 until 28
+} replace(row, line)
 
-  def copy(oldString: String, newString: String): String = new String(oldString.concat(newString))
-}
-
-prettyPrint(c, Array(25, 25))
-
+box
