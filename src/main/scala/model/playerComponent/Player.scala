@@ -1,20 +1,18 @@
 package model
 
 
-class Player(name: String, piece: Piece) {
+class Player(name: String, piece: Map[Integer, Piece]) {
 
-  var piecesOnBoard: Int = 0
+  //  var piecesOnBoard: Int = 0
   var piecesOnStandby: Int = 4
 
   override def toString: String = name
-  def getPiece : Piece = piece
+
+  def getPiece: Map[Integer, Piece] = piece //indexing & mapping pieces
 }
 
-case class Piece(piece: Array[Int], color: String) {
-  def getPieces: Array[Int] = piece
-
-
-
+case class Piece(index: Integer, color: String) {
+  def getIndex: Integer = index
   def getColor: String = color
 }
 
