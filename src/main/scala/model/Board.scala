@@ -3,7 +3,6 @@ package model
 import util.Observable
 
 import scala.io.Source
-import scala.util.Random
 
 case class Board() extends Observable {
 
@@ -50,14 +49,14 @@ case class Board() extends Observable {
   //    copy(xy, cells.updated(pos, cell))
   //  }
 
-  def createRandomCard(): CardTrait = {
-    Random.nextInt(2) match {
-      case 0 => ChangeCard()
-      case 1 => JokerCard()
-      case 2 => SevenCard()
-      case _ => null
-    }
-  }
+  //  def createRandomCard(): Card = {
+  //    Random.nextInt(2) match {
+  //      case 0 => ChangeCard()
+  //      case 1 => JokerCard()
+  //      case 2 => SevenCard()
+  //      case _ => null
+  //    }
+  //  }
 
   def getBoardMap: Map[Int, Cell] = boardMap
 
