@@ -2,8 +2,6 @@ package model.boardComponent
 
 case class Cell(filled: Boolean) {
 
-  val filling: String = ???
-
   def isFilled: Boolean = filled
 
   def fill(fill: Boolean): Boolean = {
@@ -11,6 +9,6 @@ case class Cell(filled: Boolean) {
     true
   }
 
-  override def toString: String = "[" + (if (filled) "" else "  ") + "]"
+  override def toString: String = "[" + (if (filled) "x" else "  ") + "]"
 
 }

@@ -29,6 +29,9 @@ class Tui(controller: Controller) {
             case _ => result = "create nothing"
           }
         }
+      case "m" =>
+        result = "move a player by 6 fields"
+        controller.move(controller.player(0), 6, 0)
       case _ => result = ""
     }
     result
