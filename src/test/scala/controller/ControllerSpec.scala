@@ -15,7 +15,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
 //      "create a player" in {
 //       val players =  controller.createPlayer(Array("Player1","Player2","Player3","Player4"))
-//        "and move a player" in {
+      //        "and move a player"  {
 //          controller.move(players(0), 6, 2) should be(true)
 //        }
 //      }
