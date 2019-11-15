@@ -30,9 +30,9 @@ class Tui() {
         }
       case "m" =>
         result = "moved a player"
-//        controller.move(controller.player(0), 6, 0)
+      //        controller.move(controller.player(0), 6, 0)
       case "p" =>
-        controller.printBoard
+        print(controller.printBoard)
         result = "printed board"
       case _ => result = ""
     }

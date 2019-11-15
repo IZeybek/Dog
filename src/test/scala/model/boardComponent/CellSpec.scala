@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 class CellSpec extends WordSpec with Matchers {
   "A Cell" when {
     "created" should {
-      val cellSpec = Cell(true)
+      val cellSpec = Cell(0,true)
       "be filled" in {
         cellSpec.filled should be(true)
       }

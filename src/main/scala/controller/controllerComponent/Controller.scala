@@ -23,23 +23,27 @@ class Controller(playerNames: Array[String]) extends Observable {
 
   def createPlayer(name: Array[String]): Array[Player] = {
     val player = new Array[Player](4)
-    player(0) = Player(name(0), "gelb", Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0)))
-    player(1) = Player(name(1), "blau", Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0)))
-    player(2) = Player(name(2), "grün", Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0)))
-    player(3) = Player(name(3), "rot", Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0)))
+    val map1, map2, map3, map4 = Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0))
+
+    player(0) = Player(name(0), "gelb", map1)
+    player(1) = Player(name(1), "blau", map2)
+    player(2) = Player(name(2), "grün", map3)
+    player(3) = Player(name(3), "rot", map4)
     notifyObservers
     player
   }
 
-  def printBoard(): Unit = print(board.toString)
+  def getBoard: Board = board
 
-  def move(player: Player, moveIndex: Int, piece: Int): Boolean = {
-    //    val old = player.getPiece(piece).position
+  def printBoard(): String = getBoard.toString
 
-    //update Piece in Player
-    //    val p: Player = player.copy(piece = player.piece.updated(piece, player.getPiece(piece).copy(position = old + moveIndex)))
-    player.piece(piece).setPosition(moveIndex)
-    notifyObservers
-    true
-  }
+  //  def move(player: Player, moveIndex: Int, piece: Int): Boolean = {
+  //      //    val old = player.getPiece(piece).position
+  //
+  //      //update Piece in Player
+  //      //    val p: Player = player.copy(piece = player.piece.updated(piece, player.getPiece(piece).copy(position = old + moveIndex)))
+  //      player.piece(piece).setPosition(moveIndex)
+  //      notifyObservers
+  //      true
+  //    }
 }

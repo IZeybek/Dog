@@ -10,7 +10,7 @@ class BoardSpec extends WordSpec with Matchers {
         "created" in {
           board.getBoardMap.size should be (64)
           for(i <- 0 until  board.getBoardMap.size){
-            board.getBoardMap(i) should be (i)
+            board.getBoardMap(i).getPos should be (i)
           }
         }
         "output created" in {
@@ -19,7 +19,7 @@ class BoardSpec extends WordSpec with Matchers {
           for(i <- 0 until 21; j <- 0 until(21)){
             sum += {if(board.getArrayOutput(i)(j) != null) board.getArrayOutput(i)(j).getPos else 0}
           }
-          sum should be (2016)
+          sum should be (2017)
         }
         "toString executed" in {
           var box = ""
