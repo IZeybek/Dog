@@ -13,7 +13,7 @@ object Dog {
     tui.input("n player")
     tui.input("p")
     do {
-      System.out.println("\npromtpt >> ")
+      System.out.println("\nprompt >> ")
       input = scala.io.StdIn.readLine()
       println(f"${tui.input(input)}")
     } while (input != "exit")
