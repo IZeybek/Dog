@@ -1,6 +1,8 @@
 package model.boardComponent
 
-case class Cell(filled: Boolean) {
+case class Cell(idx: Int, filled: Boolean) {
+
+  def getPos: Int = idx
 
   def isFilled: Boolean = filled
 

@@ -7,21 +7,22 @@ import scala.util.Random
 
 case class Board() {
 
-
-  val boardMap: Map[Int, Cell] = createBoard()
+  val boardMap: Map[Int, Cell] = createBoard
   val file = Source.fromFile("src/feld.txt")
   val arrayOutput = initArrayOutput
 
-  def createBoard(): Map[Int, Cell] = {
+  def createBoard: Map[Int, Cell] = {
 
-    var boardMap = Map(0 -> Cell(false))
+    var boardMap = Map(0 -> Cell(0,false))
 
     for {
       i <- 0 until 64
-    } boardMap += (i -> Cell(false))
+    } boardMap += (i -> Cell(i,false))
 
     boardMap
   }
+
+  def getArrayOutput:Array[Array[Cell]] = arrayOutput
 
   def initArrayOutput: Array[Array[Cell]] = {
     val array = Array.ofDim[Cell](21, 21)
@@ -34,7 +35,7 @@ case class Board() {
         if (myVlaue.size > 2) {
           x += myVlaue.size
         } else {
-          array(y)(x) = boardMap(myVlaue.toInt)
+          array(y)(x) = getBoardMap(myVlaue.toInt)
           x += 1;
         }
       }
@@ -61,15 +62,15 @@ case class Board() {
 
 
   override def toString(): String = {
-
+    var box = ""
     //output as an array!
     for (i <- 0 to 20) {
       for (j <- 0 to 20) {
-        if (arrayOutput(i)(j) != null) print(arrayOutput(i)(j).toString)
-        else print(" -- ")
+        if (arrayOutput(i)(j) != null) box += arrayOutput(i)(j).toString
+        else box += " -- "
       }
-      println("")
+      box += "\n"
     }
-    ""
+    box
   }
 }

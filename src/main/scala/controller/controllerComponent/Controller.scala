@@ -35,12 +35,12 @@ class Controller(playerNames : Array[String]) extends Observable {
 
   def printBoard(): Unit = print(board.toString)
 
-  def move(player: Player, moveIndex: Int, piece: Int): Player = {
-    val old = player.getPiece(piece).position
-
-    //update Piece in Player
-    val p: Player = player.copy(piece = player.piece.updated(piece, player.getPiece(piece).copy(position = old + moveIndex)))
-    notifyObservers
-    p
-  }
+//  def move(player: Player, moveIndex: Int, piece: Int): Player = {
+//    val old = player.getPiece(piece).position
+//
+//    //update Piece in Player
+//    val p: Player = player.copy(piece = player.piece.updated(piece, player.getPiece(piece).copy(position = old + moveIndex)))
+//    notifyObservers
+//    p
+//  }
 }
