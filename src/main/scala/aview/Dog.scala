@@ -16,7 +16,7 @@ object Dog {
     tui.input("n player Isy Josy Isa Marco")
     tui.input("p")
     do {
-      System.out.println("\nprompt >> ")
+      System.out.print("\nprompt >> ")
       input = scala.io.StdIn.readLine()
 
 
