@@ -5,19 +5,19 @@ import model.playerComponent.card._
 import scala.io.Source
 import scala.util.Random
 
-case class Board(size: Int) {
+case class Board() {
 
 
-  val boardMap: Map[Int, Cell] = createBoard(size)
+  val boardMap: Map[Int, Cell] = createBoard()
   val file = Source.fromFile("src/feld.txt")
   val arrayOutput = initArrayOutput
 
-  def createBoard(size: Int): Map[Int, Cell] = {
+  def createBoard(): Map[Int, Cell] = {
 
     var boardMap = Map(0 -> Cell(false))
 
     for {
-      i <- 0 until (size * 16)
+      i <- 0 until 64
     } boardMap += (i -> Cell(false))
 
     boardMap

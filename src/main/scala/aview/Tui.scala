@@ -4,34 +4,36 @@ import controller.controllerComponent.Controller
 
 import scala.io.StdIn
 
-class Tui(controller: Controller) {
-
+class Tui() {
+  val controller = new Controller(Array("Player1", "Player2", "Player3", "Player4"))
 
   def input(input: String): String = {
     val commands = input.split("\\s+")
     var result = ""
 
     commands(0) match {
-      case "p" =>
-        result = "print board"
-        controller.printBoard
       case "n" =>
-        if (commands.length > 1) {
+        if (commands.length == 1) {
           commands(1) match {
             case "board" =>
-              result = "create a new board"
-              controller.createBoard(4)
+              controller.createBoard
+              result = "created a new board"
             case "player" => {
-              result = "create a new player\n"
               print("What's your name?\n")
-              controller.createPlayer(StdIn.readLine().split("\\s+"))
+              val playerNames = StdIn.readLine().split("\\s+")
+              if (playerNames.size == 4)
+                controller.createPlayer(playerNames)
             }
-            case _ => result = "create nothing"
+              result = "created new players"
+            case _ => result = "creation failed!"
           }
         }
       case "m" =>
-        result = "move a player by 6 fields"
-        controller.move(controller.player(0), 6, 0)
+        result = "moved a player"
+//        controller.move(controller.player(0), 6, 0)
+      case "p" =>
+        controller.printBoard
+        result = "printed board"
       case _ => result = ""
     }
     result
