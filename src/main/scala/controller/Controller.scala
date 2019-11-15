@@ -45,13 +45,11 @@ class Controller() extends Observable {
 
   def toStringBoard(): String = getBoard.toString
 
-  //  def move(player: Player, moveIndex: Int, piece: Int): Boolean = {
-  //      //    val old = player.getPiece(piece).position
-  //
-  //      //update Piece in Player
-  //      //    val p: Player = player.copy(piece = player.piece.updated(piece, player.getPiece(piece).copy(position = old + moveIndex)))
-  //      player.piece(piece).setPosition(moveIndex)
-  //      notifyObservers
-  //      true
-  //    }
+  def move(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
+    val newPos = player(playerNum).piece(pieceNum).setPosition(moveBy)
+    player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).setPosition(moveBy)))
+    notifyObservers
+    newPos
+  }
+
 }

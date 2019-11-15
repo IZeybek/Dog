@@ -13,8 +13,9 @@ case class Player(name: String, color: String, piece: Map[Int, Piece]) {
 }
 
 class Piece(var position: Int) {
-  def setPosition(pos: Int): Unit = {
+  def setPosition(pos: Int): Int = {
     position = pos + position
+    position
   }
   def getPosition: Int = position
 }
