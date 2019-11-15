@@ -1,7 +1,6 @@
 package controller
 
 import controller.controllerComponent.Controller
-import model.Board
 import org.scalatest.{Matchers, WordSpec}
 
 class ControllerSpec extends WordSpec with Matchers {
@@ -10,8 +9,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "initialized" should {
       val controller: Controller = new Controller(Array("Player1", "Player2", "Player3", "Player4"))
       "create a board " in {
-        val b: Board = Board()
-        controller.createBoard should be(b)
+        controller.setNewBoard should be(controller.getBoard)
       }
       "create a player" in {
        val players =  controller.createPlayer(Array("Player1","Player2","Player3","Player4"))

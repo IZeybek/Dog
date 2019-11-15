@@ -5,10 +5,17 @@ import util.Observable
 
 class Controller(playerNames: Array[String]) extends Observable {
 
-  val board: Board = createBoard
-  val player: Array[Player] = createPlayer(playerNames)
+  var board: Board = createBoard
+  var player: Array[Player] = createPlayer(playerNames)
 
-  def createBoard: Board = Board()
+  def setNewBoard: Board = {
+    board = Board()
+    board
+  }
+
+  def createBoard: Board = {
+    Board()
+  }
 
   //
   //  def generateRandomCards(): Array[CardTrait] = {

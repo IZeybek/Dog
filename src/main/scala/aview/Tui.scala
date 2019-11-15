@@ -1,10 +1,9 @@
 package aview
 
 import controller.controllerComponent.Controller
+import util.Observer
 
-import scala.io.StdIn
-
-class Tui() {
+class Tui() extends Observer {
   val controller = new Controller(Array("Player1", "Player2", "Player3", "Player4"))
 
   def input(input: String): String = {
@@ -15,7 +14,7 @@ class Tui() {
       case "n" =>
         commands(1) match {
           case "board" =>
-            controller.createBoard
+            controller.setNewBoard
             result = "created a new board"
           case "player" => {
 
@@ -38,10 +37,10 @@ class Tui() {
         result = "printed board"
       case _ => result = ""
     }
-    return result
+    result
   }
 
-
+  override def update: Unit = controller.printBoard()
 }
 
 

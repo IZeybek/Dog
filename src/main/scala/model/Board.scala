@@ -1,6 +1,5 @@
-package model.boardComponent
+package model
 
-import model.playerComponent.card._
 import util.Observable
 
 import scala.io.Source

@@ -1,7 +1,5 @@
 package aview
 
-import scala.io.StdIn
-
 object Dog {
 
   def main(args: Array[String]): Unit = {
