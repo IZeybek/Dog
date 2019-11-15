@@ -43,7 +43,7 @@ class Controller() extends Observable {
 
   def getBoard: Board = board
 
-  def printBoard(): String = getBoard.toString
+  def toStringBoard(): String = getBoard.toString
 
   //  def move(player: Player, moveIndex: Int, piece: Int): Boolean = {
   //      //    val old = player.getPiece(piece).position
