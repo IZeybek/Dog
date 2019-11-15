@@ -1,7 +1,6 @@
 package aview
 
 
-import controller.controllerComponent.Controller
 import org.scalatest._
 
 class TuiSpec extends WordSpec with Matchers {
