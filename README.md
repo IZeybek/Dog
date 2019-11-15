@@ -1,3 +1,5 @@
+https://travis-ci.org/Akkarin007/Dog.svg?branch=master
+
 # Dog
 
 Der Name vom Spiel sagt Ihnen nichts? Das ist überhaupt nicht schlimm, uns nämlich auch nicht. Aber wir lieben Hunde.
