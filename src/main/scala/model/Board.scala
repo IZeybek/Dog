@@ -61,13 +61,26 @@ case class Board() extends Observable {
   def getBoardMap: Map[Int, Cell] = boardMap
 
 
+
   override def toString(): String = {
+    var box = ""
+    var line_down = "_" * getBoardMap.size * 3 + "\n"
+    var line_up = "\n" + "‾" * getBoardMap.size * 3
+    box = box + line_down
+    for (i <- 0 until getBoardMap.size) {
+      box += getBoardMap(i).toString
+    }
+    box += line_up
+    box
+  }
+
+  def makeString(): String = {
     var box = ""
     //output as an array!
     for (i <- 0 to 20) {
       for (j <- 0 to 20) {
         if (arrayOutput(i)(j) != null) box += arrayOutput(i)(j).toString
-        else box += " -- "
+        else box += " - "
       }
       box += "\n"
     }

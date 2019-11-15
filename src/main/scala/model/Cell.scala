@@ -6,6 +6,6 @@ case class Cell(idx: Int, filled: Boolean) {
 
   def isFilled: Boolean = filled
 
-  override def toString: String = "[" + (if (filled) "x" else "  ") + "]"
+  override def toString: String = "[" + (if (filled) "x" else " ") + "]"
 
 }
