@@ -5,5 +5,3 @@ scala:
 script:
   - sbt clean test
 
-after_success:
-  - sbt coveralls
