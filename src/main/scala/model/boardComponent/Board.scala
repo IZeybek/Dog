@@ -1,11 +1,12 @@
 package model.boardComponent
 
 import model.playerComponent.card._
+import util.Observable
 
 import scala.io.Source
 import scala.util.Random
 
-case class Board() {
+case class Board() extends Observable {
 
   val boardMap: Map[Int, Cell] = createBoard
   val file = Source.fromFile("src/feld.txt")
@@ -19,6 +20,7 @@ case class Board() {
       i <- 0 until 64
     } boardMap += (i -> Cell(i,false))
 
+    notifyObservers
     boardMap
   }
 
