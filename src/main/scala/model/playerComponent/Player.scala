@@ -3,7 +3,6 @@ package model
 
 case class Player(name: String, color: String, piece: Map[Int, Piece]) {
 
-  //  var piecesOnBoard: Int = 0
   var piecesOnStandby: Int = 4
 
   def getColor: String = color

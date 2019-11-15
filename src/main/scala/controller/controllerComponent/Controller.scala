@@ -4,21 +4,22 @@ import model.boardComponent.Board
 import model.{Piece, Player}
 import util.Observable
 
-class Controller(playerNames : Array[String]) extends Observable {
+class Controller(playerNames: Array[String]) extends Observable {
 
   val board: Board = createBoard
   val player: Array[Player] = createPlayer(playerNames)
 
   def createBoard: Board = Board()
-//
-//  def generateRandomCards(): Array[CardTrait] = {
-//    val array = mutable.ArrayBuffer.empty[CardTrait]
-//    for (_ <- 0 until 8) {
-//      array += board.createRandomCard()
-//    }
-//    notifyObservers
-//    array.toArray
-//  }
+
+  //
+  //  def generateRandomCards(): Array[CardTrait] = {
+  //    val array = mutable.ArrayBuffer.empty[CardTrait]
+  //    for (_ <- 0 until 8) {
+  //      array += board.createRandomCard()
+  //    }
+  //    notifyObservers
+  //    array.toArray
+  //  }
 
   def createPlayer(name: Array[String]): Array[Player] = {
     val player = new Array[Player](4)

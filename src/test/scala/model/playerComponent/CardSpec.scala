@@ -1,12 +1,11 @@
 package model.playerComponent
 
 import model.playerComponent.card.{ChangeCard, JokerCard, SevenCard}
-import model.{Piece, Player}
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {
   "A Card" when {
-    val playerTest = Player("CardSpec", Map(0 -> Piece(0, "gelb"), 1 -> Piece(0, "gelb"), 2 -> Piece(0, "gelb"), 3 -> Piece(0, "gelb")))
+    //    val cardSpecPlayer = Player("CardSpec", "gelb", Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0)))
     "as ChangeCard" should {
       val changeCard = ChangeCard()
       "have a function" in {
