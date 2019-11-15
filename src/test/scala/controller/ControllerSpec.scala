@@ -13,12 +13,13 @@ class ControllerSpec extends WordSpec with Matchers {
         val b: Board = Board()
         controller.createBoard should be(b)
       }
-//      "create a player" in {
-//       val players =  controller.createPlayer(Array("Player1","Player2","Player3","Player4"))
-//        "and move a player" in {
-//          controller.move(players(0), 6, 2) should be(true)
-//        }
-//      }
+      "create a player" in {
+       val players =  controller.createPlayer(Array("Player1","Player2","Player3","Player4"))
+        players(0).toString should be("Player1")
+        players(1).toString should be("Player2")
+        players(2).toString should be("Player3")
+        players(3).toString should be("Player4")
+      }
       "print board" in {
         controller.printBoard() should be(controller.board.toString())
       }

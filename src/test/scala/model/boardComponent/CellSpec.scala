@@ -9,6 +9,9 @@ class CellSpec extends WordSpec with Matchers {
       "be filled" in {
         cellSpec.filled should be(true)
       }
+      "have idx" in {
+        cellSpec.getPos should be(42)
+      }
       "return if its filled" in {
         cellSpec.isFilled should be(true)
       }

@@ -32,7 +32,6 @@ class BoardSpec extends WordSpec with Matchers {
             box += "\n"
           }
           board.toString should be (box)
-
         }
       }
 
