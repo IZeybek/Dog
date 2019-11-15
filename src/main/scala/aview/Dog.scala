@@ -6,6 +6,7 @@ object Dog {
 
   val controller = new Controller()
   val tui = new Tui(controller)
+  controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
 

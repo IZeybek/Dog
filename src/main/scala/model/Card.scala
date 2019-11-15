@@ -1,25 +1,25 @@
 package model
 
-case class ChangeCard() extends CardTrait {
+case class ChangeCard() {
 
-  override def cardFunc(p: Player): Unit = ???
+  def cardFunc(p: Player): Unit = ???
 
   override def toString: String = ".//////////////////.\n////////////////////\n/////..//....///////\n/////.../////....///\n///...///...///...//\n//...///.....///..//\n//..........///...//\n/..........///....//\n/........///......//\n//......./........//\n//................//\n//......///.././/.//\n//////......////////\n//////////./////////\n.//////////////////."
 }
 
 
-case class SevenCard() extends CardTrait {
+case class SevenCard() {
 
-  override def cardFunc(p: Player): Unit = ???
+  def cardFunc(p: Player): Unit = ???
 
   override def toString: String = "///////////.////////\n////////////////////\n/.//////////////////\n///////.........////\n/.///../..//.../////\n////////////.///////\n//////////..////////\n//////......////////\n///////...//////////\n///////..///////////\n//////...///////////\n//////..////////////\n////////////////////\n////////////////////\n////////////////////"
 
 }
 
 
-case class JokerCard() extends CardTrait {
+case class JokerCard() {
 
-  override def cardFunc(p: Player): Unit = ???
+  def cardFunc(p: Player): Unit = ???
 
 }
 
