@@ -3,7 +3,7 @@ scala:
   - 2.12.2
 
 script:
-  - sbt clean test coverageReport
+  - sbt clean test
 
 after_success:
   - sbt coveralls
