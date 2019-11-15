@@ -9,27 +9,25 @@ class Tui() {
 
   def input(input: String): String = {
     val commands = input.split("\\s+")
-    var result: String = ""
+    var result = ""
 
     commands(0) match {
       case "n" =>
-        commands(1) match {
-          case "board" =>
-            controller.createBoard
-            result = "created a new board"
-          case "player" => {
-
-            if (commands.length == 6) {
-              controller.createPlayer(Array(commands(2), commands(3), commands(4), commands(5)))
-              result = "created new players"
-            } else {
-              result = "creation failed!"
+        if (commands.length == 2) {
+          commands(1) match {
+            case "board" =>
+              controller.createBoard
+              result = "created a new board"
+            case "player" => {
+              print("What's your name?\n")
+              val playerNames = StdIn.readLine().split("\\s+")
+              if (playerNames.size == 4)
+                controller.createPlayer(playerNames)
             }
+              result = "created new players"
+            case _ => result = "creation failed!"
           }
-
-          case _ => result = "creation failed!"
         }
-
       case "m" =>
         result = "moved a player"
       //        controller.move(controller.player(0), 6, 0)
@@ -38,7 +36,7 @@ class Tui() {
         result = "printed board"
       case _ => result = ""
     }
-    return result
+    result
   }
 
 
