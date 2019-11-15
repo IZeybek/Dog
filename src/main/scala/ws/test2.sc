@@ -1,4 +1,3 @@
-import model.boardComponent.Cell
 
 case class Board(size:Int) {
   val boardMap: Map[Int, Cell] = createBoard(size)

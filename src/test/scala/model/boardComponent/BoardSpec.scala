@@ -1,5 +1,6 @@
 package model.boardComponent
 
+import model.Board
 import org.scalatest.{Matchers, WordSpec}
 
 class BoardSpec extends WordSpec with Matchers {
