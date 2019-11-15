@@ -33,14 +33,14 @@ class Tui(controller:Controller) extends Observer {
         result = "moved a player"
       //        controller.move(controller.player(0), 6, 0)
       case "p" =>
-        print(controller.printBoard)
+        print(controller.toStringBoard())
         result = "printed board"
       case _ => result = ""
     }
     result
   }
 
-  override def update: Unit = println(controller.printBoard())
+  override def update: Unit = println(controller.toStringBoard())
 }
 
 
