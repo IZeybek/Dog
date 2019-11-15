@@ -24,13 +24,12 @@ class BoardSpec extends WordSpec with Matchers {
           }
           sum should be(2017)
         }
-        "toString executed" in {
+        "makeString executed" in {
           var box = ""
           for (i <- 0 until board.getBoardMap.size) box += board.getBoardMap(i).toString
-          board.toString should be(box)
+          board.makeString() should be(box)
         }
       }
-
     }
   }
 }
