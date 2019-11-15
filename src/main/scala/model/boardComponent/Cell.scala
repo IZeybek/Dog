@@ -1,14 +1,16 @@
 package model.boardComponent
 
-case class Cell(idx: Int, filled: Boolean) {
+class Cell(idx: Int) {
+
+  var filled: Boolean = false
 
   def getPos: Int = idx
 
   def isFilled: Boolean = filled
 
   def fill(fill: Boolean): Boolean = {
-    copy(filled = fill)
-    true
+    filled = fill
+    filled
   }
 
   override def toString: String = "[" + (if (filled) "x" else "  ") + "]"
