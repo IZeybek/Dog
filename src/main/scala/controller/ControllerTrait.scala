@@ -1,8 +1,6 @@
 package controller
 
-import model.Player
-import model.boardComponent.{Board}
-import model.playerComponent.card.CardTrait
+import model.{Board, CardTrait, Player}
 
 trait ControllerTrait {
 

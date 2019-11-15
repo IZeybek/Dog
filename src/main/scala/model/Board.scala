@@ -1,6 +1,4 @@
-package model.boardComponent
-
-import model.playerComponent.card._
+package model
 
 import scala.io.Source
 import scala.util.Random

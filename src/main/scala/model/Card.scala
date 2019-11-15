@@ -1,6 +1,4 @@
-package model.playerComponent.card
-
-import model.Player
+package model
 
 case class ChangeCard() extends CardTrait {
 

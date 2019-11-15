@@ -1,7 +1,6 @@
 package controller.controllerComponent
 
-import model.boardComponent.Board
-import model.{Piece, Player}
+import model.{Board, Piece, Player}
 import util.Observable
 
 class Controller(playerNames: Array[String]) extends Observable {

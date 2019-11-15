@@ -1,4 +1,4 @@
-package model.boardComponent
+package model
 
 case class Cell(idx: Int, filled: Boolean) {
 
