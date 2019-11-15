@@ -18,7 +18,7 @@ class ControllerSpec extends WordSpec with Matchers {
         players(3).toString should be("Player4")
       }
       "print board" in {
-        controller.printBoard() should be(controller.board.toString())
+        controller.toStringBoard() should be(controller.board.toString())
       }
     }
   }

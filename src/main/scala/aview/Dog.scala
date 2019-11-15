@@ -18,8 +18,6 @@ object Dog {
     do {
       System.out.print("\nprompt >> ")
       input = scala.io.StdIn.readLine()
-
-
       println(tui.input(input))
     } while (input != "exit")
   }
