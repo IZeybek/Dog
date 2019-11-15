@@ -1,10 +1,15 @@
 package aview
 
+import controller.Controller
+
 object Dog {
+
+  val controller = new Controller()
+  val tui = new Tui(controller)
 
   def main(args: Array[String]): Unit = {
 
-    val tui = new Tui
+
     var input = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
     tui.input("n board")

@@ -1,10 +1,10 @@
 package aview
 
-import controller.controllerComponent.Controller
+import controller.Controller
 import util.Observer
 
-class Tui() extends Observer {
-  val controller = new Controller(Array("Player1", "Player2", "Player3", "Player4"))
+class Tui(controller:Controller) extends Observer {
+
 
   def input(input: String): String = {
     val commands = input.split("\\s+")

@@ -1,12 +1,12 @@
-package controller.controllerComponent
+package controller
 
 import model.{Board, Piece, Player}
 import util.Observable
 
-class Controller(playerNames: Array[String]) extends Observable {
+class Controller() extends Observable {
 
   var board: Board = createBoard
-  var player: Array[Player] = createPlayer(playerNames)
+  var player: Array[Player] = createPlayer(Array("p1","p2","p3","p4"))
 
   def setNewBoard: Board = {
     board = Board()

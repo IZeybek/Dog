@@ -1,12 +1,17 @@
 package aview
 
+
+
+import controller.Controller
 import org.scalatest._
 
 class TuiSpec extends WordSpec with Matchers {
 
   "Tui" when {
     "executed" should {
-      val tui = new Tui()
+      val controller = new Controller()
+      val tui = new Tui(controller)
+
       "new board" in {
         tui.input("n board") should be("created a new board")
       }
