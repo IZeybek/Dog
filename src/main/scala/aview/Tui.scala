@@ -4,7 +4,7 @@ import controller.Controller
 import util.Observer
 
 class Tui(controller:Controller) extends Observer {
-
+  controller.add(this)
 
   def input(input: String): String = {
     val commands = input.split("\\s+")
@@ -40,7 +40,7 @@ class Tui(controller:Controller) extends Observer {
     result
   }
 
-  override def update: Unit = controller.printBoard()
+  override def update: Unit = println(controller.printBoard())
 }
 
 

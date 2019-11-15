@@ -6,26 +6,20 @@ import util.Observable
 class Controller() extends Observable {
 
   var board: Board = createBoard
-  var player: Array[Player] = createPlayer(Array("p1","p2","p3","p4"))
+  var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
 
   def setNewBoard: Board = {
     board = Board()
+    println("notifying observers in setNewBoard")
+    notifyObservers
     board
   }
 
   def createBoard: Board = {
+    notifyObservers
+    println("notifying observers in createBoard")
     Board()
   }
-
-  //
-  //  def generateRandomCards(): Array[CardTrait] = {
-  //    val array = mutable.ArrayBuffer.empty[CardTrait]
-  //    for (_ <- 0 until 8) {
-  //      array += board.createRandomCard()
-  //    }
-  //    notifyObservers
-  //    array.toArray
-  //  }
 
   def createPlayer(name: Array[String]): Array[Player] = {
     val player = new Array[Player](4)
@@ -35,6 +29,14 @@ class Controller() extends Observable {
     player(1) = Player(name(1), "blau", map2)
     player(2) = Player(name(2), "grün", map3)
     player(3) = Player(name(3), "rot", map4)
+    println("notifying observers in createPlayer")
+    notifyObservers
+    player
+  }
+
+  def setPlayer(name: Array[String]): Array[Player] = {
+    player = createPlayer(name)
+    println("notifying observers in setPlayer")
     notifyObservers
     player
   }
