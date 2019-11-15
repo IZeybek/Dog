@@ -1,4 +1,6 @@
-https://travis-ci.org/Akkarin007/Dog.svg?branch=master
+[![Build Status in Master](https://travis-ci.org/Akkarin007/Dog.svg?branch=master)](https://travis-ci.org/Akkarin007/Dog)
+[![Build Status in BuildMap](https://travis-ci.org/Akkarin007/Dog.svg?branch=BuildMap)](https://travis-ci.org/Akkarin007/Dog)
+
 
 # Dog
 
