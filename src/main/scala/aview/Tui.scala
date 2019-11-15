@@ -13,7 +13,7 @@ class Tui() {
 
     commands(0) match {
       case "n" =>
-        if (commands.length == 1) {
+        if (commands.length == 2) {
           commands(1) match {
             case "board" =>
               controller.createBoard
