@@ -13,9 +13,6 @@ object Dog {
 
     var input = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
-    //    tui.input("n board")
-    //    tui.input("n player Isy Josy Isa Marco")
-    //    tui.input("p")
     do {
       System.out.print("\n>> ")
       input = scala.io.StdIn.readLine()

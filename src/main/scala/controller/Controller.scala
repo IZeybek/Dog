@@ -14,16 +14,23 @@ class Controller() extends Observable {
   //Board
 
   def setNewBoard: Board = {
-    board = Board()
+    board = createBoard
     println("notifying observers in setNewBoard")
     notifyObservers
     board
   }
 
+
   def createBoard: Board = {
+
+    var boardMap = Map(0 -> Cell(0, false))
+
+    for {
+      i <- 0 until 64
+    } boardMap += (i -> Cell(i, false))
+
     notifyObservers
-    println("notifying observers in createBoard")
-    Board()
+    Board(boardMap)
   }
 
   //Player
@@ -53,8 +60,10 @@ class Controller() extends Observable {
   def toStringBoard(): String = getBoard.toString
 
   def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
-    val newPos = player(playerNum).piece(pieceNum).setPosition(moveBy)
-    player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).setPosition(moveBy)))
+    val newPos = player(playerNum).piece(pieceNum).position + moveBy
+    //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
+    player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
+    board.boardMap
     notifyObservers
     newPos
   }
@@ -64,9 +73,9 @@ class Controller() extends Observable {
   def createRandomCards(): Array[CardTrait] = {
     val c = List.newBuilder[CardTrait]
     for (i <- 0 until 20) yield i match {
-      case 0 until 10 =>
+      case i if 0 until 10 contains i =>
         c += SevenCard()
-      case 10 until 20 =>
+      case i if 10 until 20 contains i =>
         c += ChangeCard()
     }
     val cards = c.result()

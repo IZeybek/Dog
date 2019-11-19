@@ -12,11 +12,7 @@ case class Player(name: String, color: String, piece: Map[Int, Piece]) {
   def getPiece: Map[Int, Piece] = piece //indexing & mapping pieces
 }
 
-class Piece(var position: Int) {
-  def setPosition(pos: Int): Int = {
-    position = pos + position
-    position
-  }
+case class Piece(var position: Int) {
   def getPosition: Int = position
 }
 

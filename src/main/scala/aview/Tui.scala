@@ -31,7 +31,10 @@ class Tui(controller: Controller) extends Observer {
 
       case "m" =>
         result = "moved a player"
-      //        controller.move(controller.player(0), 6, 0)
+        val playerNum = 0
+        val pieceNum = 5
+        val moveBy = 4
+        controller.movePlayer(playerNum, pieceNum, moveBy)
       case "p" =>
         print(controller.toStringBoard())
         result = "printed board"

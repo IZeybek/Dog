@@ -4,23 +4,10 @@ import util.Observable
 
 import scala.io.Source
 
-case class Board() extends Observable {
+case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
-  val boardMap: Map[Int, Cell] = createBoard
   val file = Source.fromFile("src/feld.txt")
   val arrayOutput = initArrayOutput
-
-  def createBoard: Map[Int, Cell] = {
-
-    var boardMap = Map(0 -> Cell(0, false))
-
-    for {
-      i <- 0 until 64
-    } boardMap += (i -> Cell(i, false))
-
-    notifyObservers
-    boardMap
-  }
 
   def getArrayOutput: Array[Array[Cell]] = arrayOutput
 

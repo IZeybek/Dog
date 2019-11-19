@@ -1,12 +1,13 @@
 package model.boardComponent
 
-import model.Board
+import controller.Controller
 import org.scalatest.{Matchers, WordSpec}
 
 class BoardSpec extends WordSpec with Matchers {
   "A Board" when {
     "created" should {
-      val board = Board()
+      val controller = new Controller
+      val board = controller.createBoard
       "have a Map" when {
         "created" in {
           board.getBoardMap.size should be(64)
