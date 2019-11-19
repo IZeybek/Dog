@@ -60,12 +60,12 @@ class Controller() extends Observable {
   def toStringBoard(): String = getBoard.toString
 
   def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
-    val newPos = player(playerNum).piece(pieceNum).position + moveBy
+    val oldPos = player(playerNum).piece(pieceNum).position
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
-    board.boardMap
+    board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = true)))
     notifyObservers
-    newPos
+    oldPos + moveBy
   }
 
   //Cards
