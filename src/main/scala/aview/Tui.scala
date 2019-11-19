@@ -3,7 +3,7 @@ package aview
 import controller.Controller
 import util.Observer
 
-class Tui(controller:Controller) extends Observer {
+class Tui(controller: Controller) extends Observer {
   controller.add(this)
 
   def input(input: String): String = {

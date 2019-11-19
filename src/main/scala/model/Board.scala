@@ -12,17 +12,17 @@ case class Board() extends Observable {
 
   def createBoard: Map[Int, Cell] = {
 
-    var boardMap = Map(0 -> Cell(0,false))
+    var boardMap = Map(0 -> Cell(0, false))
 
     for {
       i <- 0 until 64
-    } boardMap += (i -> Cell(i,false))
+    } boardMap += (i -> Cell(i, false))
 
     notifyObservers
     boardMap
   }
 
-  def getArrayOutput:Array[Array[Cell]] = arrayOutput
+  def getArrayOutput: Array[Array[Cell]] = arrayOutput
 
   def initArrayOutput: Array[Array[Cell]] = {
     val array = Array.ofDim[Cell](21, 21)
@@ -45,21 +45,7 @@ case class Board() extends Observable {
     array
   }
 
-  //  def replaceCell(pos: Int, cell: Cell): Board = {
-  //    copy(xy, cells.updated(pos, cell))
-  //  }
-
-  //  def createRandomCard(): Card = {
-  //    Random.nextInt(2) match {
-  //      case 0 => ChangeCard()
-  //      case 1 => JokerCard()
-  //      case 2 => SevenCard()
-  //      case _ => null
-  //    }
-  //  }
-
   def getBoardMap: Map[Int, Cell] = boardMap
-
 
 
   override def toString(): String = {
