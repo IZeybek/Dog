@@ -1,6 +1,6 @@
 package model
 
-case class ChangeCard() {
+case class ChangeCard() extends CardTrait {
 
   def cardFunc(p: Player): Unit = ???
 
@@ -8,7 +8,7 @@ case class ChangeCard() {
 }
 
 
-case class SevenCard() {
+case class SevenCard() extends CardTrait {
 
   def cardFunc(p: Player): Unit = ???
 
@@ -17,7 +17,7 @@ case class SevenCard() {
 }
 
 
-case class JokerCard() {
+case class JokerCard() extends CardTrait {
 
   def cardFunc(p: Player): Unit = ???
 

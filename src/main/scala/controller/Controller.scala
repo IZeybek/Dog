@@ -1,12 +1,17 @@
 package controller
 
-import model.{Board, Piece, Player}
+import model._
 import util.Observable
+
+import scala.util.Random
 
 class Controller() extends Observable {
 
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
+  var card: Array[CardTrait] = createRandomCards()
+
+  //Board
 
   def setNewBoard: Board = {
     board = Board()
@@ -20,6 +25,8 @@ class Controller() extends Observable {
     println("notifying observers in createBoard")
     Board()
   }
+
+  //Player
 
   def createPlayer(name: Array[String]): Array[Player] = {
     val player = new Array[Player](4)
@@ -45,11 +52,29 @@ class Controller() extends Observable {
 
   def toStringBoard(): String = getBoard.toString
 
-  def move(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
     val newPos = player(playerNum).piece(pieceNum).setPosition(moveBy)
     player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).setPosition(moveBy)))
     notifyObservers
     newPos
   }
 
+  //Cards
+
+  def createRandomCards(): Array[CardTrait] = {
+    val c = List.newBuilder[CardTrait]
+    for (i <- 0 until 20) yield i match {
+      case 0 until 10 =>
+        c += SevenCard()
+      case 10 until 20 =>
+        c += ChangeCard()
+    }
+    val cards = c.result()
+    Random.shuffle(cards)
+    cards.toArray
+  }
+
+  def drawCard(): Unit = {
+
+  }
 }

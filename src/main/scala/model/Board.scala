@@ -64,7 +64,7 @@ case class Board() extends Observable {
 
   override def toString(): String = {
     var box = ""
-    var line_down = "_" * getBoardMap.size * 3 + "\n"
+    val line_down = "_" * getBoardMap.size * 3 + "\n"
     var line_up = "\n" + "‾" * getBoardMap.size * 3
     box = box + line_down
     for (i <- 0 until getBoardMap.size) {
