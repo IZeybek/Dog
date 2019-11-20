@@ -16,7 +16,7 @@ class Controller() extends Observable {
 
   def setNewBoard: Board = {
     board = createBoard
-    println("notifying observers in setNewBoard")
+    //println("notifying observers in setNewBoard")
     notifyObservers
     board
   }
@@ -40,6 +40,13 @@ class Controller() extends Observable {
 
   //Player
 
+  def setPlayer(name: Array[String]): Array[Player] = {
+    player = createPlayer(name)
+    //println("notifying observers in setPlayer")
+    notifyObservers
+    player
+  }
+
   def createPlayer(name: Array[String]): Array[Player] = {
     val player = new Array[Player](4)
     val map1, map2, map3, map4 = Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0))
@@ -48,14 +55,7 @@ class Controller() extends Observable {
     player(1) = Player(name(1), "blau", map2)
     player(2) = Player(name(2), "grün", map3)
     player(3) = Player(name(3), "rot", map4)
-    println("notifying observers in createPlayer")
-    notifyObservers
-    player
-  }
-
-  def setPlayer(name: Array[String]): Array[Player] = {
-    player = createPlayer(name)
-    println("notifying observers in setPlayer")
+    //println("notifying observers in createPlayer")
     notifyObservers
     player
   }
