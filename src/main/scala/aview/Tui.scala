@@ -35,7 +35,7 @@ class Tui(controller: Controller) extends Observer {
         result = "moved a player"
         val playerNum = Random.nextInt(3)
         val pieceNum = Random.nextInt(4)
-        val moveBy = Random.nextInt(4)
+        val moveBy = Random.nextInt(5) + 1
         controller.movePlayer(playerNum, pieceNum, moveBy)
       case "p" =>
         print(controller.toStringBoard())

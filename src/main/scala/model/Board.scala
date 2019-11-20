@@ -7,6 +7,7 @@ import scala.io.Source
 case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   val file = Source.fromFile("src/feld.txt")
+  /*
   val arrayOutput = initArrayOutput
 
   def getArrayOutput: Array[Array[Cell]] = arrayOutput
@@ -30,7 +31,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
       x = 0;
     }
     array
-  }
+  } */
 
   def getBoardMap: Map[Int, Cell] = boardMap
 
@@ -47,6 +48,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     box
   }
 
+  /*
   def makeString(): String = {
     var box = ""
     //output as an array!
@@ -58,5 +60,5 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
       box += "\n"
     }
     box
-  }
+  } */
 }

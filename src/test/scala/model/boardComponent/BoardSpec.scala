@@ -15,6 +15,7 @@ class BoardSpec extends WordSpec with Matchers {
             board.getBoardMap(i).getPos should be(i)
           }
         }
+        /*
         "output created" in {
           var sum = 0;
 
@@ -24,7 +25,7 @@ class BoardSpec extends WordSpec with Matchers {
             }
           }
           sum should be(2017)
-        }
+        } */
         //        "makeString executed" in {
         //          var box = ""
         //          for (i <- 0 until board.getBoardMap.size) box += board.getBoardMap(i).toString
