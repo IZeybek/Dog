@@ -32,7 +32,7 @@ class Tui(controller: Controller) extends Observer {
       case "m" =>
         result = "moved a player"
         val playerNum = 0
-        val pieceNum = 5
+        val pieceNum = 3
         val moveBy = 4
         controller.movePlayer(playerNum, pieceNum, moveBy)
       case "p" =>

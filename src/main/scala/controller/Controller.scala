@@ -37,7 +37,7 @@ class Controller() extends Observable {
 
   def createPlayer(name: Array[String]): Array[Player] = {
     val player = new Array[Player](4)
-    val map1, map2, map3, map4 = Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0))
+    val map1, map2, map3, map4 = Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0))
 
     player(0) = Player(name(0), "gelb", map1)
     player(1) = Player(name(1), "blau", map2)
@@ -63,7 +63,8 @@ class Controller() extends Observable {
     val oldPos = player(playerNum).piece(pieceNum).position
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
-    board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = true)))
+    board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true)))
+    board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false)))
     notifyObservers
     oldPos + moveBy
   }

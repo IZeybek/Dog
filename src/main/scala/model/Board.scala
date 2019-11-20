@@ -43,7 +43,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     for (i <- 0 until getBoardMap.size) {
       box += getBoardMap(i).toString
     }
-    box += line_up
+    box += line_up + "\n"
     box
   }
 
