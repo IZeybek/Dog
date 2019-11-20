@@ -10,6 +10,7 @@ class Controller() extends Observable {
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
   var card: Array[CardTrait] = createRandomCards()
+  var cardIndex: Integer = 0
 
   //Board
 
@@ -33,6 +34,10 @@ class Controller() extends Observable {
     Board(boardMap)
   }
 
+  def toStringBoard(): String = getBoard.toString
+
+  def getBoard: Board = board
+
   //Player
 
   def createPlayer(name: Array[String]): Array[Player] = {
@@ -55,16 +60,12 @@ class Controller() extends Observable {
     player
   }
 
-  def getBoard: Board = board
-
-  def toStringBoard(): String = getBoard.toString
-
   def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
     val oldPos = player(playerNum).piece(pieceNum).position
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
-    board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true)))
-    board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false)))
+    board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true))) //set new position
+    board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false))) //update old cell to filled=false
     notifyObservers
     oldPos + moveBy
   }
@@ -84,7 +85,11 @@ class Controller() extends Observable {
     cards.toArray
   }
 
-  def drawCard(): Unit = {
-
+  def drawCard(): CardTrait = {
+    if (cardIndex == 20)
+      createRandomCards()
+    val card = card(cardIndex)
+    cardIndex += 1
+    card
   }
 }
