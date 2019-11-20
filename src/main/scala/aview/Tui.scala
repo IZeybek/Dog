@@ -3,6 +3,8 @@ package aview
 import controller.Controller
 import util.Observer
 
+import scala.util.Random
+
 class Tui(controller: Controller) extends Observer {
   controller.add(this)
 
@@ -31,9 +33,9 @@ class Tui(controller: Controller) extends Observer {
 
       case "m" =>
         result = "moved a player"
-        val playerNum = 0
-        val pieceNum = 3
-        val moveBy = 4
+        val playerNum = Random.nextInt(3)
+        val pieceNum = Random.nextInt(4)
+        val moveBy = Random.nextInt(4)
         controller.movePlayer(playerNum, pieceNum, moveBy)
       case "p" =>
         print(controller.toStringBoard())

@@ -38,7 +38,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
   override def toString(): String = {
     var box = ""
     val line_down = "_" * getBoardMap.size * 3 + "\n"
-    var line_up = "\n" + "‾" * getBoardMap.size * 3
+    val line_up = "\n" + "‾" * getBoardMap.size * 3
     box = box + line_down
     for (i <- 0 until getBoardMap.size) {
       box += getBoardMap(i).toString

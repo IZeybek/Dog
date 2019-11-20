@@ -24,11 +24,11 @@ class Controller() extends Observable {
 
   def createBoard: Board = {
 
-    var boardMap = Map(0 -> Cell(0, false))
+    var boardMap = Map(0 -> Cell(0, false, -1))
 
     for {
       i <- 0 until 64
-    } boardMap += (i -> Cell(i, false))
+    } boardMap += (i -> Cell(i, false, -1))
 
     notifyObservers
     Board(boardMap)
@@ -64,8 +64,8 @@ class Controller() extends Observable {
     val oldPos = player(playerNum).piece(pieceNum).position
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
-    board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true))) //set new position
-    board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false))) //update old cell to filled=false
+    board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true, player = playerNum))) //set new position
+    board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false, player = -1))) //update old cell to filled=false
     notifyObservers
     oldPos + moveBy
   }
@@ -82,14 +82,15 @@ class Controller() extends Observable {
     }
     val cards = c.result()
     Random.shuffle(cards)
+    cardIndex = 0
     cards.toArray
   }
 
   def drawCard(): CardTrait = {
     if (cardIndex == 20)
       createRandomCards()
-    val card = card(cardIndex)
+    val c = card(cardIndex)
     cardIndex += 1
-    card
+    c
   }
 }
