@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Akkarin007/Dog.svg?branch=BoardMap)](https://travis-ci.org/Akkarin007/Dog)
+[![Coverage Status](https://coveralls.io/repos/github/Akkarin007/Dog/badge.svg?branch=master)](https://coveralls.io/github/Akkarin007/Dog?branch=master)
 
 
 # Dog
