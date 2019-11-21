@@ -25,7 +25,7 @@ class Controller() extends Observable {
     var boardMap = Map(0 -> Cell(0, false, -1))
 
     for {
-      i <- 0 until 15
+      i <- 0 until 64
     } boardMap += (i -> Cell(i, false, -1))
 
     notifyObservers
