@@ -1,9 +1,7 @@
 package model
 
 
-case class Player(name: String, color: String, piece: Map[Int, Piece]) {
-
-  var piecesOnStandby: Int = 4
+case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int) {
 
   def getColor: String = color
 

@@ -48,6 +48,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     box
   }
 
+
   /*
   def makeString(): String = {
     var box = ""
