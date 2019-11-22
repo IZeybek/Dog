@@ -1,7 +1,7 @@
 package model
 import model.CardComponent.Card
 
-trait Cards {
+trait CardTrait {
 
   def generateDeck : List[Card]
 

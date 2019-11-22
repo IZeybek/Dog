@@ -1,6 +1,6 @@
 package model.CardComponent
 
-import model.Cards
+import model.CardTrait
 
 case class Card(symbol: String, task: String, color: String) {
 
@@ -11,14 +11,14 @@ case class Card(symbol: String, task: String, color: String) {
   def getColor: String = color
 }
 
-case class SpecialCards() extends Cards {
+case class SpecialCardTrait() extends CardTrait {
 
   val specialCards: List[Card] = generateDeck
 
   override def generateDeck: List[Card] = {
     List(Card("1 11 start", "move;move;start", "red"),
       Card("4","forwards;backwards","red" ),
-      Card("7","" ,"red"),
+      Card("7","burn" ,"red"),
       Card("swap","swap", "red"),
       Card("?", "joker", "red"),
       Card("13 play", "move;start", "red"))
@@ -28,7 +28,7 @@ case class SpecialCards() extends Cards {
 }
 
 
-case class NormalCards() extends Cards {
+case class NormalCardTrait() extends CardTrait {
 
 
   val normalCards: List[Card] = generateDeck
