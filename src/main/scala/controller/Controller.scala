@@ -9,7 +9,7 @@ class Controller() extends Observable {
 
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
-  var card: Array[CardTrait] = createRandomCards
+//  var card: Array[Cards] = createRandomCards
   var cardIndex: Integer = 0
 
   //Board
@@ -93,25 +93,25 @@ class Controller() extends Observable {
 
   //Cards
 
-  def createRandomCards: Array[CardTrait] = {
-    val c = List.newBuilder[CardTrait]
-    for (i <- 0 until 20) yield i match {
-      case i if 0 until 10 contains i =>
-        c += SevenCard()
-      case i if 10 until 20 contains i =>
-        c += ChangeCard()
-    }
-    val cards = c.result()
-    Random.shuffle(cards)
-    cardIndex = 0
-    cards.toArray
-  }
+//  def createRandomCards: Array[Cards] = {
+//    val c = List.newBuilder[Cards]
+//    for (i <- 0 until 20) yield i match {
+//      case i if 0 until 10 contains i =>
+//        c += SevenCard()
+//      case i if 10 until 20 contains i =>
+//        c += ChangeCard()
+//    }
+//    val cards = c.result()
+//    Random.shuffle(cards)
+//    cardIndex = 0
+//    cards.toArray
+//  }
 
-  def drawCard: CardTrait = {
-    if (cardIndex == 20)
-      createRandomCards
-    val c = card(cardIndex)
-    cardIndex += 1
-    c
-  }
+//  def drawCard: Cards = {
+//    if (cardIndex == 20)
+//      createRandomCards
+//    val c = card(cardIndex)
+//    cardIndex += 1
+//    c
+//  }
 }
