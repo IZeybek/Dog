@@ -12,7 +12,6 @@ class Controller() extends Observable {
   var card: Array[CardTrait] = createRandomCards
   var cardIndex: Integer = 0
 
-
   //Board
 
   def setNewBoard: Board = {
@@ -32,7 +31,6 @@ class Controller() extends Observable {
     notifyObservers
     Board(boardMap)
   }
-
 
   def toStringBoard: String = toStringHouse + board.toString()
 
@@ -76,19 +74,21 @@ class Controller() extends Observable {
     player
   }
 
-  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Boolean = {
-
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    if (!board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).isFilled) {
-      //      player(playerNum) = player(playerNum).copy(inHouse = player(playerNum).inHouse - 1)
-      //      player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
-      board = board.movePlayer(player(playerNum), pieceNum, moveBy)
-      notifyObservers
-      true
-    } else {
-      notifyObservers
-      false
+    var playerIndex = -1
+    if (board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).isFilled) {
+      val color = board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).player.color
+      for (i <- player.indices) yield {
+        if (player(i).color == color)
+          playerIndex = i
+      }
+      player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
     }
+    board = board.movePlayer(player(playerNum), pieceNum, moveBy)
+    player(playerNum) = player(playerNum).movePlayer(pieceNum, moveBy)
+    notifyObservers
+    playerIndex
   }
 
   //Cards
