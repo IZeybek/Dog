@@ -23,11 +23,11 @@ class Controller() extends Observable {
 
   def createBoard: Board = {
 
-    var boardMap = Map(0 -> Cell(0, filled = false, -1))
+    var boardMap = Map(0 -> Cell(0, filled = false, null))
 
     for {
-      i <- 0 until 64
-    } boardMap += (i -> Cell(i, filled = false, -1))
+      i <- 0 until 10
+    } boardMap += (i -> Cell(i, filled = false, null))
 
     notifyObservers
     Board(boardMap)
@@ -77,14 +77,12 @@ class Controller() extends Observable {
   }
 
   def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Boolean = {
-    val oldPos = player(playerNum).piece(pieceNum).position
+
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     if (!board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).isFilled) {
-      if (oldPos == 0)
-        player(playerNum) = player(playerNum).copy(inHouse = player(playerNum).inHouse - 1)
-      player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
-      board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true, player = playerNum))) //set new position
-      board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false, player = -1))) //update old cell to filled=false
+      //      player(playerNum) = player(playerNum).copy(inHouse = player(playerNum).inHouse - 1)
+      //      player(playerNum) = player(playerNum).copy(piece = player(playerNum).piece.updated(pieceNum, player(playerNum).piece(pieceNum).copy(player(playerNum).piece(pieceNum).position + moveBy)))
+      board = board.movePlayer(player(playerNum), pieceNum, moveBy)
       notifyObservers
       true
     } else {

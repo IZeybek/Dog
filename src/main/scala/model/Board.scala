@@ -7,31 +7,6 @@ import scala.io.Source
 case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   val file = Source.fromFile("src/feld.txt")
-  /*
-  val arrayOutput = initArrayOutput
-
-  def getArrayOutput: Array[Array[Cell]] = arrayOutput
-
-  def initArrayOutput: Array[Array[Cell]] = {
-    val array = Array.ofDim[Cell](21, 21)
-    var x = 0
-    var y = 0
-
-    for (line <- file.getLines) {
-
-      for (myVlaue <- line.split("\\s+")) {
-        if (myVlaue.size > 2) {
-          x += myVlaue.size
-        } else {
-          array(y)(x) = getBoardMap(myVlaue.toInt)
-          x += 1;
-        }
-      }
-      y += 1
-      x = 0;
-    }
-    array
-  } */
 
   def getBoardMap: Map[Int, Cell] = boardMap
 
@@ -48,18 +23,10 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     box
   }
 
-
-  /*
-  def makeString(): String = {
-    var box = ""
-    //output as an array!
-    for (i <- 0 to 20) {
-      for (j <- 0 to 20) {
-        if (arrayOutput(i)(j) != null) box += arrayOutput(i)(j).toString
-        else box += " - "
-      }
-      box += "\n"
-    }
-    box
-  } */
+  def movePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Board = {
+    val oldPos: Integer = player.getPiece(pieceNum).getPosition
+    var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))
+    nBoard = nBoard.updated(oldPos + moveBy, boardMap(oldPos + moveBy).copy(filled = true, player = player))
+    copy(nBoard)
+  }
 }
