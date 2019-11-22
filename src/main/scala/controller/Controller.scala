@@ -1,5 +1,6 @@
 package controller
 
+import model.CardComponent.{Card, CardDeck}
 import model._
 import util.Observable
 
@@ -9,6 +10,7 @@ class Controller() extends Observable {
 
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
+  var cardDeck :  Array[Card] = createDeck()
 //  var card: Array[Cards] = createRandomCards
   var cardIndex: Integer = 0
 
@@ -93,6 +95,20 @@ class Controller() extends Observable {
   }
 
   //Cards
+
+  def createDeck(): Array[Card] = {
+    val cardDeck = CardDeck()
+    val deck = cardDeck.getDeck
+    Random.shuffle(deck).toArray
+  }
+
+  def toStringCardDeck : String = {
+    var cardString = "________DECK________\n"
+    for (i <- cardDeck.indices){
+      cardString += s"$i: ${cardDeck(i)}\n"
+    }
+    cardString + "\n"
+  }
 
 //  def createRandomCards: Array[Cards] = {
 //    val c = List.newBuilder[Cards]

@@ -39,6 +39,7 @@ class Tui(controller: Controller) extends Observer {
         controller.movePlayer(playerNum, pieceNum, moveBy)
       case "p" =>
         print(controller.toStringBoard)
+        print(controller.toStringCardDeck)
         result = "printed board"
       case _ => result = ""
     }
