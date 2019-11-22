@@ -10,7 +10,11 @@ class BoardSpec extends WordSpec with Matchers {
       val board = controller.createBoard
       "have a Map" when {
         "created" in {
-          board.getBoardMap.size should be(64)
+          for (i <- 0 until board.getBoardMap.size) {
+            board.getBoardMap(i).getPos should be(i)
+          }
+        }
+        "return map " in {
           for (i <- 0 until board.getBoardMap.size) {
             board.getBoardMap(i).getPos should be(i)
           }

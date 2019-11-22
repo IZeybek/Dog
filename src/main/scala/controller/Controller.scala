@@ -9,8 +9,9 @@ class Controller() extends Observable {
 
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
-  var card: Array[CardTrait] = createRandomCards()
+  var card: Array[CardTrait] = createRandomCards
   var cardIndex: Integer = 0
+
 
   //Board
 
@@ -22,26 +23,26 @@ class Controller() extends Observable {
 
   def createBoard: Board = {
 
-    var boardMap = Map(0 -> Cell(0, false, -1))
+    var boardMap = Map(0 -> Cell(0, filled = false, -1))
 
     for {
       i <- 0 until 64
-    } boardMap += (i -> Cell(i, false, -1))
+    } boardMap += (i -> Cell(i, filled = false, -1))
 
     notifyObservers
     Board(boardMap)
   }
 
 
-  def toStringBoard(): String = {
-    toStringHouse() + board.toString()
+  def toStringBoard: String = {
+    toStringHouse + board.toString()
   }
 
-  def toStringHouse(): String = {
-    val up = "‾" * player.size * 3
-    val down = "_" * player.size * 3
+  def toStringHouse: String = {
+    val up = "‾" * player.length * 3
+    val down = "_" * player.length * 3
     var house = ""
-    for (i <- 0 until player.size) {
+    for (i <- player.indices) {
       house = house + s" ${
         i match {
           case 0 => Console.YELLOW;
@@ -87,7 +88,6 @@ class Controller() extends Observable {
       board = board.copy(boardMap = board.boardMap.updated(oldPos + moveBy, board.boardMap(oldPos).copy(filled = true, player = playerNum))) //set new position
       board = board.copy(boardMap = board.boardMap.updated(oldPos, board.boardMap(oldPos).copy(filled = false, player = -1))) //update old cell to filled=false
       notifyObservers
-      //oldPos + moveBy
       true
     } else {
       notifyObservers
@@ -97,7 +97,7 @@ class Controller() extends Observable {
 
   //Cards
 
-  def createRandomCards(): Array[CardTrait] = {
+  def createRandomCards: Array[CardTrait] = {
     val c = List.newBuilder[CardTrait]
     for (i <- 0 until 20) yield i match {
       case i if 0 until 10 contains i =>
@@ -111,9 +111,9 @@ class Controller() extends Observable {
     cards.toArray
   }
 
-  def drawCard(): CardTrait = {
+  def drawCard: CardTrait = {
     if (cardIndex == 20)
-      createRandomCards()
+      createRandomCards
     val c = card(cardIndex)
     cardIndex += 1
     c

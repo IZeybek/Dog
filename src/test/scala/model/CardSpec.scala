@@ -1,29 +1,33 @@
 package model
 
+import controller.Controller
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {
   "A Card" when {
-    //    val cardSpecPlayer = Player("CardSpec", "gelb", Map(0 -> new Piece(0), 1 -> new Piece(0), 2 -> new Piece(0), 3 -> new Piece(0)))
-    "as ChangeCard" should {
+    val player = new Controller().setPlayer(Array("P1", "P2", "P3", "P4"))
+    "a ChangeCard" should {
       val changeCard = ChangeCard()
       "have a function" in {
-        print("the player can switch his Piece with one of another player")
+        changeCard.cardFunc(0, player) should be(player)
       }
       "be printed" in {
         print(changeCard)
       }
     }
-    "as SevenCard" should {
+    "a SevenCard" should {
       val sevenCard = SevenCard()
       "have a function" in {
-        print("the player can share its points between his Pieces")
+        sevenCard.cardFunc(0, player) should be(player)
+      }
+      "be printed" in {
+        print(sevenCard)
       }
     }
-    "as JokerCard" should {
+    "a JokerCard" should {
       val jokerCard = JokerCard()
       "have a function" in {
-        print("the player can transform this card in any card he wishes")
+        jokerCard.cardFunc(0, player) should be(player)
       }
     }
   }
