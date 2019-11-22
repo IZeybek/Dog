@@ -11,7 +11,7 @@ case class Card(symbol: String, task: String, color: String) {
   def getColor: String = color
 }
 
-case class SpecialCardTrait() extends CardTrait {
+case class SpecialCard() extends CardTrait {
 
   val specialCards: List[Card] = generateDeck
 
@@ -28,7 +28,7 @@ case class SpecialCardTrait() extends CardTrait {
 }
 
 
-case class NormalCardTrait() extends CardTrait {
+case class NormalCard() extends CardTrait {
 
 
   val normalCards: List[Card] = generateDeck
