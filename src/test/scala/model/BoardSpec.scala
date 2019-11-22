@@ -1,4 +1,4 @@
-package model.boardComponent
+package model
 
 import controller.Controller
 import org.scalatest.{Matchers, WordSpec}

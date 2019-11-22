@@ -1,6 +1,5 @@
-package model.playerComponent
+package model
 
-import model.{Piece, Player}
 import org.scalatest.{Matchers, WordSpec}
 
 class PlayerSpec extends WordSpec with Matchers {

@@ -1,12 +1,11 @@
-package model.boardComponent
+package model
 
-import model.Cell
 import org.scalatest.{Matchers, WordSpec}
 
 class CellSpec extends WordSpec with Matchers {
   "A Cell" when {
     "created" should {
-      val cellSpec = Cell(42, true, -1)
+      val cellSpec = Cell(42, filled = true, -1)
       "be filled" in {
         cellSpec.filled should be(true)
       }
