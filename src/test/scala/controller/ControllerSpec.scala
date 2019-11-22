@@ -1,6 +1,6 @@
 package controller
 
-import model.Player
+import model._
 import org.scalatest.{Matchers, WordSpec}
 
 class ControllerSpec extends WordSpec with Matchers {
@@ -35,6 +35,9 @@ class ControllerSpec extends WordSpec with Matchers {
       "move a player by 0" in {
         controller.setPlayer(Array("Player1", "Player2", "Player3", "Player4"))
         controller.movePlayer(3, 0, 4) should be(false)
+      }
+      "draw a card" in {
+        controller.drawCard.isInstanceOf[CardTrait] should be(true)
       }
     }
   }
