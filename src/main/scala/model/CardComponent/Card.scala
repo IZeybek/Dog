@@ -12,6 +12,21 @@ case class Card(symbol: String, task: String, color: String) {
 
   override def toString: String = {
     "[" + (s"${if (this.color == "gelb") Console.YELLOW; else if (this.color == "blau") Console.BLUE;}x" + s"${}" + s"${Console.RESET}" ) + "]"
+
+
+
+    val up = "‾" * 3
+    val down = "_" * 3
+    var symbol = ""
+    for (i <- getSymbol) {
+      symbol = symbol + s" ${
+        getColor match {
+          case "blue" => Console.BLUE;
+          case "red" => Console.RED
+        }
+      }${getSymbol}${Console.RESET} "
+    }
+    "\n" + down + "\n" + symbol + "| " + "\n" + up + "\n"
   }
 }
 
