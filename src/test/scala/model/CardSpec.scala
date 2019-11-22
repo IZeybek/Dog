@@ -29,6 +29,9 @@ class CardSpec extends WordSpec with Matchers {
       "have a function" in {
         jokerCard.cardFunc(0, player) should be(player)
       }
+      "be printed" in {
+        println("should be printed then")
+      }
     }
   }
 }

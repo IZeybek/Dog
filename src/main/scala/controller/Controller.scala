@@ -34,9 +34,7 @@ class Controller() extends Observable {
   }
 
 
-  def toStringBoard: String = {
-    toStringHouse + board.toString()
-  }
+  def toStringBoard: String = toStringHouse + board.toString()
 
   def toStringHouse: String = {
     val up = "‾" * player.length * 3
