@@ -9,6 +9,10 @@ case class Card(symbol: String, task: String, color: String) {
   def getTask: String = task
 
   def getColor: String = color
+
+  override def toString: String = {
+    "[" + (s"${if (this.color == "gelb") Console.YELLOW; else if (this.color == "blau") Console.BLUE;}x" + s"${}" + s"${Console.RESET}" ) + "]"
+  }
 }
 
 case class SpecialCardsDeck() extends CardTrait {
@@ -17,9 +21,9 @@ case class SpecialCardsDeck() extends CardTrait {
 
   override def generateDeck: List[Card] = {
     List(Card("1 11 start", "move;move;start", "red"),
-      Card("4","forwards;backwards","red" ),
-      Card("7","burn" ,"red"),
-      Card("swap","swap", "red"),
+      Card("4", "forwards;backwards", "red"),
+      Card("7", "burn", "red"),
+      Card("swap", "swap", "red"),
       Card("?", "joker", "red"),
       Card("13 play", "move;start", "red"))
   }
