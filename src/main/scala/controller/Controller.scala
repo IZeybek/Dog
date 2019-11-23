@@ -10,8 +10,9 @@ class Controller() extends Observable {
 
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
-  var cardDeck :  Array[Card] = createDeck()
-//  var card: Array[Cards] = createRandomCards
+  var colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
+  var cardDeck: Array[Card] = createDeck()
+  //  var card: Array[Cards] = createRandomCards
   var cardIndex: Integer = 0
 
   //Board
@@ -77,21 +78,18 @@ class Controller() extends Observable {
     player
   }
 
-  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Integer = {
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Boolean = {
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    var playerIndex = -1
+    var overRide: Boolean = false
     if (board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).isFilled) {
-      val color = board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).player.color
-      for (i <- player.indices) yield {
-        if (player(i).color == color)
-          playerIndex = i
-      }
+      val playerIndex = colors(board.boardMap(moveBy + player(playerNum).piece(pieceNum).position).player.color)
       player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
+      overRide = true
     }
     board = board.movePlayer(player(playerNum), pieceNum, moveBy)
     player(playerNum) = player(playerNum).movePlayer(pieceNum, moveBy)
     notifyObservers
-    playerIndex
+    overRide
   }
 
   //Cards
@@ -102,33 +100,33 @@ class Controller() extends Observable {
     Random.shuffle(deck).toArray
   }
 
-  def toStringCardDeck : String = {
+  def toStringCardDeck: String = {
     var cardString = "________DECK________\n"
-    for (i <- cardDeck.indices){
+    for (i <- cardDeck.indices) {
       cardString += s"$i: ${cardDeck(i)}\n"
     }
     cardString + "\n"
   }
 
-//  def createRandomCards: Array[Cards] = {
-//    val c = List.newBuilder[Cards]
-//    for (i <- 0 until 20) yield i match {
-//      case i if 0 until 10 contains i =>
-//        c += SevenCard()
-//      case i if 10 until 20 contains i =>
-//        c += ChangeCard()
-//    }
-//    val cards = c.result()
-//    Random.shuffle(cards)
-//    cardIndex = 0
-//    cards.toArray
-//  }
+  //  def createRandomCards: Array[Cards] = {
+  //    val c = List.newBuilder[Cards]
+  //    for (i <- 0 until 20) yield i match {
+  //      case i if 0 until 10 contains i =>
+  //        c += SevenCard()
+  //      case i if 10 until 20 contains i =>
+  //        c += ChangeCard()
+  //    }
+  //    val cards = c.result()
+  //    Random.shuffle(cards)
+  //    cardIndex = 0
+  //    cards.toArray
+  //  }
 
-//  def drawCard: Cards = {
-//    if (cardIndex == 20)
-//      createRandomCards
-//    val c = card(cardIndex)
-//    cardIndex += 1
-//    c
-//  }
+  //  def drawCard: Cards = {
+  //    if (cardIndex == 20)
+  //      createRandomCards
+  //    val c = card(cardIndex)
+  //    cardIndex += 1
+  //    c
+  //  }
 }
