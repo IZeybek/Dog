@@ -1,11 +1,17 @@
 package model
 
+import model.CardComponent.Card
 
-case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int) {
+
+case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, card: List[Card]) {
 
   def getColor: String = color
 
   def getPiece: Map[Int, Piece] = piece //indexing & mapping pieces
+
+  def getPosition(pieceNum: Integer): Integer = {
+    piece(pieceNum).position
+  }
 
   def movePlayer(pieceNum: Integer, moveBy: Integer): Player = {
     val oldPos = piece(pieceNum).position

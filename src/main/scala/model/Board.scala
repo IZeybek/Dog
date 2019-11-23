@@ -11,7 +11,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
   def getBoardMap: Map[Int, Cell] = boardMap
 
 
-  override def toString(): String = {
+  override def toString: String = {
     var box = ""
     val line_down = "_" * getBoardMap.size * 3 + "\n"
     val line_up = "\n" + "‾" * getBoardMap.size * 3
@@ -29,4 +29,13 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     nBoard = nBoard.updated(oldPos + moveBy, boardMap(oldPos + moveBy).copy(filled = true, player = player))
     copy(nBoard)
   }
+
+  def overridePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
+    boardMap(moveBy + player.piece(pieceNum).position).isFilled
+  }
+
+  def getColor(pos: Integer): String = {
+    boardMap(pos).player.color
+  }
 }
+

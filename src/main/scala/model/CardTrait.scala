@@ -5,7 +5,7 @@ trait CardTrait {
 
   def generateDeck : List[Card]
 
-  def getCardDeck() : List[Card]
+  def getCardDeck: List[Card]
 
 
 }

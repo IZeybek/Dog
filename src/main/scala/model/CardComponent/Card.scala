@@ -1,6 +1,7 @@
 package model.CardComponent
 
-import model.CardTrait
+import model.{CardTrait, Player}
+
 
 case class Card(symbol: String, task: String, color: String) {
 
@@ -17,26 +18,40 @@ case class Card(symbol: String, task: String, color: String) {
         case "blue" => Console.BLUE;
         case "red" => Console.RED
       }
-    }${getSymbol}${Console.RESET})"
+    }$getSymbol${Console.RESET})"
 
     symbol
   }
 }
 
+case class CardParser() {
+
+  def function(card: Card, player: Array[Player], playerNum: Integer, pieceNum: Integer, moveBy: Integer): Array[Player] = {
+    card.color match {
+      case "blue" =>
+        card.task match {
+          case "move" =>
+            player.updated(playerNum, player(playerNum).movePlayer(pieceNum, card.symbol.toInt))
+        }
+    }
+  }
+}
+
 case class CardDeck() {
 
-  val deck = generateCards
+  val deck: List[Card] = generateCards
 
   def generateCards: List[Card] = {
     val deck1 = SpecialCardsDeck()
     val deck2 = NormalCardsDeck()
     val deck3 = SpecialCardsDeck()
     val deck4 = NormalCardsDeck()
-    deck1.getCardDeck() ++ deck2.getCardDeck() ++ deck3.getCardDeck() ++ deck4.getCardDeck()
+    deck1.getCardDeck ++ deck2.getCardDeck ++ deck3.getCardDeck ++ deck4.getCardDeck
   }
 
   def getDeck: List[Card] = deck
 }
+
 
 case class SpecialCardsDeck() extends CardTrait {
 
@@ -51,7 +66,7 @@ case class SpecialCardsDeck() extends CardTrait {
       Card("13 play", "move;start", "red"))
   }
 
-  override def getCardDeck(): List[Card] = specialCards
+  override def getCardDeck: List[Card] = specialCards
 }
 
 
@@ -72,6 +87,6 @@ case class NormalCardsDeck() extends CardTrait {
       Card("12", "move", "blue"))
   }
 
-  override def getCardDeck(): List[Card] = normalCards
+  override def getCardDeck: List[Card] = normalCards
 }
 
