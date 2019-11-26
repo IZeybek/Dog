@@ -37,7 +37,7 @@ class Controller() extends Observable {
   def toStringBoard: String = toStringHouse + board.toString()
 
   def toStringHouse: String = {
-    val titel = s"${Console.UNDERLINED}Houses${Console.RESET}"
+    val title = s"${Console.UNDERLINED}Houses${Console.RESET}"
     val up = "‾" * player.length * 3
     val down = "_" * player.length * 3
     var house = ""
@@ -51,7 +51,7 @@ class Controller() extends Observable {
         }
       }${player(i).inHouse}${Console.RESET} "
     }
-    "\n" + down + "\n" + house + "\t" + titel + "\n" + up + "\n"
+    "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
   def getBoard: Board = board
