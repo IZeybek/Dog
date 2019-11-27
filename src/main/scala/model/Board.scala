@@ -2,14 +2,15 @@ package model
 
 import util.Observable
 
-import scala.io.Source
 
 case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
-  val file = Source.fromFile("src/feld.txt")
+  //can create a Board with a given size
+  def this(size: Int) = {
+    this((0 until size).map(i => (i, Cell(i, false, null))).toMap)
+  }
 
   def getBoardMap: Map[Int, Cell] = boardMap
-
 
   override def toString: String = {
     var box = ""

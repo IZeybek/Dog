@@ -10,8 +10,8 @@ class Controller() extends Observable {
 
   var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
-  var colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
-  var cardDeck: Array[Card] = createDeck
+  val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
+  var cardDeck: Array[Card] = createCardDeck
   var cardIndex: Integer = 0
 
   //Board
@@ -37,12 +37,12 @@ class Controller() extends Observable {
     val down = "_" * player.length * 3
     var house = ""
     player.indices.foreach(i => house = house + s" ${
-        player(i).color match {
-          case "gelb" => Console.YELLOW;
-          case "blau" => Console.BLUE;
-          case "grün" => Console.GREEN;
-          case "rot" => Console.RED
-        }
+      player(i).color match {
+        case "gelb" => Console.YELLOW;
+        case "blau" => Console.BLUE;
+        case "grün" => Console.GREEN;
+        case "rot" => Console.RED
+      }
     }${player(i).inHouse}${Console.RESET} ")
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
@@ -57,15 +57,10 @@ class Controller() extends Observable {
     player
   }
 
-  def createPlayer(name: Array[String]): Array[Player] = {
-    val player = new Array[Player](4)
-    val map1, map2, map3, map4 = Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0))
-
-    player(0) = Player(name(0), "gelb", map1, 4, null)
-    player(1) = Player(name(1), "blau", map2, 4, null)
-    player(2) = Player(name(2), "grün", map3, 4, null)
-    player(3) = Player(name(3), "rot", map4, 4, null)
-
+  def createPlayer(playerNames: Array[String]): Array[Player] = {
+    val player: Array[Player] = new Array[Player](4)
+    val colors = Array("gelb", "blau", "grün", "rot")
+    playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
     notifyObservers
     player
   }
@@ -86,9 +81,9 @@ class Controller() extends Observable {
 
   //Cards
 
-  def createDeck: Array[Card] = {
+  def createCardDeck: Array[Card] = {
     notifyObservers
-    Random.shuffle(CardDeck().getDeck).toArray
+    Random.shuffle(CardDeck.apply()).toArray
   }
 
   def toStringCardDeck: String = {
@@ -103,6 +98,7 @@ class Controller() extends Observable {
   }
 
   def drawPlayerCard(playerNum: Integer, cardNum: Integer): Card = {
+    player(playerNum) = player(playerNum).copy(cards = player(playerNum).removeCard(player(playerNum).drawCard(cardNum)))
     player(playerNum).drawCard(cardNum)
   }
 

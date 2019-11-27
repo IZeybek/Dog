@@ -7,5 +7,4 @@ trait CardTrait {
 
   def getCardDeck: List[Card]
 
-
 }

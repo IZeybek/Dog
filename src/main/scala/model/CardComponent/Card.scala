@@ -4,7 +4,6 @@ import model.{CardTrait, Player}
 
 
 case class Card(symbol: String, task: String, color: String) {
-
   def getSymbol: String = symbol
 
   def getTask: String = task
@@ -12,15 +11,12 @@ case class Card(symbol: String, task: String, color: String) {
   def getColor: String = color
 
   override def toString: String = {
-    var symbol = "Card("
-    symbol = symbol + s"${
+    "Card(" + s"${
       getColor match {
         case "blue" => Console.BLUE;
         case "red" => Console.RED
       }
     }$getSymbol${Console.RESET})"
-
-    symbol
   }
 }
 
@@ -37,19 +33,24 @@ case class CardParser() {
   }
 }
 
-case class CardDeck() {
 
-  val deck: List[Card] = generateCards
+object GenCardDeck {
 
-  def generateCards: List[Card] = {
-    val deck1 = SpecialCardsDeck()
-    val deck2 = NormalCardsDeck()
-    val deck3 = SpecialCardsDeck()
-    val deck4 = NormalCardsDeck()
-    deck1.getCardDeck ++ deck2.getCardDeck ++ deck3.getCardDeck ++ deck4.getCardDeck
+  def apply(typ: String): CardTrait = typ match {
+    case "special" =>
+      SpecialCardsDeck()
+    case "normal" =>
+      NormalCardsDeck()
   }
+}
 
-  def getDeck: List[Card] = deck
+object CardDeck {
+  def apply(): List[Card] = {
+    GenCardDeck.apply("special").getCardDeck ++
+      GenCardDeck.apply("normal").getCardDeck ++
+      GenCardDeck.apply("special").getCardDeck ++
+      GenCardDeck.apply("normal").getCardDeck
+  }
 }
 
 
@@ -72,9 +73,7 @@ case class SpecialCardsDeck() extends CardTrait {
 
 case class NormalCardsDeck() extends CardTrait {
 
-
   val normalCards: List[Card] = generateDeck
-
 
   override def generateDeck: List[Card] = {
     List(Card("2", "move", "blue"),
