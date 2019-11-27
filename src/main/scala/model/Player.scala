@@ -18,7 +18,6 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
 
   def overridePlayer(pieceNum: Integer): Player = copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
 
-
   def removeCard(card: Card, list: List[Card]): List[Card] = list diff List(card)
 
   def drawCard(cardNum: Integer): Card = card(cardNum)

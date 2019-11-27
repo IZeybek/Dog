@@ -23,13 +23,8 @@ class Controller() extends Observable {
   }
 
   def createBoard: Board = {
-
     var boardMap = Map(0 -> Cell(0, filled = false, null))
-
-    for {
-      i <- 0 until 10
-    } boardMap += (i -> Cell(i, filled = false, null))
-
+    (0 until 10).foreach(i => boardMap += (i -> Cell(i, filled = false, null)))
     notifyObservers
     Board(boardMap)
   }
@@ -41,16 +36,14 @@ class Controller() extends Observable {
     val up = "‾" * player.length * 3
     val down = "_" * player.length * 3
     var house = ""
-    for (i <- player.indices) {
-      house = house + s" ${
+    player.indices.foreach(i => house = house + s" ${
         player(i).color match {
           case "gelb" => Console.YELLOW;
           case "blau" => Console.BLUE;
           case "grün" => Console.GREEN;
           case "rot" => Console.RED
         }
-      }${player(i).inHouse}${Console.RESET} "
-    }
+    }${player(i).inHouse}${Console.RESET} ")
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
@@ -77,41 +70,40 @@ class Controller() extends Observable {
     player
   }
 
-  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Boolean = {
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    var overRide: Boolean = false
     val p: Player = player(playerNum)
     if (board.overridePlayer(p, pieceNum, moveBy)) {
       val playerIndex = colors(board.getColor(moveBy + p.getPosition(pieceNum)))
       player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
-      overRide = true
     }
     board = board.movePlayer(p, pieceNum, moveBy)
     player(playerNum) = p.movePlayer(pieceNum, moveBy)
     notifyObservers
-    overRide
+    player(playerNum)
   }
 
 
   //Cards
 
   def createDeck: Array[Card] = {
-    val deck = CardDeck().getDeck
-    Random.shuffle(deck).toArray
+    notifyObservers
+    Random.shuffle(CardDeck().getDeck).toArray
   }
 
   def toStringCardDeck: String = {
-    var cardString = "________DECK________\n"
-    for (i <- cardDeck.indices) {
-      cardString += s"$i: ${cardDeck(i)}\n"
-    }
-    cardString + "\n"
+    var cardString: String = "________DECK________\n"
+    cardDeck.indices.foreach(i => cardString += s"$i: ${cardDeck(i)}\n") + "\n"
   }
 
   def drawCard: Card = {
     val card: Card = cardDeck(cardIndex)
     cardIndex = cardIndex + 1
     card
+  }
+
+  def drawPlayerCard(playerNum: Integer, cardNum: Integer): Card = {
+    player(playerNum).drawCard(cardNum)
   }
 
 }
