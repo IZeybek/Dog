@@ -18,7 +18,7 @@ class TuiSpec extends WordSpec with Matchers {
       }
       "create one player" in {
         input = "n player Bob"
-        tui.processInput(input) should be("create 1 player")
+        tui.processInput(input) should be("created 1 player")
       }
       "create no player" in {
         input = "n player"
