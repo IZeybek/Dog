@@ -8,8 +8,8 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-  var board: Board = createBoard
   var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
+  var board: Board = createRandomBoard
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var cardDeck: Array[Card] = createCardDeck
   var cardIndex: Integer = 0
@@ -23,10 +23,13 @@ class Controller() extends Observable {
   }
 
   def createBoard: Board = {
-    var boardMap = Map(0 -> Cell(0, filled = false, null))
-    (0 until 10).foreach(i => boardMap += (i -> Cell(i, filled = false, null)))
-    notifyObservers
-    Board(boardMap)
+    board = new Board(10)
+    board
+  }
+
+  def createRandomBoard: Board = {
+    board = new BoardCreateStrategyRandom().createNewBoard(10)
+    board
   }
 
   def toStringBoard: String = toStringHouse + board.toString()

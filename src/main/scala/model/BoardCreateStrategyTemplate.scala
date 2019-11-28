@@ -11,5 +11,6 @@ trait BoardCreateStrategyTemplate {
     board
   }
 
-  def fill(board: Board): Board
+  def fill(board: Board, player: Array[Player]): Board
+
 }

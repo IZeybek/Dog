@@ -19,7 +19,6 @@ class Tui(controller: Controller) extends Observer {
             controller.setNewBoard
             result = "created a new board"
           case "player" => {
-
             if (commands.length == 6) {
               controller.createPlayer(Array(commands(2), commands(3), commands(4), commands(5)))
               result = "created new players"
@@ -27,7 +26,6 @@ class Tui(controller: Controller) extends Observer {
               result = "creation failed!"
             }
           }
-
           case _ => result = "creation failed!"
         }
 
@@ -41,7 +39,13 @@ class Tui(controller: Controller) extends Observer {
         print(controller.toStringBoard)
         print(controller.toStringCardDeck)
         result = "printed board"
-      case _ => result = ""
+      case _ =>
+        input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
+          case playerNum :: pieceNum :: moveBy :: Nil =>
+            controller.movePlayer(playerNum, pieceNum, moveBy)
+            result = f"move player $playerNum by $moveBy"
+          case _ =>
+        }
     }
     result
   }
