@@ -18,6 +18,7 @@ class Tui(controller: Controller) extends Observer {
           case "board" =>
             controller.setNewBoard
             result = "created a new board"
+
           case "player" => {
             if (commands.length == 6) {
               controller.createPlayer(Array(commands(2), commands(3), commands(4), commands(5)))
@@ -27,12 +28,6 @@ class Tui(controller: Controller) extends Observer {
             }
           }
           case _ => result = "creation failed!"
-        }
-      case "create" =>
-        result "create"
-        input.toList match {
-          //case "player" :: playerNumber :: Nil =>
-          case "board" :: Nil => controller.setNewBoard
         }
       case "m" =>
         result = "moved a player"

@@ -22,8 +22,8 @@ class Controller() extends Observable {
     board
   }
 
-  def createBoard: Board = {
-    board = new Board(10)
+  def createBoard(size: Integer): Board = {
+    board = new Board(size)
     board
   }
 
