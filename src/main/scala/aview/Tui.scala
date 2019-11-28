@@ -16,7 +16,8 @@ import scala.util.Random
       controller.createCardDeck
       controller.initPlayerHandCards(6)
       controller.toStringPlayerHands()
-      println(controller.playCard(1))
+      println(controller.playCard(0))
+      controller.toStringPlayerHands()
     }
 
     def processInput(input: String): String = {
@@ -24,7 +25,7 @@ import scala.util.Random
 
       input.split("\\s+").toList match {
         case "n" :: "player" :: player =>
-          if (player.size > 0) {
+          if (player.nonEmpty) {
             controller.createPlayer(player)
             result = if (player.size > 1)
               s"created ${player.size} players"
@@ -53,7 +54,6 @@ import scala.util.Random
       }
       result
     }
-
 
     override def update: Unit = {
       println(controller.toStringBoard)

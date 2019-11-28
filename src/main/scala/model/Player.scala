@@ -17,6 +17,7 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
 
   def removeCard(card: Card): List[Card] = cardList diff List(card)
 
+
   def setHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
 
 

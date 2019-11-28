@@ -59,6 +59,7 @@ class Controller() extends Observable {
     notifyObservers
     player
   }
+
   def createPlayer(playerNames: List[String]): Array[Player] = {
     val player: Array[Player] = new Array[Player](playerNames.size)
     val colors = Array("gelb", "blau", "grün", "rot")
@@ -66,25 +67,6 @@ class Controller() extends Observable {
     notifyObservers
     player
   }
-  def playCard(playerNum : Int): Card ={
-    player(playerNum).getCard(0)
-  }
-
-  def drawCards(amount: Int): List[Card] = {
-    var hand : List[Card] = List(drawCard)
-    for(i <- 0 until amount-1){
-      hand = drawCard ::  hand
-    }
-    hand
-  }
-
-  def toStringPlayerHands(): Unit = {
-    for (i <- player.indices) {
-      println("player: " + i + " --> myHand: " + player(i).cardList)
-    }
-  }
-
-  def initPlayerHandCards(amount: Int): Unit = for (pNr <- player.indices) player(pNr) = player(pNr).setHandCards(drawCards(amount))
 
 
   def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
@@ -114,15 +96,34 @@ class Controller() extends Observable {
     cardDeck.indices.foreach(i => cardString += s"$i: ${cardDeck(i)}\n") + "\n"
   }
 
+  def drawFewCards(amount: Int): List[Card] = {
+    var hand : List[Card] = List(drawCardFromDeck)
+    for(i <- 0 until amount-1){
+      hand = drawCardFromDeck ::  hand
+    }
+    hand
+  }
 
-  def drawCard: Card = {
+  def drawCardFromDeck: Card = {
     if (cardIndex != 0) cardIndex = cardIndex - 1
     cardDeck(cardIndex)
   }
 
-  def drawPlayerCard(playerNum: Integer, cardNum: Integer): Card = {
-    player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
-    player(playerNum).getCard(cardNum)
+  def playCard(playerNum : Int): Card ={
+    val oldCard = player(playerNum).getCard(0)
+    player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(0)))
+    println(oldCard.myLogic(oldCard.getTask))
+
+    oldCard
   }
+
+  def toStringPlayerHands(): Unit = {
+    for (i <- player.indices) {
+      println("player: " + i + " --> myHand: " + player(i).cardList)
+    }
+  }
+
+  def initPlayerHandCards(amount: Int): Unit = for (pNr <- player.indices) player(pNr) = player(pNr).setHandCards(drawFewCards(amount))
+
 
 }

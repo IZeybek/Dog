@@ -1,20 +1,18 @@
 package model.CardComponent
 
-import model.{CardTrait, Player}
+import model.{CardTrait, Piece, Player}
 
 import scala.util.Random
 
 
 case class Card(symbol: String, task: String, color: String) {
+
   def getSymbol: String = symbol
 
   def getTask: String = task
 
   def getColor: String = color
 
-  def myLogic(task: String): Unit ={
-    cardLogic.logic
-  }
 
   override def toString: String = {
     "Card(" + s"${
@@ -26,15 +24,50 @@ case class Card(symbol: String, task: String, color: String) {
   }
 }
 
-object cardLogic {
-  var logic = if (Random.nextInt() % 2 == 0) strategy1 else strategy2
-  def strategy1 = println("I am strategy 1")
-  def strategy2 = println("I am strategy 2")
+case class MoveLogic() {
+
+  def myLogic(player : List[Player], task: String): Unit = {
+    val s = CardLogic.getLogic("move")
+    val logicMode: String = "move";
+
+    val deviationModeFunction = CardLogic.getLogic(logicMode)
+    val move1 = CardLogic.setStrategy(deviationModeFunction, player,2,3,3)
+    val move2 = CardLogic.setStrategy(deviationModeFunction,  player,2,3,3)
+
+//    val mean = DeviationMode.mean(deviationModeFunction, 2, 25)
+//    val breach = DeviationMode.compare(DeviationMode.compareMeanDeviation, mean, 88)
+
+  }
+
 }
 
+object CardLogic {
 
+
+  val move = (player:List[Player], playerNum: Int, pieceNum: Int, moveBy: Int) => {
+    player(playerNum).getPiece(pieceNum).movePiece(moveBy)
+  }
+  val swap = (player:List[Player],playerNum: Int, pieceNum: Int, moveBy: Int) => {
+    player(playerNum).getPiece(2).movePiece(moveBy)
+  }
+
+  def setStrategy(callback: (List[Player],Int, Int, Int) => Piece, player: List[Player],playerNum: Int, pieceNum: Int, moveBy: Int) = {
+    callback(pieceNum, pieceNum, moveBy);
+  }
+
+  def getLogic(mode: String) = {
+    mode match {
+      case "move" => move
+      case "swap" => swap
+//      case "start" => Nil
+//      case "forwardBackward" => Nil
+      case _ => throw new IllegalArgumentException("Supported type are LOWER and HIGHER.")
+    }
+  }
+}
 
 object GenCardDeck {
+
 
   def apply(typ: String): CardTrait = typ match {
     case "special" =>
@@ -60,7 +93,7 @@ case class SpecialCardsDeck() extends CardTrait {
 
   override def generateDeck: List[Card] = {
     List(Card("1 11 start", "move;move;start", "red"),
-      Card("4", "forwards;backwards", "red"),
+      Card("4", "forwardBackward", "red"),
       Card("7", "burn", "red"),
       Card("swap", "swap", "red"),
       Card("?", "joker", "red"),
