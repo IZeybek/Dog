@@ -11,24 +11,30 @@ class TuiSpec extends WordSpec with Matchers {
     "executed" should {
       val controller = new Controller()
       val tui = new Tui(controller)
-
-      "new board" in {
-        tui.input("n board") should be("created a new board")
+      var input = ""
+      "create new players" in {
+        input = "n player Bobby BobRoss Ross"
+        tui.processInput(input) should be("created 3 players")
       }
-      "new player p1 p2 p3 p4" in {
-        tui.input("n player p1 p2 p3 p4") should be("created new players")
+      "create one player" in {
+        input = "n player Bob"
+        tui.processInput(input) should be("created 1 player")
       }
-      "new player" in {
-        tui.input("n player a") should be("creation failed!")
+      "create no player" in {
+        input = "n player"
+        tui.processInput(input) should be("no players created")
       }
-      "new ..." in {
-        tui.input("n test") should be("creation failed!")
+      "print cards" in {
+        input = "p card"
+        tui.processInput(input) should be("printed cards")
       }
-      "move" in {
-        tui.input("m") should be("moved a player")
+      "print board" in {
+        input = "p board"
+        tui.processInput(input) should be("printed board")
       }
-      "print" in {
-        tui.input("p") should be("printed board")
+      "print game" in {
+        input = "p"
+        tui.processInput(input) should be("printed game")
       }
     }
   }
