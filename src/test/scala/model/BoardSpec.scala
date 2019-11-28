@@ -7,7 +7,7 @@ class BoardSpec extends WordSpec with Matchers {
   "A Board" when {
     "created" should {
       val controller = new Controller
-      val board = controller.createBoard
+      val board = controller.createBoard(10)
       "have a Map" when {
         "created" in {
           for (i <- 0 until board.getBoardMap.size) {

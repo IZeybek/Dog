@@ -16,7 +16,7 @@ object Dog {
     do {
       System.out.print("\n>> ")
       input = scala.io.StdIn.readLine()
-      println(tui.input(input))
+      println(tui.processInput(input))
     } while (input != "exit")
   }
 }
