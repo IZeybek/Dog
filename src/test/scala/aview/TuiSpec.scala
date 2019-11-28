@@ -12,9 +12,17 @@ class TuiSpec extends WordSpec with Matchers {
       val controller = new Controller()
       val tui = new Tui(controller)
       var input = ""
-      "new players" in {
+      "create new players" in {
         input = "n player Bobby BobRoss Ross"
         tui.processInput(input) should be("created 3 players")
+      }
+      "create one player" in {
+        input = "n player Bob"
+        tui.processInput(input) should be("create 1 player")
+      }
+      "create no player" in {
+        input = "n player"
+        tui.processInput(input) should be("no players created")
       }
       "print cards" in {
         input = "p card"
