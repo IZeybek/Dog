@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/Akkarin007/Dog.svg?branch=BoardMap)](https://travis-ci.org/Akkarin007/Dog)
+[![Coverage Status](https://coveralls.io/repos/github/Akkarin007/Dog/badge.svg?branch=BoardMap)](https://coveralls.io/github/Akkarin007/Dog?branch=BoardMap)
+
+
 # Dog
 
 Der Name vom Spiel sagt Ihnen nichts? Das ist überhaupt nicht schlimm, uns nämlich auch nicht. Aber wir lieben Hunde.
