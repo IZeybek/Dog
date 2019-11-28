@@ -3,8 +3,6 @@ package aview
 import controller.Controller
 import util.Observer
 
-import scala.util.Random
-
 
   class Tui(controller: Controller) extends Observer {
     controller.add(this)
