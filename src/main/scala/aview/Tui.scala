@@ -28,7 +28,12 @@ class Tui(controller: Controller) extends Observer {
           }
           case _ => result = "creation failed!"
         }
-
+      case "create" =>
+        result "create"
+        input.toList match {
+          //case "player" :: playerNumber :: Nil =>
+          case "board" :: Nil => controller.setNewBoard
+        }
       case "m" =>
         result = "moved a player"
         val playerNum = Random.nextInt(4)
