@@ -22,9 +22,6 @@ class CellSpec extends WordSpec with Matchers {
       "have a position" in {
         cellSpecTrue.idx should be(42)
       }
-      "print itself out" in {
-        cellSpecTrue.toString.startsWith("[") should be(true)
-      }
     }
   }
 }

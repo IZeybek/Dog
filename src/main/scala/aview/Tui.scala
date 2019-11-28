@@ -11,8 +11,15 @@ class Tui(controller: Controller) extends Observer {
 
     input.split("\\s+").toList match {
       case "n" :: "player" :: player =>
-        controller.createPlayer(player)
-        result = s"created players ${player}"
+        if (player.size > 0) {
+          controller.createPlayer(player)
+          result = if (player.size > 1)
+            s"created ${player.size} players"
+          else
+            "created 1 player"
+        } else {
+          result = "no players created"
+        }
       case "p" :: "card" :: Nil =>
         print(controller.toStringCardDeck)
         result = "printed cards"
