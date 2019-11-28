@@ -8,7 +8,7 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-  var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
+  var player: Array[Player] = createPlayer(Array("p1", "p2", "p3", "p4"))
   var board: Board = createRandomBoard
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var cardDeck: Array[Card] = createCardDeck
@@ -16,8 +16,8 @@ class Controller() extends Observable {
 
   //Board
 
-  def setNewBoard(size: Integer): Board = {
-    board = createBoard(size)
+  def setNewBoard: Board = {
+    board = createBoard
     notifyObservers
     board
   }
@@ -54,14 +54,14 @@ class Controller() extends Observable {
 
   //Player
 
-  def setPlayer(name: List[String]): Array[Player] = {
+  def setPlayer(name: Array[String]): Array[Player] = {
     player = createPlayer(name)
     notifyObservers
     player
   }
 
-  def createPlayer(playerNames: List[String]): Array[Player] = {
-    val player: Array[Player] = new Array[Player](playerNames.size)
+  def createPlayer(playerNames: Array[String]): Array[Player] = {
+    val player: Array[Player] = new Array[Player](4)
     val colors = Array("gelb", "blau", "grün", "rot")
     playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
     notifyObservers

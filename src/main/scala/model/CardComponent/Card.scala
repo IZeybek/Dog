@@ -2,6 +2,8 @@ package model.CardComponent
 
 import model.{CardTrait, Player}
 
+import scala.util.Random
+
 
 case class Card(symbol: String, task: String, color: String) {
   def getSymbol: String = symbol
@@ -9,6 +11,10 @@ case class Card(symbol: String, task: String, color: String) {
   def getTask: String = task
 
   def getColor: String = color
+
+  def myLogic(task: String): Unit ={
+    cardLogic.logic
+  }
 
   override def toString: String = {
     "Card(" + s"${
@@ -20,18 +26,12 @@ case class Card(symbol: String, task: String, color: String) {
   }
 }
 
-case class CardParser() {
-
-  def function(card: Card, player: Array[Player], playerNum: Integer, pieceNum: Integer, moveBy: Integer): Array[Player] = {
-    card.color match {
-      case "blue" =>
-        card.task match {
-          case "move" =>
-            player.updated(playerNum, player(playerNum).movePlayer(pieceNum, card.symbol.toInt))
-        }
-    }
-  }
+object cardLogic {
+  var logic = if (Random.nextInt() % 2 == 0) strategy1 else strategy2
+  def strategy1 = println("I am strategy 1")
+  def strategy2 = println("I am strategy 2")
 }
+
 
 
 object GenCardDeck {
