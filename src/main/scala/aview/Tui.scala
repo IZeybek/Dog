@@ -8,6 +8,15 @@ import scala.util.Random
 class Tui(controller: Controller) extends Observer {
   controller.add(this)
 
+  def printHands(): Unit ={
+    controller.setNewBoard(64)
+    controller.createPlayer(Array("a1","a2","a3","a4"))
+    controller.createCardDeck
+    controller.initPlayerHandCards(6)
+    controller.toStringPlayerHands()
+    println(controller.playCard(1))
+  }
+
   def input(input: String): String = {
     val commands = input.split("\\s+")
     var result: String = ""
@@ -16,7 +25,8 @@ class Tui(controller: Controller) extends Observer {
       case "n" =>
         commands(1) match {
           case "board" =>
-            controller.setNewBoard
+
+            controller.setNewBoard(commands(1).toInt)
             result = "created a new board"
 
           case "player" => {

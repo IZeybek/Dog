@@ -9,14 +9,14 @@ object Dog {
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
-
-
-    var input = ""
-    print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
-    do {
-      System.out.print("\n>> ")
-      input = scala.io.StdIn.readLine()
-      println(tui.input(input))
-    } while (input != "exit")
+    tui.printHands
+//
+//    var input = ""
+//    print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
+//    do {
+//      System.out.print("\n>> ")
+//      input = scala.io.StdIn.readLine()
+//      println(tui.input(input))
+//    } while (input != "exit")
   }
 }

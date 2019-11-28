@@ -10,7 +10,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "initialized" should {
       val controller: Controller = new Controller()
       "create a board " in {
-        controller.createBoard should be(controller.getBoard)
+        controller.createBoard(16) should be(controller.getBoard)
       }
       "print board" in {
         controller.toStringBoard should be(controller.toStringHouse + controller.board.toString())
