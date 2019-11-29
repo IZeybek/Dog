@@ -24,22 +24,22 @@ case class Card(symbol: String, task: String, color: String) {
   }
 }
 
-case class MoveLogic() {
-
-  def myLogic(player: Array[Player], task: String): Unit = {
-    //    val s = CardLogic.getLogic("move")
-    //    val logicMode: String = "move";
-    //
-    //    val taskMode = CardLogic.getLogic(logicMode)
-    //    val move1 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
-    //    val move2 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
-    //
-    //    //    val mean = DeviationMode.mean(deviationModeFunction, 2, 25)
-    //    //    val breach = DeviationMode.compare(DeviationMode.compareMeanDeviation, mean, 88)
-
-  }
-
-}
+//case class MoveLogic() {
+//
+//  def myLogic(player: Array[Player], task: String): Unit = {
+//    //    val s = CardLogic.getLogic("move")
+//    //    val logicMode: String = "move";
+//    //
+//    //    val taskMode = CardLogic.getLogic(logicMode)
+//    //    val move1 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
+//    //    val move2 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
+//    //
+//    //    //    val mean = DeviationMode.mean(deviationModeFunction, 2, 25)
+//    //    //    val breach = DeviationMode.compare(DeviationMode.compareMeanDeviation, mean, 88)
+//
+//  }
+//
+//}
 
 object CardLogic {
 
@@ -70,7 +70,7 @@ object CardLogic {
       //      case "swap" => swap
       //      case "start" => Nil
       //      case "forwardBackward" => Nil
-      case _ => throw new IllegalArgumentException("Supported type are LOWER and HIGHER.")
+      case _ => throw new IllegalArgumentException("Supported type are move")
     }
   }
 }
