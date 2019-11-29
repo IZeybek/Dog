@@ -1,6 +1,6 @@
 package model.CardComponent
 
-import model.{CardTrait, Player}
+import model.CardTrait
 
 import scala.util.Random
 
@@ -45,11 +45,10 @@ object GenCardDeck {
 }
 
 object CardDeck {
-  def apply(): List[Card] = {
-    GenCardDeck.apply("special").getCardDeck ++
-      GenCardDeck.apply("normal").getCardDeck ++
-      GenCardDeck.apply("special").getCardDeck ++
-      GenCardDeck.apply("normal").getCardDeck
+  def apply(special: Integer, normal: Integer): List[Card] = {
+    val specialList: List[Card] = (0 until special).map(GenCardDeck.apply("special").getCardDeck).toList
+    val normalList: List[Card] = (0 until normal).map(GenCardDeck.apply("normal").getCardDeck).toList
+    normalList ++ specialList
   }
 }
 

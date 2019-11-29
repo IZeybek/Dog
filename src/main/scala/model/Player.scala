@@ -5,8 +5,8 @@ import model.CardComponent.Card
 
 case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, cardList: List[Card]) {
 
-  def this(name: String, color: String) = {
-    this(name, color = color, (0 until 5).map(i => (i, Piece(0))).toMap, inHouse = 4, null)
+  def this(name: String, color: String, pieceNumber: Integer) = {
+    this(name, color = color, (0 to pieceNumber).map(i => (i, Piece(0))).toMap, inHouse = 4, null)
   }
 
   def getColor: String = color
@@ -49,3 +49,18 @@ case class Piece(var position: Int) {
 
 }
 
+case class PlayerBuilder() {
+  var pieceNumber: Int = 4
+  var color: String = "blau"
+  var name: String = "Bob"
+
+  def withPieceNumber(pieceNum: Integer): Unit = pieceNumber = pieceNum
+
+  def withColor(c: String): Unit = color = c
+
+  def withName(n: String): Unit = name = n
+
+  def build(): Player = {
+    new Player(name, color, pieceNumber)
+  }
+}

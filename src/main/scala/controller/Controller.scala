@@ -54,7 +54,7 @@ class Controller() extends Observable {
 
   def createSetPlayer(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
-    player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i))).toArray
+    player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i), 4)).toArray
     notifyObservers
     player
   }
@@ -98,7 +98,7 @@ class Controller() extends Observable {
 
   def createCardDeck: Array[Card] = {
     notifyObservers
-    val array = Random.shuffle(CardDeck.apply()).toArray
+    val array = Random.shuffle(CardDeck.apply(2, 2)).toArray
     cardIndex = array.length
     array
   }
@@ -120,3 +120,5 @@ class Controller() extends Observable {
   }
 
 }
+
+
