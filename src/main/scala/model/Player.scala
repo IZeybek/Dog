@@ -36,11 +36,9 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
   }
 
   def movePlayer(pieceNum: Integer, moveBy: Integer): Player = {
-
     val oldPos = piece(pieceNum).getPosition
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = if (oldPos == 0) inHouse - 1 else inHouse)
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = if (oldPos == 0 && moveBy > 0) inHouse - 1 else inHouse)
   }
-
 
   override def toString: String = name
 }

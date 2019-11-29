@@ -45,8 +45,8 @@ class Tui(controller: Controller) extends Observer {
         result = "printed game"
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
-          case playerNum :: pieceNum :: Nil =>
-            controller.movePlayer(playerNum, pieceNum)
+          case playerNum :: pieceNum :: cardNum :: Nil =>
+            controller.parseCard(playerNum, pieceNum, cardNum)
             result = f"moved player $playerNum"
           case _ =>
         }

@@ -52,11 +52,13 @@ object CardLogic {
       val nextCellPos = moveBy + p.getPosition(pieceNum)
       val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.getBoardMap(nextCellPos).player.color)
       players(otherPlayerIndex) = board.getBoardMap(nextCellPos).player.overridePlayer(pieceNum)
+      print("player overriden")
     }
     players(playerNum) = p.movePlayer(pieceNum, moveBy)
 
     (board.movePlayer(p, pieceNum, moveBy), players)
   }
+
 
   def setStrategy(callback: (Array[Player], Board, Int, Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: Int, pieceNum: Int, moveBy: Int) = {
     callback(player, board, playerNum, pieceNum, moveBy)

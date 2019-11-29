@@ -62,20 +62,18 @@ class Controller() extends Observable {
     player
   }
 
-  def movePlayer(playerNum: Integer, pieceNum: Integer): Player = {
-    val logicMode: String = "move";
-    val taskMode = CardLogic.getLogic(logicMode)
-    val selectedCard = playCard(playerNum)
+  def parseCard(playerNum: Integer, pieceNum: Integer, cardNum: Integer): Unit = {
+    val selectedCard: Card = playCard(playerNum, cardNum)
+    selectedCard.task match {
+      case "move" => movePlayer(playerNum, pieceNum, selectedCard.symbol.toString.toInt)
+    }
+  }
 
-    val moveBy = if (selectedCard.getTask == "move")
-      selectedCard.getSymbol.toString.toInt
-    else
-      0
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
+    val taskMode = CardLogic.getLogic("move")
     val move: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy)
-
     board = move._1
     player = move._2
-
     notifyObservers
     player(playerNum)
   }
@@ -83,7 +81,6 @@ class Controller() extends Observable {
   //Cards
 
   def createCardDeck: Array[Card] = {
-
     val array = Random.shuffle(CardDeck.apply()).toArray
     cardIndex = array.length
     array
@@ -107,8 +104,8 @@ class Controller() extends Observable {
     cardDeck(cardIndex)
   }
 
-  def playCard(playerNum: Int): Card = {
-    val oldCard = player(playerNum).getCard(0)
+  def playCard(playerNum: Int, cardNum: Integer): Card = {
+    val oldCard = player(playerNum).getCard(cardNum)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(0)))
     println(oldCard.getTask)
 
