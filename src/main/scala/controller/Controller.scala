@@ -26,8 +26,8 @@ class Controller() extends Observable {
     board
   }
 
-  def createRandomBoard: Board = {
-    board = new BoardCreateStrategyRandom().createNewBoard(10)
+  def createRandomBoard(size: Int): Board = {
+    board = new BoardCreateStrategyRandom().createNewBoard(size)
     gameState = CREATEBOARD
     board
   }
