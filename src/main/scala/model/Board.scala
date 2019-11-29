@@ -26,12 +26,14 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   def movePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Board = {
     val oldPos: Integer = player.getPiece(pieceNum).getPosition
+    //set old Cell unoccupied
     var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))
+    //set new Pos as occupied
     nBoard = nBoard.updated(oldPos + moveBy, boardMap(oldPos + moveBy).copy(filled = true, player = player))
     copy(nBoard)
   }
 
-  def overridePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
+  def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
     boardMap(moveBy + player.piece(pieceNum).position).isFilled
   }
 

@@ -1,6 +1,6 @@
 package model.CardComponent
 
-import model.{CardTrait, Piece, Player}
+import model.{Board, CardTrait, Piece, Player}
 
 import scala.util.Random
 
@@ -26,16 +26,16 @@ case class Card(symbol: String, task: String, color: String) {
 
 case class MoveLogic() {
 
-  def myLogic(player : List[Player], task: String): Unit = {
-    val s = CardLogic.getLogic("move")
-    val logicMode: String = "move";
-
-    val deviationModeFunction = CardLogic.getLogic(logicMode)
-    val move1 = CardLogic.setStrategy(deviationModeFunction, player,2,3,3)
-    val move2 = CardLogic.setStrategy(deviationModeFunction,  player,2,3,3)
-
-//    val mean = DeviationMode.mean(deviationModeFunction, 2, 25)
-//    val breach = DeviationMode.compare(DeviationMode.compareMeanDeviation, mean, 88)
+  def myLogic(player: Array[Player], task: String): Unit = {
+    //    val s = CardLogic.getLogic("move")
+    //    val logicMode: String = "move";
+    //
+    //    val taskMode = CardLogic.getLogic(logicMode)
+    //    val move1 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
+    //    val move2 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
+    //
+    //    //    val mean = DeviationMode.mean(deviationModeFunction, 2, 25)
+    //    //    val breach = DeviationMode.compare(DeviationMode.compareMeanDeviation, mean, 88)
 
   }
 
@@ -44,23 +44,32 @@ case class MoveLogic() {
 object CardLogic {
 
 
-  val move = (player:List[Player], playerNum: Int, pieceNum: Int, moveBy: Int) => {
-    player(playerNum).getPiece(pieceNum).movePiece(moveBy)
-  }
-  val swap = (player:List[Player],playerNum: Int, pieceNum: Int, moveBy: Int) => {
-    player(playerNum).getPiece(2).movePiece(moveBy)
+  val move = (player: Array[Player], board: Board, playerNum: Int, pieceNum: Int, moveBy: Int) => {
+
+    //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
+    val p: Player = player(playerNum)
+
+    if (board.checkOverrideOtherPlayer(p, pieceNum, moveBy)) {
+      val nextCellPos = moveBy + p.getPosition(pieceNum)
+      player(pieceNum) = board.getBoardMap(nextCellPos).player
+      otherPlayer.overridePlayer(pieceNum)
+
+
+    }
+
+    (board.movePlayer(p, pieceNum, moveBy), p.movePlayer(pieceNum, moveBy))
   }
 
-  def setStrategy(callback: (List[Player],Int, Int, Int) => Piece, player: List[Player],playerNum: Int, pieceNum: Int, moveBy: Int) = {
-    callback(pieceNum, pieceNum, moveBy);
+  def setStrategy(callback: (Array[Player], Board, Int, Int, Int) => (Board, Player), player: Array[Player], board: Board, playerNum: Int, pieceNum: Int, moveBy: Int) = {
+    callback(player, board, pieceNum, pieceNum, moveBy)
   }
 
   def getLogic(mode: String) = {
     mode match {
       case "move" => move
-      case "swap" => swap
-//      case "start" => Nil
-//      case "forwardBackward" => Nil
+      //      case "swap" => swap
+      //      case "start" => Nil
+      //      case "forwardBackward" => Nil
       case _ => throw new IllegalArgumentException("Supported type are LOWER and HIGHER.")
     }
   }

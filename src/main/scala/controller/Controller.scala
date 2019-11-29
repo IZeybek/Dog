@@ -1,6 +1,8 @@
 package controller
 
-import model.CardComponent.{Card, CardDeck}
+import java.nio.file.AtomicMoveNotSupportedException
+
+import model.CardComponent.{Card, CardDeck, CardLogic, MoveLogic}
 import model._
 import util.Observable
 
@@ -9,21 +11,16 @@ import scala.util.Random
 class Controller() extends Observable {
 
   var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
-  var board: Board = createBoard(16)
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var cardDeck: Array[Card] = createCardDeck
+  var board: Board = createBoard(20)
   var cardIndex: Integer = 0
 
   //Board
 
-  def setNewBoard(size: Int): Board = {
-    board = createBoard(size)
-    notifyObservers
-    board
-  }
-
   def createBoard(size: Integer): Board = {
     board = new Board(size)
+    notifyObservers
     board
   }
 
@@ -56,7 +53,6 @@ class Controller() extends Observable {
 
   def setPlayer(name: List[String]): Array[Player] = {
     player = createPlayer(name)
-    notifyObservers
     player
   }
 
@@ -64,20 +60,20 @@ class Controller() extends Observable {
     val player: Array[Player] = new Array[Player](playerNames.size)
     val colors = Array("gelb", "blau", "grün", "rot")
     playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
-    notifyObservers
     player
   }
 
 
-  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
-    //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val p: Player = player(playerNum)
-    if (board.overridePlayer(p, pieceNum, moveBy)) {
-      val playerIndex = colors(board.getColor(moveBy + p.getPosition(pieceNum)))
-      player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
-    }
-    board = board.movePlayer(p, pieceNum, moveBy)
-    player(playerNum) = p.movePlayer(pieceNum, moveBy)
+  def movePlayer(playerNum: Integer, pieceNum: Integer): Player = {
+    val logicMode: String = "move";
+    val taskMode = CardLogic.getLogic(logicMode)
+    val selectedCard = playCard(playerNum)
+    val moveBy = if (selectedCard.getTask == "move") selectedCard.getSymbol.toString.toInt else 2
+    val move = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy - 1)
+
+    board = move._1
+    player = move._2
+
     notifyObservers
     player(playerNum)
   }
@@ -85,7 +81,7 @@ class Controller() extends Observable {
   //Cards
 
   def createCardDeck: Array[Card] = {
-    notifyObservers
+
     val array = Random.shuffle(CardDeck.apply()).toArray
     cardIndex = array.length
     array
@@ -97,9 +93,9 @@ class Controller() extends Observable {
   }
 
   def drawFewCards(amount: Int): List[Card] = {
-    var hand : List[Card] = List(drawCardFromDeck)
-    for(i <- 0 until amount-1){
-      hand = drawCardFromDeck ::  hand
+    var hand: List[Card] = List(drawCardFromDeck)
+    for (i <- 0 until amount - 1) {
+      hand = drawCardFromDeck :: hand
     }
     hand
   }
@@ -109,11 +105,12 @@ class Controller() extends Observable {
     cardDeck(cardIndex)
   }
 
-  def playCard(playerNum : Int): Card ={
+  def playCard(playerNum: Int): Card = {
     val oldCard = player(playerNum).getCard(0)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(0)))
-    println(oldCard.myLogic(oldCard.getTask))
+    println(oldCard.getTask)
 
+    println(oldCard)
     oldCard
   }
 
