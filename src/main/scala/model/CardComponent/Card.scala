@@ -42,32 +42,40 @@ case class Card(symbol: String, task: String, color: String) {
 object CardLogic {
 
 
-  val move = (player: Array[Player], board: Board, playerNum: Int, pieceNum: Int, moveBy: Int) => {
+  val move = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
 
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val p: Player = player(playerNum)
+    val p: Player = player(playerNums(0))
     val players: Array[Player] = player
 
     if (board.checkOverrideOtherPlayer(p, pieceNum, moveBy)) {
       val nextCellPos = moveBy + p.getPosition(pieceNum)
       val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.getBoardMap(nextCellPos).player.color)
       players(otherPlayerIndex) = board.getBoardMap(nextCellPos).player.overridePlayer(pieceNum)
-      print("player overriden")
     }
-    players(playerNum) = p.movePlayer(pieceNum, moveBy)
+    players(playerNums(0)) = p.movePlayer(pieceNum, moveBy)
 
     (board.movePlayer(p, pieceNum, moveBy), players)
   }
 
+  val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
+    val p: Player = player(playerNums(0))
+    val swapPlayer: Player = player(playerNums(1))
 
-  def setStrategy(callback: (Array[Player], Board, Int, Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: Int, pieceNum: Int, moveBy: Int) = {
+    val players: Array[Player] = player
+    p.swapPiece(pieceNum,)
+    (board.movePlayer(p, pieceNum, moveBy), players)
+  }
+
+
+  def setStrategy(callback: (Array[Player], Board, Int, Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNum: Int, moveBy: Int) = {
     callback(player, board, playerNum, pieceNum, moveBy)
   }
 
   def getLogic(mode: String) = {
     mode match {
       case "move" => move
-      //      case "swap" => swap
+      case "swap" => swap
       //      case "start" => Nil
       //      case "forwardBackward" => Nil
       case _ => throw new IllegalArgumentException("Supported type are move")

@@ -63,13 +63,15 @@ class Controller() extends Observable {
     player
   }
 
-  def useCardLogic(playerNum: Int, pieceNum: Int, cardNum: Int): Player = {
-    val selectedCard: Card = playCard(playerNum, cardNum)
-    val taskMode = CardLogic.getLogic("move") // move because others arent implemented yet
-    val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
-    val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
-    board = updateGame._1
-    player = updateGame._2
+  def useCardLogic(playerNum: Int, pieceNum: List[Int], cardNum: Int): Player = {
+    if (player(playerNum).cardList.nonEmpty) {
+      val selectedCard: Card = playCard(playerNum, cardNum)
+      val taskMode = CardLogic.getLogic("move") // move because others arent implemented yet
+      val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
+      val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
+      board = updateGame._1
+      player = updateGame._2
+    }
     notifyObservers
     player(playerNum)
   }
