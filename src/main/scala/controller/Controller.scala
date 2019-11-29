@@ -1,8 +1,7 @@
 package controller
 
-import java.nio.file.AtomicMoveNotSupportedException
-
-import model.CardComponent.{Card, CardDeck, CardLogic, MoveLogic}
+import controller.GameState._
+import model.CardComponent.{Card, CardDeck}
 import model._
 import util.Observable
 
@@ -12,20 +11,25 @@ class Controller() extends Observable {
 
   var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
+  var gameState: GameState = IDLE
+  var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
   var cardDeck: Array[Card] = createCardDeck
-  var board: Board = createBoard(20)
+
   var cardIndex: Integer = 0
+  var board: Board = setNewBoard(16)
 
   //Board
 
-  def createBoard(size: Integer): Board = {
+  def setNewBoard(size: Int): Board = {
     board = new Board(size)
+    gameState = CREATEBOARD
     notifyObservers
     board
   }
 
-  def createRandomBoard: Board = {
-    board = new BoardCreateStrategyRandom().createNewBoard(10)
+  def createRandomBoard(size: Int): Board = {
+    board = new BoardCreateStrategyRandom().createNewBoard(size)
+    gameState = CREATEBOARD
     board
   }
 
@@ -51,15 +55,18 @@ class Controller() extends Observable {
 
   //Player
 
-  def setPlayer(name: List[String]): Array[Player] = {
-    player = createPlayer(name)
+  def createSetPlayer(playerNames: List[String]): Array[Player] = {
+    val colors = Array("gelb", "blau", "grün", "rot")
+    player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i), 4)).toArray
+    gameState = CREATEPLAYER
+    notifyObservers
     player
   }
-
   def createPlayer(playerNames: List[String]): Array[Player] = {
     val player: Array[Player] = new Array[Player](playerNames.size)
     val colors = Array("gelb", "blau", "grün", "rot")
     playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
+    notifyObservers
     player
   }
 

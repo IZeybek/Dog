@@ -36,6 +36,10 @@ class TuiSpec extends WordSpec with Matchers {
         input = "p"
         tui.processInput(input) should be("printed game")
       }
+      "do nothing" in {
+        input = ""
+        tui.processInput(input) should be("")
+      }
     }
   }
 }

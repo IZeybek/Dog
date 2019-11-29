@@ -37,7 +37,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     boardMap(moveBy + player.piece(pieceNum).getPosition).isFilled
   }
 
-  def getColor(pos: Integer): String = {
+  def getPlayerColor(pos: Integer): String = {
     boardMap(pos).player.color
   }
 }
