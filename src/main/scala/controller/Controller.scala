@@ -11,11 +11,12 @@ class Controller() extends Observable {
 
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var gameState: GameState = IDLE
+  var board: Board = setNewBoard(30)
   var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
   var cardDeck: Array[Card] = createCardDeck
 
   var cardIndex: Integer = 0
-  var board: Board = setNewBoard(30)
+
 
   //Board
 
@@ -64,8 +65,9 @@ class Controller() extends Observable {
 
   def useCardLogic(playerNum: Int, pieceNum: Int, cardNum: Int): Player = {
     val selectedCard: Card = playCard(playerNum, cardNum)
-    val taskMode = CardLogic.getLogic(selectedCard.getTask)
-    val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, selectedCard.getSymbol.toInt)
+    val taskMode = CardLogic.getLogic("move") // move because others arent implemented yet
+    val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
+    val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
     board = updateGame._1
     player = updateGame._2
     notifyObservers

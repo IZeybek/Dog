@@ -7,7 +7,7 @@ import org.scalatest.{Matchers, WordSpec}
 class CardSpec extends WordSpec with Matchers {
   "A Card" when {
     "created" should {
-      val card = Card("2", "move", "grün")
+      val card = Card("2", "move", "blau")
       "have a CaseClass" in {
         card should not be null
       }
@@ -18,13 +18,11 @@ class CardSpec extends WordSpec with Matchers {
         card.getTask should be("move")
       }
       "have a Color" in {
-        card.getColor should be("grün")
-      }
-      "be printed out" in {
-        card.toString should be("Card(2)")
+        card.getColor should be("blau")
       }
     }
   }
+
 }
 
 class CardLogicSpec extends WordSpec with Matchers {
