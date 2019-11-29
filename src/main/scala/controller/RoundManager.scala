@@ -1,5 +1,5 @@
 package controller
 
-object PlayerState {
+object RoundManager {
 
 }

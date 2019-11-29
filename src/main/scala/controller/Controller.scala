@@ -1,5 +1,8 @@
 package controller
 
+import controller.GameState._
+
+.PlayerState
 import model.CardComponent.{Card, CardDeck}
 import model._
 import util.Observable
@@ -8,24 +11,23 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-  var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
-  var board: Board = createBoard(16)
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
+
+  var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
+  var gameState: GameState = IDLE
   var cardDeck: Array[Card] = createCardDeck
+
   var cardIndex: Integer = 0
+  var board: Board = setNewBoard(16)
 
   //Board
 
   def setNewBoard(size: Int): Board = {
-    board = createBoard(size)
+    board = new Board(size)
     notifyObservers
     board
   }
 
-  def createBoard(size: Integer): Board = {
-    board = new Board(size)
-    board
-  }
 
   def createRandomBoard: Board = {
     board = new BoardCreateStrategyRandom().createNewBoard(10)
@@ -59,6 +61,7 @@ class Controller() extends Observable {
     notifyObservers
     player
   }
+
   def createPlayer(playerNames: List[String]): Array[Player] = {
     val player: Array[Player] = new Array[Player](playerNames.size)
     val colors = Array("gelb", "blau", "grün", "rot")
@@ -66,6 +69,7 @@ class Controller() extends Observable {
     notifyObservers
     player
   }
+
   def playCard(playerNum : Int): Card ={
     player(playerNum).getCard(0)
   }
