@@ -11,8 +11,9 @@ class Tui(controller: Controller) extends Observer {
   def automatedSequenceForTesting(): Unit = {
 
     controller.createSetPlayer(List("a1", "a2", "a3", "a4"))
-    controller.createCardDeck
     controller.setNewBoard(30)
+    controller.createCardDeck
+    controller.toStringCardDeck
     controller.initPlayerHandCards(6)
     controller.toStringPlayerHands()
     //      println(controller.playCard(0))
@@ -56,6 +57,7 @@ class Tui(controller: Controller) extends Observer {
 
   override def update: Unit = {
     println(controller.toStringBoard)
+    println(controller.toStringCardDeck)
     println(controller.toStringPlayerHands())
   }
 
