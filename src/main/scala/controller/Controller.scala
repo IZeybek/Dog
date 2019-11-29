@@ -21,12 +21,14 @@ class Controller() extends Observable {
 
   def setNewBoard(size: Int): Board = {
     board = new Board(size)
+    gameState = CREATEBOARD
     notifyObservers
     board
   }
 
   def createRandomBoard: Board = {
     board = new BoardCreateStrategyRandom().createNewBoard(10)
+    gameState = CREATEBOARD
     board
   }
 
@@ -55,6 +57,7 @@ class Controller() extends Observable {
   def createSetPlayer(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
     player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i), 4)).toArray
+    gameState = CREATEPLAYER
     notifyObservers
     player
   }
@@ -64,11 +67,12 @@ class Controller() extends Observable {
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     val p: Player = player(playerNum)
     if (board.overridePlayer(p, pieceNum, moveBy)) {
-      val playerIndex = colors(board.getColor(moveBy + p.getPosition(pieceNum)))
+      val playerIndex = colors(board.getPlayerColor(moveBy + p.getPosition(pieceNum)))
       player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
     }
     board = board.movePlayer(p, pieceNum, moveBy)
     player(playerNum) = p.movePlayer(pieceNum, moveBy)
+    gameState = MOVE
     notifyObservers
     player(playerNum)
   }
@@ -82,6 +86,7 @@ class Controller() extends Observable {
     for(i <- 0 until amount-1){
       hand = drawCard ::  hand
     }
+    gameState = DRAWCARD
     hand
   }
 
