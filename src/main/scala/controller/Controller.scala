@@ -1,7 +1,7 @@
 package controller
 
 import controller.GameState._
-import model.CardComponent.{Card, CardDeck}
+import model.CardComponent.{Card, CardDeck, CardLogic}
 import model._
 import util.Observable
 
@@ -9,7 +9,6 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-  var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var gameState: GameState = IDLE
   var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))

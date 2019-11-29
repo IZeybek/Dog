@@ -14,7 +14,7 @@ class Tui(controller: Controller) extends Observer {
 
     controller.createPlayer(List("a1", "a2", "a3", "a4"))
     controller.createCardDeck
-    controller.createBoard(20)
+    controller.setNewBoard(20)
     controller.initPlayerHandCards(6)
     controller.toStringPlayerHands()
     //      println(controller.playCard(0))
