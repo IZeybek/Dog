@@ -36,11 +36,11 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "move a player by 4" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
-        controller.movePlayer(3, 0, 4).getPosition(0) should be(4)
+        controller.useCardLogic(3, 0, 4).getPosition(0) should be(4)
       }
       "move a player by 0" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
-        controller.movePlayer(3, 0, 0).getPosition(0) should be(0)
+        controller.useCardLogic(3, 0, 0).getPosition(0) should be(0)
       }
       "play a Card" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))

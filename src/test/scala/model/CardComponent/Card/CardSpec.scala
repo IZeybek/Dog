@@ -1,7 +1,7 @@
 package model
 
 import controller.Controller
-import model.CardComponent.{Card, CardDeck, CardLogic, GenCardDeck, NormalCardsDeck, SpecialCardsDeck}
+import model.CardComponent._
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {
@@ -72,7 +72,7 @@ class CardDeckSpec extends WordSpec with Matchers {
     "created" should {
       val cardDeck = CardDeck
       "have a SpecialCardsDeck as List[Card]" in {
-        cardDeck.apply() shouldBe a[List[Card]]
+        cardDeck.apply()
       }
     }
   }

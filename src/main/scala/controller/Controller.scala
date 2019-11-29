@@ -15,7 +15,7 @@ class Controller() extends Observable {
   var cardDeck: Array[Card] = createCardDeck
 
   var cardIndex: Integer = 0
-  var board: Board = setNewBoard(16)
+  var board: Board = setNewBoard(30)
 
   //Board
 
@@ -62,23 +62,12 @@ class Controller() extends Observable {
     player
   }
 
-  def parseCard(playerNum: Integer, pieceNum: Integer, cardNum: Integer): Unit = {
+  def useCardLogic(playerNum: Int, pieceNum: Int, cardNum: Int): Player = {
     val selectedCard: Card = playCard(playerNum, cardNum)
-    selectedCard.color match {
-      case "blue" => selectedCard.task match {
-        case "move" => movePlayer(playerNum, pieceNum, selectedCard.symbol.toString.toInt)
-        case _ =>
-      }
-      case "red" =>
-      case _ =>
-    }
-  }
-
-  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
-    val taskMode = CardLogic.getLogic("move")
-    val move: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy)
-    board = move._1
-    player = move._2
+    val taskMode = CardLogic.getLogic(selectedCard.getTask)
+    val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, selectedCard.getSymbol.toInt)
+    board = updateGame._1
+    player = updateGame._2
     notifyObservers
     player(playerNum)
   }

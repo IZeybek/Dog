@@ -12,7 +12,7 @@ class Tui(controller: Controller) extends Observer {
 
     controller.createSetPlayer(List("a1", "a2", "a3", "a4"))
     controller.createCardDeck
-    controller.setNewBoard(20)
+    controller.setNewBoard(30)
     controller.initPlayerHandCards(6)
     controller.toStringPlayerHands()
     //      println(controller.playCard(0))
@@ -46,8 +46,8 @@ class Tui(controller: Controller) extends Observer {
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           case playerNum :: pieceNum :: cardNum :: Nil =>
-            controller.parseCard(playerNum, pieceNum, cardNum)
-            result = f"moved player $playerNum"
+            controller.useCardLogic(playerNum, pieceNum, cardNum)
+            result = s"player $playerNum used card number $cardNum"
           case _ =>
         }
     }
