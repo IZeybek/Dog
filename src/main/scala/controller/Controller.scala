@@ -64,8 +64,13 @@ class Controller() extends Observable {
 
   def parseCard(playerNum: Integer, pieceNum: Integer, cardNum: Integer): Unit = {
     val selectedCard: Card = playCard(playerNum, cardNum)
-    selectedCard.task match {
-      case "move" => movePlayer(playerNum, pieceNum, selectedCard.symbol.toString.toInt)
+    selectedCard.color match {
+      case "blue" => selectedCard.task match {
+        case "move" => movePlayer(playerNum, pieceNum, selectedCard.symbol.toString.toInt)
+        case _ =>
+      }
+      case "red" =>
+      case _ =>
     }
   }
 
@@ -106,7 +111,7 @@ class Controller() extends Observable {
 
   def playCard(playerNum: Int, cardNum: Integer): Card = {
     val oldCard = player(playerNum).getCard(cardNum)
-    player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(0)))
+    player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
     println(oldCard.getTask)
 
     println(oldCard)
