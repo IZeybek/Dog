@@ -25,6 +25,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
   }
 
   def movePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Board = {
+    print(s"piece $pieceNum is moved")
     val oldPos: Integer = player.getPiece(pieceNum).getPosition
     //set old Cell unoccupied
     var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))

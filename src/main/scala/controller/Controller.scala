@@ -61,26 +61,19 @@ class Controller() extends Observable {
     notifyObservers
     player
   }
-  def createPlayer(playerNames: List[String]): Array[Player] = {
-    val player: Array[Player] = new Array[Player](playerNames.size)
-    val colors = Array("gelb", "blau", "grün", "rot")
-    playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
-    notifyObservers
-    player
+
+  def parseCard(playerNum: Integer, pieceNum: Integer, cardNum: Integer): Unit = {
+    val selectedCard: Card = playCard(playerNum, cardNum)
+    selectedCard.task match {
+      case "move" => movePlayer(playerNum, pieceNum, selectedCard.symbol.toString.toInt)
+    }
   }
 
-
-  def movePlayer(playerNum: Integer, pieceNum: Integer): Player = {
-    val logicMode: String = "move";
-    val taskMode = CardLogic.getLogic(logicMode)
-    val selectedCard = playCard(playerNum)
-
-    val moveBy = if (selectedCard.getTask == "move") selectedCard.getSymbol.toString.toInt else 2
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
+    val taskMode = CardLogic.getLogic("move")
     val move: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy)
-
     board = move._1
     player = move._2
-
     notifyObservers
     player(playerNum)
   }
@@ -88,7 +81,6 @@ class Controller() extends Observable {
   //Cards
 
   def createCardDeck: Array[Card] = {
-
     val array = Random.shuffle(CardDeck.apply()).toArray
     cardIndex = array.length
     array
@@ -112,8 +104,8 @@ class Controller() extends Observable {
     cardDeck(cardIndex)
   }
 
-  def playCard(playerNum: Int): Card = {
-    val oldCard = player(playerNum).getCard(0)
+  def playCard(playerNum: Int, cardNum: Integer): Card = {
+    val oldCard = player(playerNum).getCard(cardNum)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(0)))
     println(oldCard.getTask)
 
