@@ -68,8 +68,9 @@ class Controller() extends Observable {
     val logicMode: String = "move";
     val taskMode = CardLogic.getLogic(logicMode)
     val selectedCard = playCard(playerNum)
+
     val moveBy = if (selectedCard.getTask == "move") selectedCard.getSymbol.toString.toInt else 2
-    val move = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy - 1)
+    val move: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy)
 
     board = move._1
     player = move._2

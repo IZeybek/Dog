@@ -34,7 +34,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
   }
 
   def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
-    boardMap(moveBy + player.piece(pieceNum).position).isFilled
+    boardMap(moveBy + player.piece(pieceNum).getPosition).isFilled
   }
 
   def getColor(pos: Integer): String = {
