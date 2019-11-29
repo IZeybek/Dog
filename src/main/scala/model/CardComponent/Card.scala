@@ -1,8 +1,6 @@
 package model.CardComponent
 
-import model.{Board, CardTrait, Piece, Player}
-
-import scala.util.Random
+import model.{Board, CardTrait, Player}
 
 
 case class Card(symbol: String, task: String, color: String) {
@@ -61,7 +59,7 @@ object CardLogic {
   }
 
   def setStrategy(callback: (Array[Player], Board, Int, Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: Int, pieceNum: Int, moveBy: Int) = {
-    callback(player, board, pieceNum, pieceNum, moveBy)
+    callback(player, board, playerNum, pieceNum, moveBy)
   }
 
   def getLogic(mode: String) = {

@@ -35,7 +35,7 @@ class ControllerSpec extends WordSpec with Matchers {
         players(3).toString should be("Player4")
       }
       "move a player by 4" in {
-        controller.createPlayer(List("Player1", "Player2", "Player3", "Player4"))
+        controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
         controller.movePlayer(3, 0) should be(-1)
       }
       "move a player by 0" in {

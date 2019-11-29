@@ -18,12 +18,22 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
   def overridePlayer(pieceNum: Integer): Player = copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
 
 
-  def removeCard(card: Card): List[Card] = cardList diff List(card)
+  def removeCard(card: Card): List[Card] = {
+    if (cardList.nonEmpty)
+      cardList diff List(card)
+    else
+      Nil
+  }
 
   def setHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
 
 
-  def getCard(cardNum: Integer): Card = cardList(cardNum)
+  def getCard(cardNum: Integer): Card = {
+    if (cardList.nonEmpty)
+      cardList(cardNum)
+    else
+      null
+  }
 
   def movePlayer(pieceNum: Integer, moveBy: Integer): Player = {
 

@@ -3,8 +3,6 @@ package aview
 import controller.Controller
 import util.Observer
 
-import scala.util.Random
-
 
 class Tui(controller: Controller) extends Observer {
   controller.add(this)
@@ -12,7 +10,7 @@ class Tui(controller: Controller) extends Observer {
 
   def automatedSequenceForTesting(): Unit = {
 
-    controller.createPlayer(List("a1", "a2", "a3", "a4"))
+    controller.createSetPlayer(List("a1", "a2", "a3", "a4"))
     controller.createCardDeck
     controller.setNewBoard(20)
     controller.initPlayerHandCards(6)
@@ -27,7 +25,7 @@ class Tui(controller: Controller) extends Observer {
     input.split("\\s+").toList match {
       case "n" :: "player" :: player =>
         if (player.nonEmpty) {
-          controller.createPlayer(player)
+          controller.createSetPlayer(player)
           result = if (player.size > 1)
             s"created ${player.size} players"
           else
@@ -49,7 +47,7 @@ class Tui(controller: Controller) extends Observer {
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           case playerNum :: pieceNum :: Nil =>
             controller.movePlayer(playerNum, pieceNum)
-            result = f"move player $playerNum by "
+            result = f"moved player $playerNum"
           case _ =>
         }
     }

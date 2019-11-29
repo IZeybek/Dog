@@ -61,21 +61,16 @@ class Controller() extends Observable {
     notifyObservers
     player
   }
-  def createPlayer(playerNames: List[String]): Array[Player] = {
-    val player: Array[Player] = new Array[Player](playerNames.size)
-    val colors = Array("gelb", "blau", "grün", "rot")
-    playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
-    notifyObservers
-    player
-  }
-
 
   def movePlayer(playerNum: Integer, pieceNum: Integer): Player = {
     val logicMode: String = "move";
     val taskMode = CardLogic.getLogic(logicMode)
     val selectedCard = playCard(playerNum)
 
-    val moveBy = if (selectedCard.getTask == "move") selectedCard.getSymbol.toString.toInt else 2
+    val moveBy = if (selectedCard.getTask == "move")
+      selectedCard.getSymbol.toString.toInt
+    else
+      0
     val move: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveBy)
 
     board = move._1
