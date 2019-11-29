@@ -20,12 +20,11 @@ class CardSpec extends WordSpec with Matchers {
       "have a Color" in {
         card.getColor should be("grün")
       }
-      "have a Color" in {
+      "be printed out" in {
         card.toString should be("Card(2)")
       }
     }
   }
-
 }
 
 class CardLogicSpec extends WordSpec with Matchers {

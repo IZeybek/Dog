@@ -113,6 +113,11 @@ class Controller() extends Observable {
     }
   }
 
+  def setHandCards(playerNum: Int, cards: List[Card]): Player = {
+    player(playerNum) = player(playerNum).setHandCards(cards)
+    player(playerNum)
+  }
+
   def initPlayerHandCards(amount: Int): Unit = for (pNr <- player.indices) player(pNr) = player(pNr).setHandCards(drawFewCards(amount))
 
 
