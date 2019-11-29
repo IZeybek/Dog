@@ -10,7 +10,7 @@ import util.Observer
 
     def automatedSequenceForTesting(): Unit ={
       controller.setNewBoard(20)
-      controller.createPlayer(List("a1","a2","a3","a4"))
+      controller.createSetPlayer(List("a1", "a2", "a3", "a4"))
       controller.createCardDeck
       controller.initPlayerHandCards(6)
       controller.toStringPlayerHands()
@@ -23,7 +23,7 @@ import util.Observer
       input.split("\\s+").toList match {
         case "n" :: "player" :: player =>
           if (player.size > 0) {
-            controller.createPlayer(player)
+            controller.createSetPlayer(player)
             result = if (player.size > 1)
               s"created ${player.size} players"
             else

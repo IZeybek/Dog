@@ -1,8 +1,6 @@
 package controller
 
 import controller.GameState._
-
-.PlayerState
 import model.CardComponent.{Card, CardDeck}
 import model._
 import util.Observable
@@ -12,9 +10,8 @@ import scala.util.Random
 class Controller() extends Observable {
 
   val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
-
-  var player: Array[Player] = createPlayer(List("p1", "p2", "p3", "p4"))
   var gameState: GameState = IDLE
+  var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
   var cardDeck: Array[Card] = createCardDeck
 
   var cardIndex: Integer = 0
@@ -27,7 +24,6 @@ class Controller() extends Observable {
     notifyObservers
     board
   }
-
 
   def createRandomBoard: Board = {
     board = new BoardCreateStrategyRandom().createNewBoard(10)
@@ -56,18 +52,25 @@ class Controller() extends Observable {
 
   //Player
 
-  def setPlayer(name: List[String]): Array[Player] = {
-    player = createPlayer(name)
+  def createSetPlayer(playerNames: List[String]): Array[Player] = {
+    val colors = Array("gelb", "blau", "grün", "rot")
+    player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i))).toArray
     notifyObservers
     player
   }
 
-  def createPlayer(playerNames: List[String]): Array[Player] = {
-    val player: Array[Player] = new Array[Player](playerNames.size)
-    val colors = Array("gelb", "blau", "grün", "rot")
-    playerNames.indices.foreach(i => player(i) = Player(playerNames(i), colors(i), Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(0), 3 -> Piece(0), 4 -> Piece(0)), 4, null))
+
+  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
+    //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
+    val p: Player = player(playerNum)
+    if (board.overridePlayer(p, pieceNum, moveBy)) {
+      val playerIndex = colors(board.getColor(moveBy + p.getPosition(pieceNum)))
+      player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
+    }
+    board = board.movePlayer(p, pieceNum, moveBy)
+    player(playerNum) = p.movePlayer(pieceNum, moveBy)
     notifyObservers
-    player
+    player(playerNum)
   }
 
   def playCard(playerNum : Int): Card ={
@@ -90,19 +93,6 @@ class Controller() extends Observable {
 
   def initPlayerHandCards(amount: Int): Unit = for (pNr <- player.indices) player(pNr) = player(pNr).setHandCards(drawCards(amount))
 
-
-  def movePlayer(playerNum: Integer, pieceNum: Integer, moveBy: Integer): Player = {
-    //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val p: Player = player(playerNum)
-    if (board.overridePlayer(p, pieceNum, moveBy)) {
-      val playerIndex = colors(board.getColor(moveBy + p.getPosition(pieceNum)))
-      player(playerIndex) = player(playerIndex).overridePlayer(pieceNum)
-    }
-    board = board.movePlayer(p, pieceNum, moveBy)
-    player(playerNum) = p.movePlayer(pieceNum, moveBy)
-    notifyObservers
-    player(playerNum)
-  }
 
   //Cards
 
