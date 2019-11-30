@@ -26,7 +26,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   def movePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Board = {
     print(s"piece $pieceNum is moved")
-    val oldPos: Integer = player.getPiece(pieceNum).getPosition
+    val oldPos: Integer = player.getPosition(pieceNum)
     //set old Cell unoccupied
     var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))
     //set new Pos as occupied
@@ -35,7 +35,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
   }
 
   def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
-    boardMap(moveBy + player.piece(pieceNum).getPosition).isFilled
+    boardMap(moveBy + player.getPosition(pieceNum)).isFilled
   }
 
   def getPlayerColor(pos: Integer): String = {

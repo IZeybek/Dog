@@ -38,13 +38,13 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
         val cardList: List[Card] = Card("5", "move", "blue") :: Nil
         controller.setHandCards(playerNum = 3, cardList)
-        controller.useCardLogic(playerNum = 3, pieceNum = 0, cardNum = 0).getPosition(0) should be(5)
+        controller.useCardLogic(playerNum = List(3), pieceNum = 0, cardNum = 0).getPosition(0) should be(5)
       }
       "move a player by 0" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
         val cardList: List[Card] = Card("0", "move", "blue") :: Nil
         controller.setHandCards(playerNum = 3, cardList)
-        controller.useCardLogic(playerNum = 3, pieceNum = 0, cardNum = 0).getPosition(0) should be(0)
+        controller.useCardLogic(playerNum = List(3), pieceNum = 0, cardNum = 0).getPosition(0) should be(0)
       }
       "play a Card" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))

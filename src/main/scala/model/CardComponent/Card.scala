@@ -61,14 +61,16 @@ object CardLogic {
   val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))
-
+    val swapPos: (Int, Int) = (p.getPosition(pieceNum), swapPlayer.getFurthestPosition()._1)
     val players: Array[Player] = player
-    p.swapPiece(pieceNum,)
-    (board.movePlayer(p, pieceNum, moveBy), players)
+
+    players(playerNums(0)) = p.swapPiece(pieceNum, swapPos._2)
+    players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getFurthestPosition()._2, swapPos._1)
+    (board, players)
   }
 
 
-  def setStrategy(callback: (Array[Player], Board, Int, Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNum: Int, moveBy: Int) = {
+  def setStrategy(callback: (Array[Player], Board, List[Int], Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNum: Int, moveBy: Int) = {
     callback(player, board, playerNum, pieceNum, moveBy)
   }
 

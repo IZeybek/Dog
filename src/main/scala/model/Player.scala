@@ -11,6 +11,10 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position
 
+  /**
+   *
+   * @return the furthest position of player, first Int: Position, second Int: pieceNum
+   */
   def getFurthestPosition(): (Int, Int) = {
     var max: (Int, Int) = (0, 0)
     val updateMax = (x: Int, pieceNum: Int) => if (x > max._1) max = (x, pieceNum)
