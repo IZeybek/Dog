@@ -36,7 +36,7 @@ class Tui(controller: Controller) extends Observer {
         print(controller.toStringBoard)
         result = "printed board"
       case "p" :: Nil =>
-        print(controller.toStringPlayerHands())
+        print(controller.toStringPlayerHands)
         print(controller.toStringBoard)
         result = "printed game"
       case _ =>
@@ -55,7 +55,7 @@ class Tui(controller: Controller) extends Observer {
 
   override def update: Unit = {
     println(controller.toStringBoard)
-    println(controller.toStringPlayerHands())
+    println(controller.toStringPlayerHands)
   }
 
 }
