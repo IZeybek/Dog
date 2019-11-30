@@ -9,7 +9,6 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-  val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var gameState: GameState = IDLE
   var board: Board = setNewBoard(30)
   var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
@@ -62,9 +61,9 @@ class Controller() extends Observable {
   }
 
   def useCardLogic(playerNum: List[Int], pieceNum: Int, cardNum: Int): Player = {
-    if (player.head.cardList.nonEmpty) {
+    if (player(playerNum.head).cardList.nonEmpty) {
       val selectedCard: Card = playCard(playerNum.head, cardNum)
-      val taskMode = CardLogic.getLogic(selectedCard.getTask) // move because others arent implemented yet
+      val taskMode = CardLogic.getLogic(selectedCard.getTask)
       val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
       val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
       board = updateGame._1
@@ -102,14 +101,19 @@ class Controller() extends Observable {
   def playCard(playerNum: Int, cardNum: Integer): Card = {
     val oldCard = player(playerNum).getCard(cardNum)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
-    println(oldCard.getTask)
-
-    println(oldCard)
+    println(s"$oldCard with ${oldCard.getTask}")
     oldCard
   }
 
   def toStringPlayerHands: Unit = {
-    player.indices.foreach(i => println("player: " + i + " --> myHand: " + player(i).cardList))
+    player.indices.foreach(i => println(s"${
+      player(i).color match {
+        case "gelb" => Console.YELLOW
+        case "blau" => Console.BLUE
+        case "grün" => Console.GREEN
+        case "rot" => Console.RED
+      }
+    }player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
   }
 
   def setHandCards(playerNum: Int, cards: List[Card]): Player = {

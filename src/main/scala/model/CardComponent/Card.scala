@@ -22,22 +22,6 @@ case class Card(symbol: String, task: String, color: String) {
   }
 }
 
-//case class MoveLogic() {
-//
-//  def myLogic(player: Array[Player], task: String): Unit = {
-//    //    val s = CardLogic.getLogic("move")
-//    //    val logicMode: String = "move";
-//    //
-//    //    val taskMode = CardLogic.getLogic(logicMode)
-//    //    val move1 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
-//    //    val move2 = CardLogic.setStrategy(deviationModeFunction, player, 2, 3, 3)
-//    //
-//    //    //    val mean = DeviationMode.mean(deviationModeFunction, 2, 25)
-//    //    //    val breach = DeviationMode.compare(DeviationMode.compareMeanDeviation, mean, 88)
-//
-//  }
-//
-//}
 
 object CardLogic {
 
@@ -45,19 +29,23 @@ object CardLogic {
   val move = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
 
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val p: Player = player(playerNums(0))
-    val players: Array[Player] = player
+    var players: Array[Player] = player
+    val p: Player = player(playerNums.head)
 
+    //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum, moveBy)) {
-      val nextCellPos = moveBy + p.getPosition(pieceNum)
-      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(nextCellPos).player.color)
-      players(otherPlayerIndex) = board.boardMap(nextCellPos).player.overridePlayer(pieceNum)
+      val newPos: Int = moveBy + p.getPosition(pieceNum)
+      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).player.color)
+      val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos)
+      println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
+      if (otherPlayerPieceNum == -1) throw new NoSuchElementException
+      players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
     }
 
-    players(playerNums(0)) = p.movePlayer(pieceNum, moveBy)
-
+    players = players.updated(playerNums.head, players(playerNums.head).movePlayer(pieceNum, moveBy))
     (board.movePlayer(p, pieceNum, moveBy), players)
   }
+
 
   val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
 

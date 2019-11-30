@@ -24,7 +24,16 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     max
   }
 
-  def overridePlayer(pieceNum: Int): Player = copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
+  def getPieceNum(position: Int): Int = {
+    piece.foreach(x => if (x._2.position == position) {
+      return x._1
+    })
+    -1
+  }
+
+  def overridePlayer(pieceNum: Int): Player = {
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
+  }
 
   def movePlayer(pieceNum: Int, moveBy: Int): Player = {
     val oldPos = getPosition(pieceNum)
