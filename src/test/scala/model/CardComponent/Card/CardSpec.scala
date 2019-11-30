@@ -40,7 +40,7 @@ class CardLogicSpec extends WordSpec with Matchers {
         cardLogic.getLogic("move") should be(cardLogic.move)
       }
       "have a Strategy" in {
-        cardLogic.setStrategy(mode, player, board, 2, 2, 2) should not be null
+        cardLogic.setStrategy(mode, player, board, List(2), 2, 2) should not be null
       }
       "have a move" in {
         cardLogic.move should not be null
