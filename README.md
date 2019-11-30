@@ -1,5 +1,5 @@
-![Build Status](https://travis-ci.org/Akkarin007/Dog.svg?branch=master)
-![Coverage Status](https://coveralls.io/repos/github/Akkarin007/Dog/badge.svg?branch=master)
+[![Build Status](https://travis-ci.org/Akkarin007/Dog.svg?branch=master)](https://travis-ci.org/Akkarin007/Dog)
+[![Coverage Status](https://coveralls.io/repos/github/Akkarin007/Dog/badge.svg?branch=master)](https://coveralls.io/github/Akkarin007/Dog)
 
 
 # Dog
