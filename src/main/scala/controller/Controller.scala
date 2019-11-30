@@ -13,9 +13,7 @@ class Controller() extends Observable {
   var gameState: GameState = IDLE
   var board: Board = setNewBoard(30)
   var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
-  var cardDeck: Array[Card] = createCardDeck
-
-  var cardIndex: Integer = 0
+  var cardDeck: (Array[Card], Int) = createCardDeck //card deck and int pointer
 
 
   //Board
@@ -78,15 +76,14 @@ class Controller() extends Observable {
 
   //Cards
 
-  def createCardDeck: Array[Card] = {
+  def createCardDeck: (Array[Card], Int) = {
     val array = Random.shuffle(CardDeck.apply()).toArray
-    cardIndex = array.length
-    array
+    (array, array.length)
   }
 
   def toStringCardDeck: String = {
     var cardString: String = "________DECK________\n"
-    cardDeck.indices.foreach(i => cardString += s"$i: ${cardDeck(i)}\n") + "\n"
+    cardDeck._1.indices.foreach(i => cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
   }
 
   def drawFewCards(amount: Int): List[Card] = {
@@ -98,8 +95,8 @@ class Controller() extends Observable {
   }
 
   def drawCardFromDeck: Card = {
-    if (cardIndex != 0) cardIndex = cardIndex - 1
-    cardDeck(cardIndex)
+    if (cardDeck._2 != 0) cardDeck = (cardDeck._1, cardDeck._2 - 1)
+    cardDeck._1(cardDeck._2)
   }
 
   def playCard(playerNum: Int, cardNum: Integer): Card = {

@@ -12,8 +12,9 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position
 
   /**
-   *
-   * @return the furthest position of player, first Int: Position, second Int: pieceNum
+   * @return the furthest position of player
+   *         1. Int: Position
+   *         2. Int: pieceNum
    */
   def getFurthestPosition(): (Int, Int) = {
     var max: (Int, Int) = (0, 0)
@@ -30,7 +31,7 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
   }
 
   def swapPiece(pieceNum: Int, newPos: Int): Player = {
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(position = newPos)))
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(position = newPos)), inHouse = if (newPos == 0) inHouse + 1 else inHouse)
   }
 
 

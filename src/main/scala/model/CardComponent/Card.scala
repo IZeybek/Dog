@@ -50,15 +50,18 @@ object CardLogic {
 
     if (board.checkOverrideOtherPlayer(p, pieceNum, moveBy)) {
       val nextCellPos = moveBy + p.getPosition(pieceNum)
-      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.getBoardMap(nextCellPos).player.color)
-      players(otherPlayerIndex) = board.getBoardMap(nextCellPos).player.overridePlayer(pieceNum)
+      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(nextCellPos).player.color)
+      players(otherPlayerIndex) = board.boardMap(nextCellPos).player.overridePlayer(pieceNum)
     }
+
     players(playerNums(0)) = p.movePlayer(pieceNum, moveBy)
 
     (board.movePlayer(p, pieceNum, moveBy), players)
   }
 
   val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
+
+    //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))
     val swapPos: (Int, Int) = (p.getPosition(pieceNum), swapPlayer.getFurthestPosition()._1)
@@ -66,7 +69,10 @@ object CardLogic {
 
     players(playerNums(0)) = p.swapPiece(pieceNum, swapPos._2)
     players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getFurthestPosition()._2, swapPos._1)
-    (board, players)
+
+    val nboard = board.swapPlayers(players, playerNums, List(pieceNum, swapPlayer.getFurthestPosition()._2))
+
+    (nboard, players)
   }
 
 
