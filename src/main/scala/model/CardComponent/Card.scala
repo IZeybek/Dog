@@ -64,13 +64,13 @@ object CardLogic {
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))
-    val swapPos: (Int, Int) = (p.getPosition(pieceNum), swapPlayer.getFurthestPosition()._1)
+    val swapPos: (Int, Int) = (p.getPosition(pieceNum), swapPlayer.getFurthestPosition._1)
     val players: Array[Player] = player
 
     players(playerNums(0)) = p.swapPiece(pieceNum, swapPos._2)
-    players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getFurthestPosition()._2, swapPos._1)
+    players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getFurthestPosition._2, swapPos._1)
 
-    val nboard = board.swapPlayers(players, playerNums, List(pieceNum, swapPlayer.getFurthestPosition()._2))
+    val nboard = board.swapPlayers(players, playerNums, List(pieceNum, swapPlayer.getFurthestPosition._2))
 
     (nboard, players)
   }
@@ -80,7 +80,7 @@ object CardLogic {
     callback(player, board, playerNum, pieceNum, moveBy)
   }
 
-  def getLogic(mode: String) = {
+  def getLogic(mode: String): (Array[Player], Board, List[Int], Int, Int) => (Board, Array[Player]) = {
     mode match {
       case "move" => move
       case "swap" => swap
