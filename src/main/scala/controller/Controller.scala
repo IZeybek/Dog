@@ -55,15 +55,15 @@ class Controller() extends Observable {
 
   def createSetPlayer(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
-    player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i), 4)).toArray
+    player = playerNames.indices.map(i => new Player(playerNames(i), colors(i), 4)).toArray
     gameState = CREATEPLAYER
     notifyObservers
     player
   }
 
   def useCardLogic(playerNum: List[Int], pieceNum: Int, cardNum: Int): Player = {
-    if (player(playerNum(0)).cardList.nonEmpty) {
-      val selectedCard: Card = playCard(playerNum(0), cardNum)
+    if (player.head.cardList.nonEmpty) {
+      val selectedCard: Card = playCard(playerNum.head, cardNum)
       val taskMode = CardLogic.getLogic(selectedCard.getTask) // move because others arent implemented yet
       val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
       val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
@@ -71,7 +71,7 @@ class Controller() extends Observable {
       player = updateGame._2
     }
     notifyObservers
-    player(playerNum(0))
+    player(playerNum.head)
   }
 
   //Cards
@@ -108,10 +108,8 @@ class Controller() extends Observable {
     oldCard
   }
 
-  def toStringPlayerHands(): Unit = {
-    for (i <- player.indices) {
-      println("player: " + i + " --> myHand: " + player(i).cardList)
-    }
+  def toStringPlayerHands: Unit = {
+    player.indices.foreach(i => println("player: " + i + " --> myHand: " + player(i).cardList))
   }
 
   def setHandCards(playerNum: Int, cards: List[Card]): Player = {
@@ -119,7 +117,9 @@ class Controller() extends Observable {
     player(playerNum)
   }
 
-  def initPlayerHandCards(amount: Int): Unit = for (pNr <- player.indices) player(pNr) = player(pNr).setHandCards(drawFewCards(amount))
+  def initPlayerHandCards(amount: Int): Unit = {
+    player.indices.foreach(pNr => player(pNr) = player(pNr).setHandCards(drawFewCards(amount)))
+  }
 
 
 }

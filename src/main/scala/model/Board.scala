@@ -7,7 +7,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   //can create a Board with a given size
   def this(size: Int) = {
-    this((0 until size).map(i => (i, Cell(i, false, null))).toMap)
+    this((0 until size).map(i => (i, Cell(i, filled = false, null))).toMap)
   }
 
   override def toString: String = {
@@ -39,10 +39,10 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     val swapPlayer: Player = player(playerNums(1))
 
     //set cell to swapPlayer
-    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums(0)), boardMap(p.getPosition(pieceNums(0))).copy(player = swapPlayer))
+    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).copy(player = swapPlayer))
 
     //set cell to player
-    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(1)).copy(player = p))
+    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).copy(player = p))
     copy(boardMap = nBoard)
   }
 

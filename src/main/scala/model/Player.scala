@@ -16,22 +16,30 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
    *         1. Int: Position
    *         2. Int: pieceNum
    */
-  def getFurthestPosition(): (Int, Int) = {
+  def getFurthestPosition: (Int, Int) = {
     var max: (Int, Int) = (0, 0)
-    val updateMax = (x: Int, pieceNum: Int) => if (x > max._1) max = (x, pieceNum)
+    val updateMax = (pos: Int, pieceNum: Int) => if (pos > max._1) max = (pos, pieceNum)
     piece.foreach(x => updateMax(x._2.position, x._1))
+    print(s"max position of $color is $max\n")
     max
   }
 
   def overridePlayer(pieceNum: Int): Player = copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
 
   def movePlayer(pieceNum: Int, moveBy: Int): Player = {
-    val oldPos = piece(pieceNum).position
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = if (oldPos == 0 && moveBy > 0) inHouse - 1 else inHouse)
+    val oldPos = getPosition(pieceNum)
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = {
+      if (oldPos == 0 && moveBy > 0) inHouse - 1
+      else inHouse
+    })
   }
 
   def swapPiece(pieceNum: Int, newPos: Int): Player = {
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(position = newPos)), inHouse = if (newPos == 0) inHouse + 1 else inHouse)
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(position = newPos)), inHouse = {
+      if (newPos == 0) inHouse + 1
+      else if (getPosition(pieceNum) == 0 && getPosition(pieceNum) < newPos) inHouse - 1
+      else inHouse
+    })
   }
 
 

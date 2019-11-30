@@ -48,18 +48,24 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "swap two players" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
-        val cardList: List[Card] = Card("5", "move", "blue") :: Card("swap", "swap", "red") :: Nil
-        controller.setHandCards(playerNum = 3, List(cardList(0)))
-        controller.setHandCards(playerNum = 2, List(cardList(1)))
+        val cardListP3: List[Card] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("9", "move", "blue") :: Nil
+        val cardListP2: List[Card] = Card("swap", "swap", "red") :: Nil
+        controller.setHandCards(playerNum = 3, cardListP3)
+        controller.setHandCards(playerNum = 2, cardListP2)
         controller.useCardLogic(playerNum = List(3), pieceNum = 0, cardNum = 0)
+        controller.useCardLogic(playerNum = List(3), pieceNum = 1, cardNum = 0)
+        controller.useCardLogic(playerNum = List(3), pieceNum = 2, cardNum = 0)
         controller.useCardLogic(playerNum = List(2, 3), pieceNum = 2, cardNum = 0)
+
+        controller.player(2).getPosition(2) should be(9)
+        controller.player(3).getPosition(2) should be(0)
       }
       "play a Card" in {
         controller.createSetPlayer(List("Player1", "Player2", "Player3", "Player4"))
         controller.setHandCards(playerNum = 0, List(Card("5", "move", "blue")))
         val handCards: List[Card] = controller.player(0).cardList
         val playedCard: Card = controller.playCard(0, 0)
-        playedCard.color should be(handCards(0).color)
+        playedCard.color should be(handCards.head.color)
       }
       "draw Cards" in {
         controller.drawFewCards(10).foreach(x => be(x.isInstanceOf[Card]))
