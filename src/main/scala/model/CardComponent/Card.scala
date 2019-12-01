@@ -92,7 +92,12 @@ object GenCardDeck {
 
 object CardDeck {
   def apply(): List[Card] = {
+
     GenCardDeck.apply("special").getCardDeck ++
+      GenCardDeck.apply("normal").getCardDeck ++
+      GenCardDeck.apply("special").getCardDeck ++
+      GenCardDeck.apply("normal").getCardDeck ++
+      GenCardDeck.apply("special").getCardDeck ++
       GenCardDeck.apply("normal").getCardDeck ++
       GenCardDeck.apply("special").getCardDeck ++
       GenCardDeck.apply("normal").getCardDeck

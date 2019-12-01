@@ -28,10 +28,10 @@ class CardSpec extends WordSpec with Matchers {
 class CardLogicSpec extends WordSpec with Matchers {
   "A CardLogic" when {
     "created" should {
-      val controller = new Controller
+      val controller = new Controller(new Board(30))
       val cardLogic = CardLogic
-      val player = controller.createSetPlayer(List("p1", "p2", "p3", "p4"))
-      val board = controller.setNewBoard(20)
+      val player = controller.createPlayers(List("p1", "p2", "p3", "p4"))
+      val board = controller.createNewBoard(20)
       val mode = cardLogic.getLogic("move")
       "have a mode" in {
         mode should be(cardLogic.move)

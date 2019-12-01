@@ -7,12 +7,10 @@ import util.Observer
 class Tui(controller: Controller) extends Observer {
   controller.add(this)
 
-
   def automatedSequenceForTesting(): Unit = {
 
-    controller.createSetPlayer(List("a1", "a2", "a3", "a4"))
-    controller.setNewBoard(30)
-    controller.initPlayerHandCards(6)
+//    controller.initAndDistributeCardsToPlayer(6)
+
   }
 
   def processInput(input: String): String = {
@@ -21,7 +19,7 @@ class Tui(controller: Controller) extends Observer {
     input.split("\\s+").toList match {
       case "n" :: "player" :: player =>
         if (player.nonEmpty) {
-          controller.createSetPlayer(player)
+          controller.createPlayers(player)
           result = if (player.size > 1)
             s"created ${player.size} players"
           else
@@ -36,8 +34,10 @@ class Tui(controller: Controller) extends Observer {
         print(controller.toStringBoard)
         result = "printed board"
       case "p" :: Nil =>
-        print(controller.toStringPlayerHands)
         print(controller.toStringBoard)
+        print(controller.toStringCardDeck)
+        print(controller.toStringPlayerHands)
+
         result = "printed game"
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {

@@ -7,17 +7,15 @@ import util.Observable
 
 import scala.util.Random
 
-class Controller() extends Observable {
+class Controller(var board: Board) extends Observable {
 
   var gameState: GameState = IDLE
-  var board: Board = setNewBoard(30)
-  var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
+  var player: Array[Player] = createPlayers(List("p1", "p2", "p3", "p4"))
   var cardDeck: (Array[Card], Int) = createCardDeck //card deck and int pointer
-
+  initAndDistributeCardsToPlayer(6)
 
   //Board
-
-  def setNewBoard(size: Int): Board = {
+  def createNewBoard(size: Int): Board = {
     board = new Board(size)
     gameState = CREATEBOARD
     notifyObservers
@@ -52,22 +50,29 @@ class Controller() extends Observable {
 
   //Player
 
-  def createSetPlayer(playerNames: List[String]): Array[Player] = {
+  def createPlayers(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
     player = playerNames.indices.map(i => new Player(playerNames(i), colors(i), 4)).toArray
     gameState = CREATEPLAYER
-    notifyObservers
+    //    notifyObservers
     player
   }
 
   def useCardLogic(playerNum: List[Int], pieceNum: Int, cardNum: Int): Player = {
     if (player(playerNum.head).cardList.nonEmpty) {
-      val selectedCard: Card = playCard(playerNum.head, cardNum)
-      val taskMode = CardLogic.getLogic(selectedCard.getTask)
-      val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
-      val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
-      board = updateGame._1
-      player = updateGame._2
+
+      val selectedCard: Card = playChosenCard(playerNum.head, cardNum)
+      val task = selectedCard.getTask
+
+      if (task == "swap" || task == "move") {
+
+        val taskMode = CardLogic.getLogic(task)
+        val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
+        val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
+
+        board = updateGame._1
+        player = updateGame._2
+      }
     }
     notifyObservers
     player(playerNum.head)
@@ -82,7 +87,8 @@ class Controller() extends Observable {
 
   def toStringCardDeck: String = {
     var cardString: String = "________DECK________\n"
-    cardDeck._1.indices.foreach(i => cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
+    cardDeck._1.indices.foreach(i => if (i < cardDeck._2) cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
+    cardString
   }
 
   def drawFewCards(amount: Int): List[Card] = {
@@ -98,7 +104,7 @@ class Controller() extends Observable {
     cardDeck._1(cardDeck._2)
   }
 
-  def playCard(playerNum: Int, cardNum: Integer): Card = {
+  def playChosenCard(playerNum: Int, cardNum: Integer): Card = {
     val oldCard = player(playerNum).getCard(cardNum)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
     println(s"$oldCard with ${oldCard.getTask}")
@@ -116,12 +122,12 @@ class Controller() extends Observable {
     }player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
   }
 
-  def setHandCards(playerNum: Int, cards: List[Card]): Player = {
+  def distributeCardsToPlayer(playerNum: Int, cards: List[Card]): Player = {
     player(playerNum) = player(playerNum).setHandCards(cards)
     player(playerNum)
   }
 
-  def initPlayerHandCards(amount: Int): Unit = {
+  def initAndDistributeCardsToPlayer(amount: Int): Unit = {
     player.indices.foreach(pNr => player(pNr) = player(pNr).setHandCards(drawFewCards(amount)))
   }
 
