@@ -64,6 +64,7 @@ class Controller(var board: Board) extends Observable {
       val selectedCard: Card = playChosenCard(playerNum.head, cardNum)
       val task = selectedCard.getTask
 
+      if (task == "swap" || task == "move") {
 
         val taskMode = CardLogic.getLogic(task)
         val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
@@ -71,7 +72,7 @@ class Controller(var board: Board) extends Observable {
 
         board = updateGame._1
         player = updateGame._2
-
+      }
     }
     notifyObservers
     player(playerNum.head)
