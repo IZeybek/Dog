@@ -5,8 +5,8 @@ import model.CardComponent.Card
 
 case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, cardList: List[Card]) {
 
-  def this(name: String, color: String, pieceNumber: Int) = {
-    this(name, color = color, (0 to pieceNumber).map(i => (i, Piece(0))).toMap, inHouse = 4, null)
+  def this(name: String, color: String, pieceQuantity: Int) = {
+    this(name, color = color, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, null)
   }
 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position

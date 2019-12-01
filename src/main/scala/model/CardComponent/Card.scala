@@ -34,15 +34,19 @@ object CardLogic {
 
     //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum, moveBy)) {
+
       val newPos: Int = moveBy + p.getPosition(pieceNum)
       val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).player.color)
       val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos)
+
       println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
       if (otherPlayerPieceNum == -1) throw new NoSuchElementException
+
       players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
     }
 
     players = players.updated(playerNums.head, players(playerNums.head).movePlayer(pieceNum, moveBy))
+
     (board.movePlayer(p, pieceNum, moveBy), players)
   }
 
@@ -92,7 +96,12 @@ object GenCardDeck {
 
 object CardDeck {
   def apply(): List[Card] = {
+
     GenCardDeck.apply("special").getCardDeck ++
+      GenCardDeck.apply("normal").getCardDeck ++
+      GenCardDeck.apply("special").getCardDeck ++
+      GenCardDeck.apply("normal").getCardDeck ++
+      GenCardDeck.apply("special").getCardDeck ++
       GenCardDeck.apply("normal").getCardDeck ++
       GenCardDeck.apply("special").getCardDeck ++
       GenCardDeck.apply("normal").getCardDeck
