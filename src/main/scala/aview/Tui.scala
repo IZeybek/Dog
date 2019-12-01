@@ -12,12 +12,7 @@ class Tui(controller: Controller) extends Observer {
 
     controller.createSetPlayer(List("a1", "a2", "a3", "a4"))
     controller.setNewBoard(30)
-    controller.createCardDeck
-    controller.toStringCardDeck
     controller.initPlayerHandCards(6)
-    controller.toStringPlayerHands()
-    //      println(controller.playCard(0))
-    //      controller.toStringPlayerHands()
   }
 
   def processInput(input: String): String = {
@@ -41,14 +36,17 @@ class Tui(controller: Controller) extends Observer {
         print(controller.toStringBoard)
         result = "printed board"
       case "p" :: Nil =>
-        print(controller.toStringCardDeck)
+        print(controller.toStringPlayerHands)
         print(controller.toStringBoard)
         result = "printed game"
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
-          case playerNum :: pieceNum :: cardNum :: Nil =>
+          case cardNum :: pieceNum :: playerNum =>
             controller.useCardLogic(playerNum, pieceNum, cardNum)
             result = s"player $playerNum used card number $cardNum"
+          case cardNum :: pieceNum :: Nil =>
+            controller.useCardLogic(List(0), pieceNum, cardNum)
+            result = s"player 0 used card number $cardNum"
           case _ =>
         }
     }
@@ -57,8 +55,7 @@ class Tui(controller: Controller) extends Observer {
 
   override def update: Unit = {
     println(controller.toStringBoard)
-    println(controller.toStringCardDeck)
-    println(controller.toStringPlayerHands())
+    println(controller.toStringPlayerHands)
   }
 
 }

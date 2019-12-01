@@ -7,39 +7,52 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   //can create a Board with a given size
   def this(size: Int) = {
-    this((0 until size).map(i => (i, Cell(i, false, null))).toMap)
+    this((0 until size).map(i => (i, Cell(i, filled = false, null))).toMap)
   }
-
-  def getBoardMap: Map[Int, Cell] = boardMap
 
   override def toString: String = {
     var box = ""
-    val line_down = "_" * getBoardMap.size * 3 + "\n"
-    val line_up = "\n" + "‾" * getBoardMap.size * 3
+    val line_down = "_" * boardMap.size * 3 + "\n"
+    val line_up = "\n" + "‾" * boardMap.size * 3
     box = box + line_down
-    for (i <- 0 until getBoardMap.size) {
-      box += getBoardMap(i).toString
+    for (i <- 0 until boardMap.size) {
+      box += boardMap(i).toString
     }
     box += line_up + "\n"
     box
   }
 
   def movePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Board = {
-    print(s"piece $pieceNum is moved")
-    val oldPos: Integer = player.getPiece(pieceNum).getPosition
+    val oldPos: Integer = player.getPosition(pieceNum)
+
     //set old Cell unoccupied
     var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))
+
     //set new Pos as occupied
     nBoard = nBoard.updated(oldPos + moveBy, boardMap(oldPos + moveBy).copy(filled = true, player = player))
-    copy(nBoard)
+    copy(boardMap = nBoard)
+  }
+
+  def swapPlayers(player: Array[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
+
+    val p: Player = player(playerNums(0))
+    val swapPlayer: Player = player(playerNums(1))
+
+    //set cell to swapPlayer
+    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).copy(player = swapPlayer))
+
+    //set cell to player
+    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).copy(player = p))
+    copy(boardMap = nBoard)
   }
 
   def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
-    boardMap(moveBy + player.piece(pieceNum).getPosition).isFilled
+    boardMap(moveBy + player.getPosition(pieceNum)).isFilled
   }
 
   def getPlayerColor(pos: Integer): String = {
     boardMap(pos).player.color
   }
+
 }
 

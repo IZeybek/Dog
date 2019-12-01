@@ -9,13 +9,10 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-  val colors: Map[String, Integer] = Map("gelb" -> 0, "blau" -> 1, "grün" -> 2, "rot" -> 3)
   var gameState: GameState = IDLE
   var board: Board = setNewBoard(30)
   var player: Array[Player] = createSetPlayer(List("p1", "p2", "p3", "p4"))
-  var cardDeck: Array[Card] = createCardDeck
-
-  var cardIndex: Integer = 0
+  var cardDeck: (Array[Card], Int) = createCardDeck //card deck and int pointer
 
 
   //Board
@@ -57,36 +54,35 @@ class Controller() extends Observable {
 
   def createSetPlayer(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
-    player = (0 until playerNames.size).map(i => new Player(playerNames(i), colors(i), 4)).toArray
+    player = playerNames.indices.map(i => new Player(playerNames(i), colors(i), 4)).toArray
     gameState = CREATEPLAYER
     notifyObservers
     player
   }
 
-  def useCardLogic(playerNum: Int, pieceNum: Int, cardNum: Int): Player = {
-    if (player(playerNum).cardList.nonEmpty) {
-      val selectedCard: Card = playCard(playerNum, cardNum)
-      val taskMode = CardLogic.getLogic("move") // move because others arent implemented yet
+  def useCardLogic(playerNum: List[Int], pieceNum: Int, cardNum: Int): Player = {
+    if (player(playerNum.head).cardList.nonEmpty) {
+      val selectedCard: Card = playCard(playerNum.head, cardNum)
+      val taskMode = CardLogic.getLogic(selectedCard.getTask)
       val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
       val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
       board = updateGame._1
       player = updateGame._2
     }
     notifyObservers
-    player(playerNum)
+    player(playerNum.head)
   }
 
   //Cards
 
-  def createCardDeck: Array[Card] = {
+  def createCardDeck: (Array[Card], Int) = {
     val array = Random.shuffle(CardDeck.apply()).toArray
-    cardIndex = array.length
-    array
+    (array, array.length)
   }
 
   def toStringCardDeck: String = {
     var cardString: String = "________DECK________\n"
-    cardDeck.indices.foreach(i => cardString += s"$i: ${cardDeck(i)}\n") + "\n"
+    cardDeck._1.indices.foreach(i => cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
   }
 
   def drawFewCards(amount: Int): List[Card] = {
@@ -98,23 +94,26 @@ class Controller() extends Observable {
   }
 
   def drawCardFromDeck: Card = {
-    if (cardIndex != 0) cardIndex = cardIndex - 1
-    cardDeck(cardIndex)
+    if (cardDeck._2 != 0) cardDeck = (cardDeck._1, cardDeck._2 - 1)
+    cardDeck._1(cardDeck._2)
   }
 
   def playCard(playerNum: Int, cardNum: Integer): Card = {
     val oldCard = player(playerNum).getCard(cardNum)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
-    println(oldCard.getTask)
-
-    println(oldCard)
+    println(s"$oldCard with ${oldCard.getTask}")
     oldCard
   }
 
-  def toStringPlayerHands(): Unit = {
-    for (i <- player.indices) {
-      println("player: " + i + " --> myHand: " + player(i).cardList)
-    }
+  def toStringPlayerHands: Unit = {
+    player.indices.foreach(i => println(s"${
+      player(i).color match {
+        case "gelb" => Console.YELLOW
+        case "blau" => Console.BLUE
+        case "grün" => Console.GREEN
+        case "rot" => Console.RED
+      }
+    }player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
   }
 
   def setHandCards(playerNum: Int, cards: List[Card]): Player = {
@@ -122,7 +121,9 @@ class Controller() extends Observable {
     player(playerNum)
   }
 
-  def initPlayerHandCards(amount: Int): Unit = for (pNr <- player.indices) player(pNr) = player(pNr).setHandCards(drawFewCards(amount))
+  def initPlayerHandCards(amount: Int): Unit = {
+    player.indices.foreach(pNr => player(pNr) = player(pNr).setHandCards(drawFewCards(amount)))
+  }
 
 
 }
