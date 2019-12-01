@@ -61,11 +61,11 @@ case class Piece(var position: Int) {
 //  var color: String = "blau"
 //  var name: String = "Bob"
 //
-//  def withPieceNumber(pieceNum: Integer): Unit = pieceNumber = pieceNum
+//  def withPieceNumber(pieceNum: Integer): PlayerBuilder = pieceNumber = pieceNum
 //
-//  def withColor(c: String): Unit = color = c
+//  def withColor(c: String): PlayerBuilder = color = c
 //
-//  def withName(n: String): Unit = name = n
+//  def withName(n: String): PlayerBuilder = name = n
 //
 //  def build(): Player = {
 //    new Player(name, color, pieceNumber)
