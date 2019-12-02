@@ -73,7 +73,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.useCardLogic(playerNum = List(3), pieceNum = List(0), cardNum = 0)
         controller.useCardLogic(playerNum = List(3), pieceNum = List(1), cardNum = 0)
         controller.useCardLogic(playerNum = List(3), pieceNum = List(2), cardNum = 0)
-        controller.useCardLogic(playerNum = List(2, 3), pieceNum = List(2), cardNum = 0)
+        controller.useCardLogic(playerNum = List(2, 3), pieceNum = List(2, 2), cardNum = 0)
 
         controller.player(2).getPosition(2) should be(9)
         controller.player(3).getPosition(2) should be(0)

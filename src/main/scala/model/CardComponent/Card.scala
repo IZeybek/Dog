@@ -56,7 +56,7 @@ object CardLogic {
     val players: Array[Player] = player
 
     players(playerNums(0)) = p.swapPiece(pieceNums(0), swapPos._2)
-    players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getPosition(pieceNums(1)), swapPos._1)
+    players(playerNums(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
 
     val nboard = board.swapPlayers(players, playerNums, pieceNums)
 
