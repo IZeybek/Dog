@@ -58,7 +58,7 @@ class Controller(var board: Board) extends Observable {
     player
   }
 
-  def useCardLogic(playerNum: List[Int], pieceNum: Int, cardNum: Int): Player = {
+  def useCardLogic(playerNum: List[Int], pieceNum: List[Int], cardNum: Int): Player = {
     if (player(playerNum.head).cardList.nonEmpty) {
 
       val selectedCard: Card = playChosenCard(playerNum.head, cardNum)

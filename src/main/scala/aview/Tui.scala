@@ -9,7 +9,7 @@ class Tui(controller: Controller) extends Observer {
 
   def automatedSequenceForTesting(): Unit = {
 
-//    controller.initAndDistributeCardsToPlayer(6)
+    //    controller.initAndDistributeCardsToPlayer(6)
 
   }
 
@@ -42,11 +42,11 @@ class Tui(controller: Controller) extends Observer {
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           case cardNum :: pieceNum :: playerNum =>
-            controller.useCardLogic(playerNum, pieceNum, cardNum)
-            result = s"player $playerNum used card number $cardNum"
-          case cardNum :: pieceNum :: Nil =>
-            controller.useCardLogic(List(0), pieceNum, cardNum)
-            result = s"player 0 used card number $cardNum"
+            controller.useCardLogic(playerNum, List(pieceNum), cardNum)
+            result = s"player ${playerNum(0)} used card number $cardNum"
+          case cardNum :: pieceNum1 :: pieceNum2 :: playerNum =>
+            controller.useCardLogic(playerNum, List(pieceNum1, pieceNum2), cardNum)
+            result = s"player ${playerNum(0)} used card number $cardNum"
           case _ =>
         }
     }

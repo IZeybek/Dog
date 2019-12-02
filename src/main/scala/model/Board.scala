@@ -22,14 +22,14 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     box
   }
 
-  def movePlayer(player: Player, pieceNum: Integer, moveBy: Integer): Board = {
+  def movePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
     val oldPos: Integer = player.getPosition(pieceNum)
 
     //set old Cell unoccupied
     var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))
 
     //set new Pos as occupied
-    nBoard = nBoard.updated(oldPos + moveBy, boardMap(oldPos + moveBy).copy(filled = true, player = player))
+    nBoard = nBoard.updated(setPos, boardMap(setPos).copy(filled = true, player = player))
     copy(boardMap = nBoard)
   }
 
@@ -46,8 +46,8 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     copy(boardMap = nBoard)
   }
 
-  def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, moveBy: Integer): Boolean = {
-    boardMap(moveBy + player.getPosition(pieceNum)).isFilled
+  def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = {
+    boardMap(newPos).isFilled
   }
 
   def getPlayerColor(pos: Integer): String = {

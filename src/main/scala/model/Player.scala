@@ -3,26 +3,26 @@ package model
 import model.CardComponent.Card
 
 
-case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, cardList: List[Card]) {
+case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
 
   def this(name: String, color: String, pieceQuantity: Int) = {
-    this(name, color = color, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, null)
+    this(name, color = color, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, null)
   }
 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position
 
-  /**
-   * @return the furthest position of player
-   *         1. Int: Position
-   *         2. Int: pieceNum
-   */
-  def getFurthestPosition: (Int, Int) = {
-    var max: (Int, Int) = (0, 0)
-    val updateMax = (pos: Int, pieceNum: Int) => if (pos > max._1) max = (pos, pieceNum)
-    piece.foreach(x => updateMax(x._2.position, x._1))
-    print(s"max position of $color is $max\n")
-    max
-  }
+  //  /**
+  //   * @return the furthest position of player
+  //   *         1. Int: Position
+  //   *         2. Int: pieceNum
+  //   */
+  //  def getFurthestPosition: (Int, Int) = {
+  //    var max: (Int, Int) = (0, 0)
+  //    val updateMax = (pos: Int, pieceNum: Int) => if (pos > max._1) max = (pos, pieceNum)
+  //    piece.foreach(x => updateMax(x._2.position, x._1))
+  //    print(s"max position of $color is $max\n")
+  //    max
+  //  }
 
   def getPieceNum(position: Int): Int = {
     piece.foreach(x => if (x._2.position == position) {
@@ -35,10 +35,18 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
   }
 
-  def movePlayer(pieceNum: Int, moveBy: Int): Player = {
+  //  def movePlayer(pieceNum: Int, moveBy: Int): Player = {
+  //    val oldPos = getPosition(pieceNum)
+  //    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = {
+  //      if (oldPos == 0 && moveBy > 0) inHouse - 1
+  //      else inHouse
+  //    })
+  //  }
+
+  def setPosition(pieceNum: Int, newPos: Int): Player = {
     val oldPos = getPosition(pieceNum)
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = {
-      if (oldPos == 0 && moveBy > 0) inHouse - 1
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(newPos)), inHouse = {
+      if (oldPos == start && newPos - oldPos > 0) inHouse - 1
       else inHouse
     })
   }

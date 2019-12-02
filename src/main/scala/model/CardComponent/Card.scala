@@ -26,15 +26,15 @@ case class Card(symbol: String, task: String, color: String) {
 object CardLogic {
 
 
-  val move = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
+  val move = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Array[Player] = player
     val p: Player = player(playerNums.head)
+    val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum(0)), board.boardMap.size)
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, pieceNum, moveBy)) {
-      val newPos: Int = moveBy + p.getPosition(pieceNum)
+    if (board.checkOverrideOtherPlayer(p, pieceNum(0), newPos)) {
       val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).player.color)
       val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos)
       println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
@@ -42,33 +42,33 @@ object CardLogic {
       players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
     }
 
-    players = players.updated(playerNums.head, players(playerNums.head).movePlayer(pieceNum, moveBy))
-    (board.movePlayer(p, pieceNum, moveBy), players)
+    players = players.updated(playerNums.head, players(playerNums.head).setPosition(pieceNum(0), newPos))
+    (board.movePlayer(p, pieceNum(0), newPos), players)
   }
 
 
-  val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: Int, moveBy: Int) => {
+  val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))
-    val swapPos: (Int, Int) = (p.getPosition(pieceNum), swapPlayer.getFurthestPosition._1)
+    val swapPos: (Int, Int) = (p.getPosition(pieceNums(0)), swapPlayer.getPosition(pieceNums(1)))
     val players: Array[Player] = player
 
-    players(playerNums(0)) = p.swapPiece(pieceNum, swapPos._2)
-    players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getFurthestPosition._2, swapPos._1)
+    players(playerNums(0)) = p.swapPiece(pieceNums(0), swapPos._2)
+    players(playerNums(1)) = swapPlayer.swapPiece(swapPlayer.getPosition(pieceNums(1)), swapPos._1)
 
-    val nboard = board.swapPlayers(players, playerNums, List(pieceNum, swapPlayer.getFurthestPosition._2))
+    val nboard = board.swapPlayers(players, playerNums, pieceNums)
 
     (nboard, players)
   }
 
 
-  def setStrategy(callback: (Array[Player], Board, List[Int], Int, Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNum: Int, moveBy: Int) = {
-    callback(player, board, playerNum, pieceNum, moveBy)
+  def setStrategy(callback: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int) = {
+    callback(player, board, playerNum, pieceNums, moveBy)
   }
 
-  def getLogic(mode: String): (Array[Player], Board, List[Int], Int, Int) => (Board, Array[Player]) = {
+  def getLogic(mode: String): (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]) = {
     mode match {
       case "move" => move
       case "swap" => swap
