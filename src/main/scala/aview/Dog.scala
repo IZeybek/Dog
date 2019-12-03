@@ -12,10 +12,10 @@ object Dog {
   def main(args: Array[String]): Unit = {
     tui.automatedSequenceForTesting
 
-    var input = ""
+    var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
     do {
-      System.out.print("\n>> ")
+      print("\n>> ")
       input = scala.io.StdIn.readLine()
       println(tui.processInput(input))
     } while (input != "exit")
