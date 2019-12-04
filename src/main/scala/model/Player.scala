@@ -7,10 +7,10 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
 
   val color: String = () => {
     c match {
-      case "grün" => Console.GREEN
-      case "blau" => Console.BLUE
-      case "rot" => Console.RED
-      case "gelb" => Console.YELLOW
+      case "grün" || Console.GREEN => Console.GREEN
+      case "blau" || Console.BLUE => Console.BLUE
+      case "rot" || Console.RED => Console.RED
+      case "gelb" || Console.YELLOW => Console.YELLOW
       case _ => ""
     }
   }
