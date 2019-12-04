@@ -3,10 +3,16 @@ package model
 import model.CardComponent.Card
 
 
-case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
+case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
 
-  def this(name: String, color: String, pieceQuantity: Int) = {
-    this(name, color = color, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, null)
+  val color: String = () => {
+    c match {
+      case "grün" => Console.GREEN
+      case "blau" => Console.BLUE
+      case "rot" => Console.RED
+      case "gelb" => Console.YELLOW
+      case _ => ""
+    }
   }
 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position
@@ -59,6 +65,9 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     })
   }
 
+  def this(name: String, pieceQuantity: Int) = {
+    this(name, c = color, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, null)
+  }
 
   def removeCard(card: Card): List[Card] = {
     if (cardList.nonEmpty)
@@ -89,8 +98,8 @@ case class Piece(var position: Int) {
   def movePiece(moveBy: Int): Piece = {
     copy(position = position + moveBy)
   }
-
 }
+
 
 //case class PlayerBuilder() {
 //  var pieceNumber: Int = 4
