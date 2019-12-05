@@ -55,13 +55,14 @@ object CardLogic {
     val swapPlayer: Player = player(playerNums(1))
     val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
     val players: Array[Player] = player
+    var isValid = 0
 
     players(playerNums.head) = p.swapPiece(pieceNums.head, swapPos._2)
     players(playerNums(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
 
     val nboard = board.swapPlayers(players, playerNums, pieceNums)
 
-    (nboard, players, 0)
+    (nboard, players, isValid)
   }
 
 
