@@ -22,18 +22,17 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     box
   }
 
-  def movePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
+  def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
     val oldPos: Integer = player.getPosition(pieceNum)
 
     //set old Cell unoccupied
-    var
-    nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell)
+    var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell)
     //set new Pos as occupied
     nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayerToCell(p = player))
     copy(boardMap = nBoard)
   }
 
-  def swapPlayers(player: Array[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
+  def updateSwapPlayers(player: Array[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
 
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))

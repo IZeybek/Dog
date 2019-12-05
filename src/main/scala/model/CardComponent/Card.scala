@@ -44,7 +44,7 @@ object CardLogic {
     }
 
     players = players.updated(selectedPlayerIndices.head, players(selectedPlayerIndices.head).setPosition(pieceNum.head, newPos))
-    (board.movePlayer(p, pieceNum.head, newPos), players, 0)
+    (board.updateMovePlayer(p, pieceNum.head, newPos), players, 0)
   }
 
 
@@ -60,7 +60,7 @@ object CardLogic {
     players(selectedPlayerIndices.head) = p.swapPiece(pieceNums.head, swapPos._2)
     players(selectedPlayerIndices(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
 
-    val nboard = board.swapPlayers(players, selectedPlayerIndices, pieceNums)
+    val nboard = board.updateSwapPlayers(players, selectedPlayerIndices, pieceNums)
 
     (nboard, players, isValid)
   }
