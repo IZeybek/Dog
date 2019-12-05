@@ -42,33 +42,35 @@ class Controller(var board: Board) extends Observable {
   def getBoard: Board = board
 
   //Player
-
+  //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   def createPlayers(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
     player = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toArray
     gameState = CREATEPLAYER
-    //    notifyObservers
     player
   }
 
-  def useCardLogic(playerNum: List[Int], pieceNum: List[Int], cardNum: Int): Player = {
-    if (player(playerNum.head).cardList.nonEmpty) {
+  def useCardLogic(selectedPlayerIndices: List[Int], pieceNum: List[Int], cardNum: Int): Player = {
+    if (selectedPlayerIndices != Nil && player(selectedPlayerIndices.head).cardList.nonEmpty) {
 
-      val selectedCard: Card = playChosenCard(playerNum.head, cardNum)
+      val selectedCard: Card = playChosenCard(selectedPlayerIndices.head, cardNum)
       val task = selectedCard.getTask
 
-      if (task == "swap" || task == "move") { // kommt nacher weg
-
+      if (task == "swap" || task == "move") { // will be changed later as well since other logic's aren't implemented yet
         val taskMode = CardLogic.getLogic(task)
         val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
-        val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveInInt)
+        val updateGame: (Board, Array[Player], Int) = CardLogic.setStrategy(taskMode, player, board, selectedPlayerIndices, pieceNum, moveInInt)
 
         board = updateGame._1
         player = updateGame._2
       }
+      notifyObservers
+      player(selectedPlayerIndices.head)
+    } else {
+      print("not enough arguments (select at least one Player) (will be changed later!!!)")
+      notifyObservers
+      player(0) // will be changed later, as "no player is selected" only occur in TUI
     }
-    notifyObservers
-    player(playerNum.head)
   }
 
   //Cards

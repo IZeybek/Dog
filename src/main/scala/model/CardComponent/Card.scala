@@ -26,7 +26,7 @@ case class Card(symbol: String, task: String, color: String) {
 object CardLogic {
 
 
-  val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: List[Int], moveBy: Int) => {
+  val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Array[Player] = player
@@ -44,11 +44,11 @@ object CardLogic {
     }
 
     players = players.updated(playerNums.head, players(playerNums.head).setPosition(pieceNum.head, newPos))
-    (board.movePlayer(p, pieceNum.head, newPos), players)
+    (board.movePlayer(p, pieceNum.head, newPos), players, 0)
   }
 
 
-  val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNums: List[Int], moveBy: Int) => {
+  val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = player(playerNums.head)
@@ -61,7 +61,7 @@ object CardLogic {
 
     val nboard = board.swapPlayers(players, playerNums, pieceNums)
 
-    (nboard, players)
+    (nboard, players, 0)
   }
 
 
@@ -69,7 +69,7 @@ object CardLogic {
     callback(player, board, playerNum, pieceNums, moveBy)
   }
 
-  def getLogic(mode: String): (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]) = {
+  def getLogic(mode: String): (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = {
     mode match {
       case "move" => move
       case "swap" => swap

@@ -39,14 +39,14 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createNewBoard(20)
         val cardList: List[Card] = Card("5", "move", "blue") :: Nil
         controller.distributeCardsToPlayer(playerNum = 3, cardList)
-        controller.useCardLogic(playerNum = List(3), pieceNum = List(0), cardNum = 0).getPosition(0) should be(5)
+        controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(0), cardNum = 0).getPosition(0) should be(5)
       }
       "move a player by 0" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
         controller.createNewBoard(20)
         val cardList: List[Card] = Card("0", "move", "blue") :: Nil
         controller.distributeCardsToPlayer(playerNum = 3, cardList)
-        controller.useCardLogic(playerNum = List(3), pieceNum = List(0), cardNum = 0).getPosition(0) should be(0)
+        controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(0), cardNum = 0).getPosition(0) should be(0)
       }
       "override a player" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
@@ -55,10 +55,10 @@ class ControllerSpec extends WordSpec with Matchers {
         var p: Player = controller.player(3)
         controller.distributeCardsToPlayer(playerNum = 3, cardList)
 
-        p = controller.useCardLogic(playerNum = List(3), pieceNum = List(0), cardNum = 0)
+        p = controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(0), cardNum = 0)
         p.getPosition(0) should be(5)
 
-        p = controller.useCardLogic(playerNum = List(3), pieceNum = List(1), cardNum = 0)
+        p = controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(1), cardNum = 0)
         p.getPosition(0) should be(0)
         p.getPosition(1) should be(5)
 
@@ -74,10 +74,10 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.distributeCardsToPlayer(playerNum = 2, cardListP2)
 
         //use CardLogic
-        controller.useCardLogic(playerNum = List(3), pieceNum = List(0), cardNum = 0)
-        controller.useCardLogic(playerNum = List(3), pieceNum = List(1), cardNum = 0)
-        controller.useCardLogic(playerNum = List(3), pieceNum = List(2), cardNum = 0)
-        controller.useCardLogic(playerNum = List(2, 3), pieceNum = List(2, 2), cardNum = 0)
+        controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(0), cardNum = 0)
+        controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(1), cardNum = 0)
+        controller.useCardLogic(selectedPlayerIndices = List(3), pieceNum = List(2), cardNum = 0)
+        controller.useCardLogic(selectedPlayerIndices = List(2, 3), pieceNum = List(2, 2), cardNum = 0)
 
         //check position
         controller.player(2).getPosition(2) should be(9)
@@ -92,7 +92,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.distributeCardsToPlayer(playerNum = 1, cardListP1)
 
         //use CardLogic
-        controller.useCardLogic(playerNum = List(1, 2), pieceNum = List(2, 3), cardNum = 0)
+        controller.useCardLogic(selectedPlayerIndices = List(1, 2), pieceNum = List(2, 3), cardNum = 0)
 
         //check if player stays the same
         controller.player(1).getPosition(2) should be(0)
