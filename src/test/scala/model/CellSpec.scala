@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 class CellSpec extends WordSpec with Matchers {
   "A Cell" when {
     "created" should {
-      val player: Player = new Player(name = "CellSpec", c = "grün", pieceQuantity = 4)
+      val player: Player = Player.PlayerBuilder().build()
       val cellSpecTrue: Cell = Cell(42, Some(player))
       val cellSpecFalse: Cell = Cell(24, None())
       "be filled" in {
