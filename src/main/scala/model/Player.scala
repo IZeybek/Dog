@@ -1,6 +1,6 @@
 package model
 
-import model.CardComponent.Card
+import model.CardComponent.{Card, GenCardDeck}
 
 
 case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
@@ -18,18 +18,6 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position
 
-  //  /**
-  //   * @return the furthest position of player
-  //   *         1. Int: Position
-  //   *         2. Int: pieceNum
-  //   */
-  //  def getFurthestPosition: (Int, Int) = {
-  //    var max: (Int, Int) = (0, 0)
-  //    val updateMax = (pos: Int, pieceNum: Int) => if (pos > max._1) max = (pos, pieceNum)
-  //    piece.foreach(x => updateMax(x._2.position, x._1))
-  //    print(s"max position of $color is $max\n")
-  //    max
-  //  }
 
   def getPieceNum(position: Int): Int = {
     piece.foreach(x => if (x._2.position == position) {
@@ -41,14 +29,6 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
   def overridePlayer(pieceNum: Int): Player = {
     copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
   }
-
-  //  def movePlayer(pieceNum: Int, moveBy: Int): Player = {
-  //    val oldPos = getPosition(pieceNum)
-  //    copy(piece = piece.updated(pieceNum, piece(pieceNum).movePiece(moveBy)), inHouse = {
-  //      if (oldPos == 0 && moveBy > 0) inHouse - 1
-  //      else inHouse
-  //    })
-  //  }
 
   def setPosition(pieceNum: Int, newPos: Int): Player = {
     val oldPos = getPosition(pieceNum)
@@ -66,8 +46,8 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
     })
   }
 
-  def this(name: String, c: String, pieceQuantity: Int) = {
-    this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, null)
+  def this(name: String, c: String, pieceQuantity: Int, cards: List[Card]) = {
+    this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
   }
 
   def removeCard(card: Card): List[Card] = {
@@ -104,28 +84,39 @@ case class None[Player]() extends Option[Player] {
 
 
 case class Piece(var position: Int) {
-  def setPosition(newPosition: Int): Piece = {
-    copy(position = newPosition)
-  }
+  def setPosition(newPosition: Int): Piece = copy(position = newPosition)
 
-  def movePiece(moveBy: Int): Piece = {
-    copy(position = position + moveBy)
-  }
+  def movePiece(moveBy: Int): Piece = copy(position = position + moveBy)
 }
 
 
-//case class PlayerBuilder() {
-//  var pieceNumber: Int = 4
-//  var color: String = "blau"
-//  var name: String = "Bob"
-//
-//  def withPieceNumber(pieceNum: Int): Unit = pieceNumber = pieceNum
-//
-//  def withColor(c: String): Unit = color = c
-//
-//  def withName(n: String): Unit = name = n
-//
-//  def build(): Player = {
-//    new Player(name, color, pieceNumber)
-//  }
-//}
+case class PlayerBuilder() {
+  var pieceNumber: Int = 4
+  var color: String = "blau"
+  var name: String = "Bob"
+  var cardsDeck: List[Card] = GenCardDeck.apply("special").getCardDeck ++ GenCardDeck.apply("normal").getCardDeck
+
+  def withPieceNumber(pieceNum: Int): PlayerBuilder = {
+    pieceNumber = pieceNum
+    this
+  }
+
+  def withColor(c: String): PlayerBuilder = {
+    color = c
+    this
+  }
+
+  def withName(n: String): PlayerBuilder = {
+    name = n
+    this
+  }
+
+  def withCards(cards: List[Card]): PlayerBuilder = {
+    cardsDeck = cards
+    this
+  }
+
+  def build(): Player = {
+    new Player(name, color, pieceNumber, cardsDeck)
+  }
+}

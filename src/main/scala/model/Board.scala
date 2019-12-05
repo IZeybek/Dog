@@ -27,9 +27,9 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
     //set old Cell unoccupied
     var
-    nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayer)
+    nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell)
     //set new Pos as occupied
-    nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayer(p = player))
+    nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayerToCell(p = player))
     copy(boardMap = nBoard)
   }
 
@@ -39,10 +39,10 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     val swapPlayer: Player = player(playerNums(1))
 
     //set cell to swapPlayer
-    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).addPlayer(swapPlayer))
+    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).addPlayerToCell(swapPlayer))
 
     //set cell to player
-    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).addPlayer(p))
+    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).addPlayerToCell(p))
     copy(boardMap = nBoard)
   }
 
