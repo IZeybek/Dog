@@ -12,7 +12,7 @@ class CellSpec extends WordSpec with Matchers {
         cellSpecTrue.p should be(Some(player))
       }
       "not be filled" in {
-        cellSpecFalse.p should be(None)
+        cellSpecFalse.p should be(None())
       }
       "have idx" in {
         cellSpecTrue.idx should be(42)

@@ -26,36 +26,37 @@ case class Card(symbol: String, task: String, color: String) {
 object CardLogic {
 
 
-  val move = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: List[Int], moveBy: Int) => {
+  val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Array[Player] = player
     val p: Player = player(playerNums.head)
-    val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum(0)), board.boardMap.size)
+    val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.boardMap.size)
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, pieceNum(0), newPos)) {
-      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).p)
-      val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos)
+    if (board.checkOverrideOtherPlayer(p, pieceNum.head, newPos)) {
+
+      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).getColor)
+      val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos) //get piece of other Player
       println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
       if (otherPlayerPieceNum == -1) throw new NoSuchElementException
       players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
     }
 
-    players = players.updated(playerNums.head, players(playerNums.head).setPosition(pieceNum(0), newPos))
-    (board.movePlayer(p, pieceNum(0), newPos), players)
+    players = players.updated(playerNums.head, players(playerNums.head).setPosition(pieceNum.head, newPos))
+    (board.movePlayer(p, pieceNum.head, newPos), players)
   }
 
 
-  val swap = (player: Array[Player], board: Board, playerNums: List[Int], pieceNums: List[Int], moveBy: Int) => {
+  val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
     //swap a piece of the player that uses the card with the furthest piece of another player
-    val p: Player = player(playerNums(0))
+    val p: Player = player(playerNums.head)
     val swapPlayer: Player = player(playerNums(1))
-    val swapPos: (Int, Int) = (p.getPosition(pieceNums(0)), swapPlayer.getPosition(pieceNums(1)))
+    val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
     val players: Array[Player] = player
 
-    players(playerNums(0)) = p.swapPiece(pieceNums(0), swapPos._2)
+    players(playerNums(0)) = p.swapPiece(pieceNums.head, swapPos._2)
     players(playerNums(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
 
     val nboard = board.swapPlayers(players, playerNums, pieceNums)
@@ -64,7 +65,7 @@ object CardLogic {
   }
 
 
-  def setStrategy(callback: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int) = {
+  def setStrategy(callback: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (Board, Array[Player]) = {
     callback(player, board, playerNum, pieceNums, moveBy)
   }
 

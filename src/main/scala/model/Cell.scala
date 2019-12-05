@@ -3,7 +3,7 @@ package model
 case class Cell(idx: Int, p: Option[Player]) {
 
   def removePlayer: Cell = {
-    p match {
+    this.p match {
       case Some(_) => copy(p = None())
       case None() => this
     }
@@ -13,6 +13,13 @@ case class Cell(idx: Int, p: Option[Player]) {
     this.p match {
       case Some(_) => this
       case None() => copy(p = Some(p))
+    }
+  }
+
+  def getColor: String = {
+    this.p match {
+      case Some(p) => p.color
+      case None() => " "
     }
   }
 
