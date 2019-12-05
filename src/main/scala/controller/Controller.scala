@@ -92,8 +92,8 @@ class Controller(var board: Board) extends Observable {
   }
 
   def drawFewCards(amount: Int): List[Card] = {
-    var hand: List[Card] = List(drawCardFromDeck)
-    for (i <- 0 until amount - 1) {
+    var hand: List[Card] = Nil
+    for (i <- 0 until amount) {
       hand = drawCardFromDeck :: hand
     }
     hand
