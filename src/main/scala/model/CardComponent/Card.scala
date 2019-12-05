@@ -26,11 +26,11 @@ case class Card(symbol: String, task: String, color: String) {
 object CardLogic {
 
 
-  val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNum: List[Int], moveBy: Int) => {
+  val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Array[Player] = player
-    val p: Player = player(playerNums.head)
+    val p: Player = player(selectedPlayerIndices.head)
     val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.boardMap.size)
 
     //overriding player
@@ -43,7 +43,7 @@ object CardLogic {
       players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
     }
 
-    players = players.updated(playerNums.head, players(playerNums.head).setPosition(pieceNum.head, newPos))
+    players = players.updated(selectedPlayerIndices.head, players(selectedPlayerIndices.head).setPosition(pieceNum.head, newPos))
     (board.movePlayer(p, pieceNum.head, newPos), players, 0)
   }
 
