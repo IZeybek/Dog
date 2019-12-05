@@ -57,11 +57,11 @@ class Controller(var board: Board) extends Observable {
       val selectedCard: Card = playChosenCard(playerNum.head, cardNum)
       val task = selectedCard.getTask
 
-      if (task == "swap" || task == "move") {
+      if (task == "swap" || task == "move") { // kommt nacher weg
 
         val taskMode = CardLogic.getLogic(task)
-        val taskToInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
-        val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, taskToInt)
+        val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
+        val updateGame: (Board, Array[Player]) = CardLogic.setStrategy(taskMode, player, board, playerNum, pieceNum, moveInInt)
 
         board = updateGame._1
         player = updateGame._2
