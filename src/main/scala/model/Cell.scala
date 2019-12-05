@@ -11,7 +11,7 @@ case class Cell(idx: Int, p: Option[Player]) {
 
   def addPlayerToCell(p: Player): Cell = {
     this.p match {
-      case Some(_) => this
+      case Some(_) => copy(p = Some(p))
       case None() => copy(p = Some(p))
     }
   }
