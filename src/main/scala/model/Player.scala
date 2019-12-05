@@ -1,6 +1,6 @@
 package model
 
-import model.CardComponent.{Card, GenCardDeck}
+import model.CardComponent.{Card, CardDeck}
 
 
 case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
@@ -89,34 +89,37 @@ case class Piece(var position: Int) {
   def movePiece(moveBy: Int): Piece = copy(position = position + moveBy)
 }
 
+object Player {
 
-case class PlayerBuilder() {
-  var pieceNumber: Int = 4
-  var color: String = "blau"
-  var name: String = "Bob"
-  var cardsDeck: List[Card] = GenCardDeck.apply("special").getCardDeck ++ GenCardDeck.apply("normal").getCardDeck
+  case class PlayerBuilder() {
+    var pieceNumber: Int = 4
+    var color: String = "blau"
+    var name: String = "Bob"
+    var cardsDeck: List[Card] = CardDeck.apply()
 
-  def withPieceNumber(pieceNum: Int): PlayerBuilder = {
-    pieceNumber = pieceNum
-    this
+    def withPieceNumber(pieceNum: Int): PlayerBuilder = {
+      pieceNumber = pieceNum
+      this
+    }
+
+    def withColor(c: String): PlayerBuilder = {
+      color = c
+      this
+    }
+
+    def withName(n: String): PlayerBuilder = {
+      name = n
+      this
+    }
+
+    def withCards(cards: List[Card]): PlayerBuilder = {
+      cardsDeck = cards
+      this
+    }
+
+    def build(): Player = {
+      new Player(name, color, pieceNumber, cardsDeck)
+    }
   }
 
-  def withColor(c: String): PlayerBuilder = {
-    color = c
-    this
-  }
-
-  def withName(n: String): PlayerBuilder = {
-    name = n
-    this
-  }
-
-  def withCards(cards: List[Card]): PlayerBuilder = {
-    cardsDeck = cards
-    this
-  }
-
-  def build(): Player = {
-    new Player(name, color, pieceNumber, cardsDeck)
-  }
 }

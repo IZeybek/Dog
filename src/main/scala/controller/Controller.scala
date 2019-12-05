@@ -45,7 +45,7 @@ class Controller(var board: Board) extends Observable {
 
   def createPlayers(playerNames: List[String]): Array[Player] = {
     val colors = Array("gelb", "blau", "grün", "rot")
-    player = playerNames.indices.map(i => new Player(playerNames(i), colors(i), 4)).toArray
+    player = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toArray
     gameState = CREATEPLAYER
     //    notifyObservers
     player

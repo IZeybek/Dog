@@ -82,7 +82,6 @@ object CardLogic {
 
 object GenCardDeck {
 
-
   def apply(typ: String): CardTrait = typ match {
     case "special" =>
       SpecialCardsDeck()
