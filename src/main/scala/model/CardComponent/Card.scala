@@ -65,7 +65,7 @@ object CardLogic {
   }
 
 
-  def setStrategy(callback: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player]), player: Array[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (Board, Array[Player]) = {
+  def setStrategy(callback: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int), player: Array[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (Board, Array[Player], Int) = {
     callback(player, board, playerNum, pieceNums, moveBy)
   }
 
