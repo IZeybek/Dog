@@ -11,12 +11,12 @@ class BoardSpec extends WordSpec with Matchers {
       "have a Map" when {
         "created" in {
           for (i <- 0 until board.boardMap.size) {
-            board.boardMap(i).pos should be(i)
+            board.boardMap(i).idx should be(i)
           }
         }
         "return map " in {
           for (i <- 0 until board.boardMap.size) {
-            board.boardMap(i).pos should be(i)
+            board.boardMap(i).idx should be(i)
           }
         }
         "check if player has to be overridden" in {
