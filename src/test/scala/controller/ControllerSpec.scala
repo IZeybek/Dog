@@ -68,15 +68,35 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createNewBoard(20)
         val cardListP3: List[Card] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("9", "move", "blue") :: Nil
         val cardListP2: List[Card] = Card("swap", "swap", "red") :: Nil
+
+        //set cards
         controller.distributeCardsToPlayer(playerNum = 3, cardListP3)
         controller.distributeCardsToPlayer(playerNum = 2, cardListP2)
+
+        //use CardLogic
         controller.useCardLogic(playerNum = List(3), pieceNum = List(0), cardNum = 0)
         controller.useCardLogic(playerNum = List(3), pieceNum = List(1), cardNum = 0)
         controller.useCardLogic(playerNum = List(3), pieceNum = List(2), cardNum = 0)
         controller.useCardLogic(playerNum = List(2, 3), pieceNum = List(2, 2), cardNum = 0)
 
+        //check position
         controller.player(2).getPosition(2) should be(9)
         controller.player(3).getPosition(2) should be(0)
+      }
+      "swap two players when no player is on the field" in {
+        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
+        controller.createNewBoard(20)
+        val cardListP1: List[Card] = Card("swap", "swap", "red") :: Nil
+
+        //set cards
+        controller.distributeCardsToPlayer(playerNum = 1, cardListP1)
+
+        //use CardLogic
+        controller.useCardLogic(playerNum = List(1, 2), pieceNum = List(2, 3), cardNum = 0)
+
+        //check if player stays the same
+        controller.player(1).getPosition(2) should be(0)
+        controller.player(1).inHouse should be(4)
       }
       "play a Card" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))

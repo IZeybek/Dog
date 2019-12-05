@@ -1,18 +1,34 @@
 package model
 
-case class Cell(idx: Int, filled: Boolean, player: Player) {
+case class Cell(idx: Int, p: Option[Player]) {
 
-  def getPos: Int = idx
+  def removePlayerFromCell: Cell = {
+    this.p match {
+      case Some(_) => copy(p = None())
+      case None() => this
+    }
+  }
 
-  def isFilled: Boolean = filled
+  def addPlayerToCell(p: Player): Cell = {
+    this.p match {
+      case Some(_) => this
+      case None() => copy(p = Some(p))
+    }
+  }
+
+  def getColor: String = {
+    this.p match {
+      case Some(p) => p.color
+      case None() => " "
+    }
+  }
 
   override def toString: String = {
-    "[" + (if (filled) s"${
-      if (player.color == "gelb") Console.YELLOW
-      else if (player.color == "blau") Console.BLUE
-      else if (player.color == "grün") Console.GREEN
-      else if (player.color == "rot") Console.RED
-      else Console.RESET
-    }x" + s"${Console.RESET}" else " ") + "]"
+    var player: String = ""
+    p match {
+      case Some(p) => player = p.color + "x" + Console.RESET
+      case None() => player = " "
+    }
+    "[" + player + "]"
   }
 }
