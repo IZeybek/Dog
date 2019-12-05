@@ -35,7 +35,7 @@ object CardLogic {
 
     //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum(0), newPos)) {
-      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).player.color)
+      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).p)
       val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos)
       println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
       if (otherPlayerPieceNum == -1) throw new NoSuchElementException

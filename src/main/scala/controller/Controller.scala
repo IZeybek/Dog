@@ -35,14 +35,7 @@ class Controller(var board: Board) extends Observable {
     val up = "‾" * player.length * 3
     val down = "_" * player.length * 3
     var house = ""
-    player.indices.foreach(i => house = house + s" ${
-      player(i).color match {
-        case "gelb" => Console.YELLOW;
-        case "blau" => Console.BLUE;
-        case "grün" => Console.GREEN;
-        case "rot" => Console.RED
-      }
-    }${player(i).inHouse}${Console.RESET} ")
+    player.indices.foreach(i => house = house + s" ${player(i).color}${player(i).inHouse}${Console.RESET} ")
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
@@ -112,14 +105,7 @@ class Controller(var board: Board) extends Observable {
   }
 
   def toStringPlayerHands: Unit = {
-    player.indices.foreach(i => println(s"${
-      player(i).color match {
-        case "gelb" => Console.YELLOW
-        case "blau" => Console.BLUE
-        case "grün" => Console.GREEN
-        case "rot" => Console.RED
-      }
-    }player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
+    player.indices.foreach(i => println(s"${player(i).color}player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
   }
 
   def distributeCardsToPlayer(playerNum: Int, cards: List[Card]): Player = {

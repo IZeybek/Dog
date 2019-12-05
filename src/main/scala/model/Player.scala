@@ -5,15 +5,16 @@ import model.CardComponent.Card
 
 case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
 
-  val color: String = () => {
+  val color: String = {
     c match {
-      case "grün" || Console.GREEN => Console.GREEN
-      case "blau" || Console.BLUE => Console.BLUE
-      case "rot" || Console.RED => Console.RED
-      case "gelb" || Console.YELLOW => Console.YELLOW
+      case "grün" => Console.GREEN
+      case "blau" => Console.BLUE
+      case "rot" => Console.RED
+      case "gelb" => Console.YELLOW
       case _ => ""
     }
   }
+
 
   def getPosition(pieceNum: Int): Int = piece(pieceNum).position
 
@@ -65,8 +66,8 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
     })
   }
 
-  def this(name: String, pieceQuantity: Int) = {
-    this(name, c = color, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, null)
+  def this(name: String, c: String, pieceQuantity: Int) = {
+    this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, null)
   }
 
   def removeCard(card: Card): List[Card] = {
@@ -87,6 +88,18 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
 
 
   override def toString: String = name
+}
+
+trait Option[Player] {
+  def map(f: Player => Player): Option[Player]
+}
+
+case class Some[Player](p: Player) extends Option[Player] {
+  override def map(f: Player => Player): Some[Player] = Some(f(p))
+}
+
+case class None[Player]() extends Option[Player] {
+  override def map(f: Player => Player) = new None
 }
 
 

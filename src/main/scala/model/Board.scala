@@ -7,7 +7,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
   //can create a Board with a given size
   def this(size: Int) = {
-    this((0 until size).map(i => (i, Cell(i, filled = false, null))).toMap)
+    this((0 until size).map(i => (i, Cell(i, None()))).toMap)
   }
 
   override def toString: String = {
@@ -26,10 +26,10 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     val oldPos: Integer = player.getPosition(pieceNum)
 
     //set old Cell unoccupied
-    var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).copy(filled = false, player = null))
-
+    var
+    nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayer)
     //set new Pos as occupied
-    nBoard = nBoard.updated(setPos, boardMap(setPos).copy(filled = true, player = player))
+    nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayer(p = player))
     copy(boardMap = nBoard)
   }
 
@@ -39,19 +39,25 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     val swapPlayer: Player = player(playerNums(1))
 
     //set cell to swapPlayer
-    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).copy(player = swapPlayer))
+    var nBoard: Map[Int, Cell] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).addPlayer(swapPlayer))
 
     //set cell to player
-    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).copy(player = p))
+    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).addPlayer(p))
     copy(boardMap = nBoard)
   }
 
   def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = {
-    boardMap(newPos).isFilled
+    boardMap(newPos).p match {
+      case Some(_) => true
+      case None() => false
+    }
   }
 
   def getPlayerColor(pos: Integer): String = {
-    boardMap(pos).player.color
+    boardMap(pos).p match {
+      case Some(p) => p.c
+      case None() => "NO COLOR"
+    }
   }
 
 }
