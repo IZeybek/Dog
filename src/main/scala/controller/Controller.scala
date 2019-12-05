@@ -50,7 +50,7 @@ class Controller(var board: Board) extends Observable {
     player
   }
 
-  def useCardLogic(selectedPlayerIndices: List[Int], pieceNum: List[Int], cardNum: Int): Player = {
+  def useCardLogic(selectedPlayerIndices: List[Int], pieceNum: List[Int], cardNum: Int): Int = {
     if (selectedPlayerIndices != Nil && player(selectedPlayerIndices.head).cardList.nonEmpty) {
 
       val selectedCard: Card = playChosenCard(selectedPlayerIndices.head, cardNum)
@@ -63,14 +63,11 @@ class Controller(var board: Board) extends Observable {
 
         board = updateGame._1
         player = updateGame._2
+        notifyObservers
+        return updateGame._3
       }
-      notifyObservers
-      player(selectedPlayerIndices.head)
-    } else {
-      print("not enough arguments (select at least one Player) (will be changed later!!!)")
-      notifyObservers
-      player(0) // will be changed later, as "no player is selected" only occur in TUI
     }
+    -1
   }
 
   //Cards
