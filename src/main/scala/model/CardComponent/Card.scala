@@ -32,19 +32,19 @@ object CardLogic {
     var players: Array[Player] = player
     val p: Player = player(playerNums.head)
     val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.boardMap.size)
+    var isValid: Int = 0
 
     //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum.head, newPos)) {
-
       val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).getColor)
       val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos) //get piece of other Player
       println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
-      if (otherPlayerPieceNum == -1) throw new NoSuchElementException
+      if (otherPlayerPieceNum == -1) isValid = -1
       players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
     }
 
     players = players.updated(playerNums.head, players(playerNums.head).setPosition(pieceNum.head, newPos))
-    (board.movePlayer(p, pieceNum.head, newPos), players, 0)
+    (board.movePlayer(p, pieceNum.head, newPos), players, isValid)
   }
 
 
@@ -56,7 +56,7 @@ object CardLogic {
     val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
     val players: Array[Player] = player
 
-    players(playerNums(0)) = p.swapPiece(pieceNums.head, swapPos._2)
+    players(playerNums.head) = p.swapPiece(pieceNums.head, swapPos._2)
     players(playerNums(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
 
     val nboard = board.swapPlayers(players, playerNums, pieceNums)
