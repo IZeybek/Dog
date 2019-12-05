@@ -7,10 +7,10 @@ import util.Observer
 class Tui(controller: Controller) extends Observer {
   controller.add(this)
 
-  def automatedSequenceForTesting(): Unit = {
-
-    //    controller.initAndDistributeCardsToPlayer(6)
-
+  def showMenu(): Unit = {
+    println("Menu")
+    println("normal -> yourCard <-> myPiece <-> (OtherPiece) <-> myPlayerNum <-> (otherPlayerNum)")
+    println("swap   -> yourCard <-> myPiece <-> OtherPiece <-> myPlayerNum <-> (otherPlayerNum)")
   }
 
   def processInput(input: String): String = {

@@ -10,7 +10,7 @@ object Dog {
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
-    tui.automatedSequenceForTesting
+    tui.showMenu
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
