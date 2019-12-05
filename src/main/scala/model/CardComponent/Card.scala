@@ -48,18 +48,18 @@ object CardLogic {
   }
 
 
-  val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, playerNums: List[Int], pieceNums: List[Int], moveBy: Int) => {
+  val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
     //swap a piece of the player that uses the card with the furthest piece of another player
-    val p: Player = player(playerNums.head)
-    val swapPlayer: Player = player(playerNums(1))
+    val p: Player = player(selectedPlayerIndices.head)
+    val swapPlayer: Player = player(selectedPlayerIndices(1))
     val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
     val players: Array[Player] = player
 
-    players(playerNums.head) = p.swapPiece(pieceNums.head, swapPos._2)
-    players(playerNums(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
+    players(selectedPlayerIndices.head) = p.swapPiece(pieceNums.head, swapPos._2)
+    players(selectedPlayerIndices(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
 
-    val nboard = board.swapPlayers(players, playerNums, pieceNums)
+    val nboard = board.swapPlayers(players, selectedPlayerIndices, pieceNums)
 
     (nboard, players, 0)
   }
