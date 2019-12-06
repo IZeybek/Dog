@@ -1,8 +1,6 @@
 package util
 
-import controller.Controller
-import model.CardComponent.Card
-import model.{Board, Player}
+import controller.{Controller, GameState}
 
 class UndoManager {
   private var undoStack: List[Command] = Nil
@@ -10,7 +8,7 @@ class UndoManager {
 
   def doStep(command: Command) = {
     undoStack = command :: undoStack
-    command.doStep
+    //    command.doStep
   }
 
   def clear(): Boolean = {
@@ -45,7 +43,7 @@ class UndoManager {
 
 trait Command {
 
-  def doStep: Unit
+  //  def doStep: Unit
 
   def undoStep: Unit
 
@@ -54,9 +52,8 @@ trait Command {
 }
 
 class SolveCommand(controller: Controller) extends Command {
-  var mementoBoard: Board = controller.board
-  var mementoPlayer: Array[Player] = controller.player
-  var mementoCardDeck: (Array[Card], Int) = controller.cardDeck
+
+  var gameState: GameState = controller.gameState
 
   override def undoStep(): Unit = {
     updateSolveCommand
@@ -68,18 +65,11 @@ class SolveCommand(controller: Controller) extends Command {
 
 
   private def updateSolveCommand(): Unit = {
-    val newMementoBoard: Board = controller.board
-    val newMementoPlayer: Array[Player] = controller.player
-    val newMementoCardDeck: (Array[Card], Int) = controller.cardDeck
 
-    controller.replaceController(mementoBoard, mementoPlayer, mementoCardDeck)
-
-    mementoBoard = newMementoBoard
-    mementoPlayer = newMementoPlayer
-    mementoCardDeck = newMementoCardDeck
+    val newGameState: GameState = controller.gameState
+    controller.gameState = gameState
+    gameState = newGameState
   }
 
-  override def doStep: Unit = {
-    mementoPlayer = controller.player
-  }
+  //  override def doStep: Unit = ???
 }

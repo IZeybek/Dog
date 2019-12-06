@@ -1,6 +1,5 @@
 package controller
 
-import controller.GameState._
 import model.CardComponent.{Card, CardDeck, CardLogic}
 import model._
 import util.{Observable, SolveCommand, UndoManager}
@@ -27,18 +26,11 @@ class Controller() extends Observable {
   }
 
   def replaceController(mementoBoard: Board, mementoPlayer: Array[Player], mementoCardDeck: (Array[Card], Int)): Boolean = {
-    board = board.updateBoard(mementoBoard)
-
-    player.indices.foreach(i => player(i) = player(i).update(mementoPlayer(i)))
-
-    cardDeck = mementoCardDeck
+    gameState = gameStateMaster.UpdateGame().withBoard(mementoBoard).withPlayers(mementoPlayer).withCardDeck(mementoCardDeck._1).buildGame
     notifyObservers
     true
   }
 
-  var gameState: GameState = IDLE
-  var player: Array[Player] = createPlayers(List("p1", "p2", "p3", "p4"))
-  var cardDeck: (Array[Card], Int) = createCardDeck //card deck and int pointer
   var gameStateMaster = new GameStateMaster
   var gameState: GameState = gameStateMaster.UpdateGame().buildGame
   initAndDistributeCardsToPlayer(6)
@@ -93,7 +85,7 @@ class Controller() extends Observable {
       if (task == "swap" || task == "move") { // will be changed later as well since other logic's aren't implemented yet
         val taskMode = CardLogic.getLogic(task)
         val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
-        val updateGame: (Board, Array[Player], Int) = CardLogic.setStrategy(taskMode, players, board, selectedPlayerIndices, pieceNum, moveInInt)
+        val updateGame: (Board, Array[Player], Int) = CardLogic.setStrategy(taskMode, players, board, selectedPlayerList, pieceNum, moveInInt)
 
         gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
         notifyObservers
@@ -146,12 +138,6 @@ class Controller() extends Observable {
     player.indices.foreach(i => println(s"${player(i).color}player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
   }
 
-  def distributeCardsToPlayer(playerNum: Int, cards: List[Card]): Player = {
-    val player: Array[Player] = gameState.players._1
-    player(playerNum) = player(playerNum).setHandCards(cards)
-    gameState = gameStateMaster.UpdateGame().withPlayers(player).buildGame
-    player(playerNum)
-  }
 
   def initAndDistributeCardsToPlayer(amount: Int): Unit = {
     val player: Array[Player] = gameState.players._1
@@ -159,5 +145,12 @@ class Controller() extends Observable {
     gameState = gameStateMaster.UpdateGame().withPlayers(player).buildGame
   }
 
+  //AREA 51-------------------------------------------------------------------------------------------------------
 
+  def testDistributeCardsToPlayer(playerNum: Int, cards: List[Card]): Player = {
+    val player: Array[Player] = gameState.players._1
+    player(playerNum) = player(playerNum).updateHandCards(cards)
+    gameState = gameStateMaster.UpdateGame().withPlayers(player).buildGame
+    player(playerNum)
+  }
 }
