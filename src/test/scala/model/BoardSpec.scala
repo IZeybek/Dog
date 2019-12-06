@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 class BoardSpec extends WordSpec with Matchers {
   "A Board" when {
     "created" should {
-      val controller = new Controller(new Board(30))
+      val controller = new Controller()
       var board = controller.createNewBoard(16)
       "have a Map" when {
         "created" in {
