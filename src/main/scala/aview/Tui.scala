@@ -50,8 +50,8 @@ class Tui(controller: Controller) extends Observer {
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           case cardNum :: pieceNum1 :: pieceNum2 :: selectedPlayerList =>
-            controller.useCardLogic(selectedPlayerList, List(pieceNum1, pieceNum2), cardNum)
             controller.doStep()
+            controller.useCardLogic(selectedPlayerList, List(pieceNum1, pieceNum2), cardNum)
             result = s"player ${if (selectedPlayerList != Nil) selectedPlayerList.head} used card number $cardNum"
           case _ => println("try again!")
         }
