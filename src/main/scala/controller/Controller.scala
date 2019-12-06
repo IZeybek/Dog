@@ -80,8 +80,10 @@ class Controller(var board: Board) extends Observable {
   def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], cardNum: Int): Player = {
     if (selectedPlayerList != Nil && player(selectedPlayerList.head).cardList.nonEmpty) {
 
+      doStep()
       val selectedCard: Card = getSelectedCard(selectedPlayerList.head, cardNum)
       val task = selectedCard.getTask
+
 
       if (task == "swap" || task == "move") { // will be changed later as well since other logic's aren't implemented yet
         val taskMode = CardLogic.getLogic(task)
@@ -91,6 +93,8 @@ class Controller(var board: Board) extends Observable {
 
         board = updateGame._1
         player = updateGame._2
+
+
       }
       notifyObservers
       player(selectedPlayerList.head)
@@ -141,12 +145,12 @@ class Controller(var board: Board) extends Observable {
   }
 
   def distributeCardsToPlayer(pIdx: Int, cards: List[Card]): Player = {
-    player(pIdx) = player(pIdx).setHandCards(cards)
+    player(pIdx) = player(pIdx).updateHandCards(cards)
     player(pIdx)
   }
 
   def initAndDistributeCardsToPlayer(amount: Int): Unit = {
-    player.indices.foreach(pNr => player(pNr) = player(pNr).setHandCards(drawFewCards(amount)))
+    player.indices.foreach(pNr => player(pNr) = player(pNr).updateHandCards(drawFewCards(amount)))
   }
 
 

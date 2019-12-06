@@ -65,7 +65,7 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
       Nil
   }
 
-  def setHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
+  def updateHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
 
   def getCard(cardNum: Int): Card = {
     if (cardList.nonEmpty)

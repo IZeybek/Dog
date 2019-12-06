@@ -62,7 +62,12 @@ class SolveCommand(controller: Controller) extends Command {
     updateSolveCommand
   }
 
-  def updateSolveCommand(): Unit = {
+  override def redoStep(): Unit = {
+    updateSolveCommand
+  }
+
+
+  private def updateSolveCommand(): Unit = {
     val newMementoBoard: Board = controller.board
     val newMementoPlayer: Array[Player] = controller.player
     val newMementoCardDeck: (Array[Card], Int) = controller.cardDeck
@@ -74,9 +79,7 @@ class SolveCommand(controller: Controller) extends Command {
     mementoCardDeck = newMementoCardDeck
   }
 
-  override def redoStep(): Unit = {
-    updateSolveCommand
+  override def doStep: Unit = {
+    mementoPlayer = controller.player
   }
-
-  override def doStep: Unit = Unit
 }
