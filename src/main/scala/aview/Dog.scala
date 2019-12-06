@@ -1,11 +1,10 @@
 package aview
 
 import controller.Controller
-import model.Board
 
 object Dog {
 
-  val controller = new Controller(new Board(30))
+  val controller = new Controller()
   val tui = new Tui(controller)
   controller.notifyObservers
 

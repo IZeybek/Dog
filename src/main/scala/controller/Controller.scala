@@ -1,14 +1,16 @@
 package controller
 
+import controller.GameStateMaster._
 import model.CardComponent.{Card, CardDeck, CardLogic}
 import model._
 import util.Observable
 
 import scala.util.Random
 
-class Controller(var board: Board) extends Observable {
+class Controller() extends Observable {
 
-  var gameState: GameState = UpdateGame(this).buildGame
+  setController(this)
+  var gameState: GameState = UpdateGame().buildGame
   initAndDistributeCardsToPlayer(6)
 
   //Board
@@ -42,7 +44,7 @@ class Controller(var board: Board) extends Observable {
   def createPlayers(playerNames: List[String]): GameState = {
     val colors = Array("gelb", "blau", "grün", "rot")
     val players: Array[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toArray
-    gameState = UpdateGame(this).withPlayers(players).buildGame
+    gameState = UpdateGame().withPlayers(players).buildGame
     gameState
   }
 
@@ -58,7 +60,7 @@ class Controller(var board: Board) extends Observable {
         val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
         val updateGame: (Board, Array[Player], Int) = CardLogic.setStrategy(taskMode, players, board, selectedPlayerIndices, pieceNum, moveInInt)
 
-        gameState = UpdateGame(this).withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
+        gameState = UpdateGame().withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
         notifyObservers
         return updateGame._3
       }
@@ -88,31 +90,38 @@ class Controller(var board: Board) extends Observable {
     hand
   }
 
-  def drawCardFromDeck: Card = {
-    var cardDeck: (Array[Card], Int) = gameState.cardDeck
-    if (cardDeck._2 != 0) cardDeck = (cardDeck._1, cardDeck._2 - 1)
-    gameState = UpdateGame(this).withCardDeck(cardDeck._1).withCardPointer(cardDeck._2).buildGame
-    cardDeck._1(cardDeck._2)
-  }
-
   def playChosenCard(playerNum: Int, cardNum: Integer): Card = {
+    val player: Array[Player] = gameState.players._1
     val oldCard = player(playerNum).getCard(cardNum)
     player(playerNum) = player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
+    gameState = UpdateGame().withPlayers(player).buildGame
     println(s"$oldCard with ${oldCard.getTask}")
     oldCard
   }
 
+  def drawCardFromDeck: Card = {
+    var cardDeck: (Array[Card], Int) = gameState.cardDeck
+    if (cardDeck._2 != 0) cardDeck = (cardDeck._1, cardDeck._2 - 1)
+    gameState = UpdateGame().withCardDeck(cardDeck._1).withCardPointer(cardDeck._2).buildGame
+    cardDeck._1(cardDeck._2)
+  }
+
   def toStringPlayerHands: Unit = {
+    val player: Array[Player] = gameState.players._1
     player.indices.foreach(i => println(s"${player(i).color}player: " + i + s"${Console.RESET} --> myHand: " + player(i).cardList))
   }
 
   def distributeCardsToPlayer(playerNum: Int, cards: List[Card]): Player = {
+    val player: Array[Player] = gameState.players._1
     player(playerNum) = player(playerNum).setHandCards(cards)
+    gameState = UpdateGame().withPlayers(player).buildGame
     player(playerNum)
   }
 
   def initAndDistributeCardsToPlayer(amount: Int): Unit = {
+    val player: Array[Player] = gameState.players._1
     player.indices.foreach(pNr => player(pNr) = player(pNr).setHandCards(drawFewCards(amount)))
+    gameState = UpdateGame().withPlayers(player).buildGame
   }
 
 
