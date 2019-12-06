@@ -96,11 +96,10 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.testDistributeCardsToPlayer(playerNum = 1, cardListP1)
 
         //use CardLogic
-        controller.useCardLogic(selectedPlayerList = List(1, 2), pieceNum = List(2, 3), cardNum = 0)
+        controller.useCardLogic(selectedPlayerList = List(1, 2), pieceNum = List(2, 3), cardNum = 0) should be(-1)
 
         //check if player stays the same
         controller.gameState.players._1(1).getPosition(2) should be(0)
-        controller.gameState.players._1(1).inHouse should be(4)
       }
       "play a Card" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))

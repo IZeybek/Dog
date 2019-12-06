@@ -28,11 +28,11 @@ object CardLogic {
 
   val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
+    var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Array[Player] = player
     val p: Player = player(selectedPlayerIndices.head)
     val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.boardMap.size)
-    var isValid: Int = 0
 
     //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum.head, newPos)) {
@@ -51,12 +51,13 @@ object CardLogic {
 
   val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
+    var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = player(selectedPlayerIndices.head)
     val swapPlayer: Player = player(selectedPlayerIndices(1))
     val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
+    if (swapPos._2 == 0) isValid = -1
     val players: Array[Player] = player
-    var isValid = 0
 
     players(selectedPlayerIndices.head) = p.swapPiece(pieceNums.head, swapPos._2)
     players(selectedPlayerIndices(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)

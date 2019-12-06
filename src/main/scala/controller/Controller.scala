@@ -86,9 +86,10 @@ class Controller() extends Observable {
         val taskMode = CardLogic.getLogic(task)
         val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
         val updateGame: (Board, Array[Player], Int) = CardLogic.setStrategy(taskMode, players, board, selectedPlayerList, pieceNum, moveInInt)
-
-        gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
-        notifyObservers
+        if (updateGame._3 == 0) {
+          gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
+          notifyObservers
+        }
         return updateGame._3
       }
     }
