@@ -1,26 +1,29 @@
 package controller
 
-import model.CardComponent.Card
+import model.CardComponent.{Card, CardDeck}
 import model.{Board, Player}
+
+import scala.util.Random
 
 case class GameState(players: (Array[Player], Int),
                      cardDeck: (Array[Card], Int),
                      board: Board) {
 }
 
-object GameStateMaster {
+class GameStateMaster {
 
-  var controller: Controller = _
   //player with player pointer
-  var players: Array[Player] = controller.createPlayers(List("p1", "p2", "p3", "p4")).players._1
-  //carddeck of game
-  var cardDeck: Array[Card] = controller.createCardDeck._1
+  var colors = Array("gelb", "blau", "grün", "rot")
+  var playerNames: Array[String] = Array("P1", "P2", "P3", "P4")
+  var players: Array[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toArray
   var actualPlayer: Int = 0
-  //board
-  var board: Board = controller.createNewBoard(20)
+
+  //carddeck of game
+  var cardDeck: Array[Card] = Random.shuffle(CardDeck.apply()).toArray
   var cardPointer: Int = cardDeck.length
 
-  def setController(setController: Controller): Unit = controller = setController
+  //board
+  var board: Board = new Board(20)
 
   case class UpdateGame() {
 
@@ -50,8 +53,8 @@ object GameStateMaster {
     }
 
     def buildGame: GameState = {
-      assert(actualPlayer >= 0 && players.length - 1 >= actualPlayer)
-      assert(cardPointer >= 0 && cardDeck.length - 1 >= cardPointer)
+      //      assert(actualPlayer >= 0 && players.length - 1 >= actualPlayer)
+      //      assert(cardPointer >= 0 && cardDeck.length - 1 >= cardPointer)
       GameState((players, actualPlayer), (cardDeck, cardPointer), board)
     }
   }
