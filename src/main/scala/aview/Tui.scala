@@ -11,6 +11,7 @@ class Tui(controller: Controller) extends Observer {
     println("Menu")
     println("normal -> yourCard <-> myPiece <-> (OtherPiece) <-> myPlayerNum <-> (otherPlayerNum)")
     println("swap   -> yourCard <-> myPiece <-> OtherPiece <-> myPlayerNum <-> (otherPlayerNum)")
+    controller.doStep()
   }
 
   def processInput(input: String): String = {
@@ -30,20 +31,28 @@ class Tui(controller: Controller) extends Observer {
       case "p" :: "card" :: Nil =>
         print(controller.toStringCardDeck)
         result = "printed cards"
+      case "undo" :: Nil =>
+        controller.undoCommand()
+        result = "undone"
+      case "redo" :: Nil =>
+        controller.redoCommand()
+        result = "redone"
       case "p" :: "board" :: Nil =>
         print(controller.toStringBoard)
         result = "printed board"
+      case "p" :: "hands" :: Nil =>
+        print(controller.toStringPlayerHands)
+        result = "printed board"
       case "p" :: Nil =>
         print(controller.toStringBoard)
-        print(controller.toStringCardDeck)
         print(controller.toStringPlayerHands)
-
         result = "printed game"
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
-          case cardNum :: pieceNum1 :: pieceNum2 :: playerNum =>
-            controller.useCardLogic(playerNum, List(pieceNum1, pieceNum2), cardNum)
-            result = s"player ${if (playerNum != Nil) playerNum(0)} used card number $cardNum"
+          case cardNum :: pieceNum1 :: pieceNum2 :: selectedPlayerList =>
+            controller.useCardLogic(selectedPlayerList, List(pieceNum1, pieceNum2), cardNum)
+            controller.doStep()
+            result = s"player ${if (selectedPlayerList != Nil) selectedPlayerList.head} used card number $cardNum"
           case _ => println("try again!")
         }
     }

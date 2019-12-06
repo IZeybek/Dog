@@ -44,6 +44,7 @@ object CardLogic {
     }
 
     players = players.updated(selectedPlayerIndices.head, players(selectedPlayerIndices.head).setPosition(pieceNum.head, newPos))
+
     (board.updateMovePlayer(p, pieceNum.head, newPos), players, 0)
   }
 

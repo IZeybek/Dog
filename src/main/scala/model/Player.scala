@@ -5,6 +5,11 @@ import model.CardComponent.{Card, CardDeck}
 
 case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
 
+  def update(mementoPlayer: Player): Player = copy(inHouse = mementoPlayer.inHouse,
+    start = mementoPlayer.start,
+    cardList = mementoPlayer.cardList)
+
+
   val color: String = {
     c match {
       case "grün" => Console.GREEN
@@ -45,6 +50,9 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
       else inHouse
     })
   }
+
+
+  def updateCardList(cards: List[Card]): Player = copy(cardList = cards)
 
   def this(name: String, c: String, pieceQuantity: Int, cards: List[Card]) = {
     this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
