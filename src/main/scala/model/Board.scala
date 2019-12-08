@@ -35,7 +35,7 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     copy(boardMap = nBoard)
   }
 
-  def updateSwapPlayers(player: Array[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
+  def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
 
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))

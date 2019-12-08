@@ -26,53 +26,62 @@ case class Card(symbol: String, task: String, color: String) {
 object CardLogic {
 
 
-  val move: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
+  val move: (Vector[Player], Board, List[Int], List[Int], Int) => (Board, Vector[Player], Int) = (player: Vector[Player], board: Board, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
     var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    var players: Array[Player] = player
+    val players: Vector[Player] = player
+    var finalPlayer: Vector[Player] = Vector.empty[Player]
     val p: Player = player(selectedPlayerIndices.head)
     val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.boardMap.size)
 
     //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum.head, newPos)) {
-      val otherPlayerIndex: Int = players.indexWhere(x => x.color == board.boardMap(newPos).getColor)
-      val otherPlayerPieceNum: Int = players(otherPlayerIndex).getPieceNum(newPos) //get piece of other Player
-      println(s"$otherPlayerIndex has $otherPlayerPieceNum on $newPos")
-      if (otherPlayerPieceNum == -1) isValid = -1
-      players = players.updated(otherPlayerIndex, players(otherPlayerIndex).overridePlayer(otherPlayerPieceNum))
+
+      //get indexes and pieces
+      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.boardMap(newPos).getColor)
+      val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
+
+      //check wether move valid or not
+      if (oPlayerPieceNum == -1) isValid = -1
+
+      //update Vector when overridden
+      val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
+      finalPlayer = overriddenPlayers.updated(selectedPlayerIndices.head, players(selectedPlayerIndices.head).setPosition(pieceNum.head, newPos))
+    } else {
+
+      //update Vector when not overridden
+      finalPlayer = players.updated(selectedPlayerIndices.head, players(selectedPlayerIndices.head).setPosition(pieceNum.head, newPos))
     }
 
-    players = players.updated(selectedPlayerIndices.head, players(selectedPlayerIndices.head).setPosition(pieceNum.head, newPos))
-
-    (board.updateMovePlayer(p, pieceNum.head, newPos), players, 0)
+    (board.updateMovePlayer(p, pieceNum.head, newPos), finalPlayer, 0)
   }
 
 
-  val swap: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = (player: Array[Player], board: Board, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
+  val swap: (Vector[Player], Board, List[Int], List[Int], Int) => (Board, Vector[Player], Int) = (player: Vector[Player], board: Board, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
     var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = player(selectedPlayerIndices.head)
     val swapPlayer: Player = player(selectedPlayerIndices(1))
     val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
-    if (swapPos._2 == 0) isValid = -1
-    val players: Array[Player] = player
 
-    players(selectedPlayerIndices.head) = p.swapPiece(pieceNums.head, swapPos._2)
-    players(selectedPlayerIndices(1)) = swapPlayer.swapPiece(pieceNums(1), swapPos._1)
+    if (swapPos._2 == 0) isValid = -1 //Second Player is not on the field
 
-    val nboard = board.updateSwapPlayers(players, selectedPlayerIndices, pieceNums)
+    val playerOneSwapped: Vector[Player] = player.updated(selectedPlayerIndices.head, p.swapPiece(pieceNums.head, swapPos._2)) //swap with second player
+    val playerTwoSwapped: Vector[Player] = playerOneSwapped.updated(selectedPlayerIndices(1), swapPlayer.swapPiece(pieceNums(1), swapPos._1)) //swap with first player
 
-    (nboard, players, isValid)
+    val nboard = board.updateSwapPlayers(playerTwoSwapped, selectedPlayerIndices, pieceNums)
+
+    (nboard, playerTwoSwapped, isValid)
   }
 
 
-  def setStrategy(callback: (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int), player: Array[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (Board, Array[Player], Int) = {
+  def setStrategy(callback: (Vector[Player], Board, List[Int], List[Int], Int) => (Board, Vector[Player], Int), player: Vector[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (Board, Vector[Player], Int) = {
     callback(player, board, playerNum, pieceNums, moveBy)
   }
 
-  def getLogic(mode: String): (Array[Player], Board, List[Int], List[Int], Int) => (Board, Array[Player], Int) = {
+  def getLogic(mode: String): (Vector[Player], Board, List[Int], List[Int], Int) => (Board, Vector[Player], Int) = {
     mode match {
       case "move" => move
       case "swap" => swap

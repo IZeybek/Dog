@@ -52,7 +52,7 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
   }
 
 
-  def updateCardList(cards: List[Card]): Player = copy(cardList = cards)
+  def setHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
 
   def this(name: String, c: String, pieceQuantity: Int, cards: List[Card]) = {
     this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
@@ -65,8 +65,6 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
       Nil
   }
 
-  def updateHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
-
   def getCard(cardNum: Int): Card = {
     if (cardList.nonEmpty)
       cardList(cardNum)
@@ -74,9 +72,9 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
       null
   }
 
-
   override def toString: String = name
 }
+
 
 trait Option[Player] {
   def map(f: Player => Player): Option[Player]

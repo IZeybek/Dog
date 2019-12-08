@@ -5,8 +5,8 @@ import model.{Board, Player}
 
 import scala.util.Random
 
-case class GameState(players: (Array[Player], Int),
-                     cardDeck: (Array[Card], Int),
+case class GameState(players: (Vector[Player], Int),
+                     cardDeck: (Vector[Card], Int),
                      board: Board) {
 }
 
@@ -15,11 +15,11 @@ class GameStateMaster {
   //player with player pointer
   var colors = Array("gelb", "blau", "grün", "rot")
   var playerNames: Array[String] = Array("P1", "P2", "P3", "P4")
-  var players: Array[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toArray
+  var players: Vector[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
   var actualPlayer: Int = 0
 
   //carddeck of game
-  var cardDeck: Array[Card] = Random.shuffle(CardDeck.apply()).toArray
+  var cardDeck: Vector[Card] = Random.shuffle(CardDeck.apply()).toVector
   var cardPointer: Int = cardDeck.length
 
   //board
@@ -27,7 +27,7 @@ class GameStateMaster {
 
   case class UpdateGame() {
 
-    def withPlayers(setPlayers: Array[Player]): UpdateGame = {
+    def withPlayers(setPlayers: Vector[Player]): UpdateGame = {
       players = setPlayers
       this
     }
@@ -37,7 +37,7 @@ class GameStateMaster {
       this
     }
 
-    def withCardDeck(setCardDeck: Array[Card]): UpdateGame = {
+    def withCardDeck(setCardDeck: Vector[Card]): UpdateGame = {
       cardDeck = setCardDeck
       this
     }
