@@ -11,13 +11,13 @@ class UndoManager {
     //    command.doStep
   }
 
-  def clear(): Boolean = {
+  def clear: Boolean = {
     undoStack = Nil
     redoStack = Nil
     redoStack == Nil && undoStack == Nil
   }
 
-  def undoStep = {
+  def undoStep: Unit = {
     undoStack match {
       case Nil =>
       case head :: stack => {
@@ -55,16 +55,16 @@ class SolveCommand(controller: Controller) extends Command {
 
   var gameState: GameState = controller.gameState
 
-  override def undoStep(): Unit = {
+  override def undoStep: Unit = {
     updateSolveCommand
   }
 
-  override def redoStep(): Unit = {
+  override def redoStep: Unit = {
     updateSolveCommand
   }
 
 
-  private def updateSolveCommand(): Unit = {
+  private def updateSolveCommand: Unit = {
 
     val newGameState: GameState = controller.gameState
     controller.gameState = gameState
