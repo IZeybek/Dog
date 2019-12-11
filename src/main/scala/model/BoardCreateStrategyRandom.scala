@@ -13,9 +13,9 @@ class BoardCreateStrategyRandom extends BoardCreateStrategyTemplate {
         if (player.inHouse > 0)
           Cell(idx, Some(player))
         else
-          Cell(idx, None())
+          Cell(idx, None)
       case 1 =>
-        Cell(idx, None())
+        Cell(idx, None)
     }
   }
 }

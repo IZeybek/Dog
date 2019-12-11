@@ -2,6 +2,8 @@ package model
 
 import model.CardComponent.{Card, CardDeck}
 
+import scala.util.{Failure, Success, Try}
+
 
 case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
 
@@ -52,30 +54,45 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
   }
 
 
-  def setHandCards(myCards: List[Card]): Player = copy(cardList = myCards)
+  def setHandCards(myCards: List[Card]): Player = {
+    copy(cardList = myCards)
+  }
 
   def this(name: String, c: String, pieceQuantity: Int, cards: List[Card]) = {
     this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
   }
 
-  def removeCard(card: Card): List[Card] = {
-    if (cardList.nonEmpty)
-      cardList diff List(card)
-    else
-      Nil
+  def removeCard(card: Card): Player = {
+    tryRemoveCard(card) match {
+      case Success(cardListAfterTry) => copy(cardList = cardListAfterTry)
+      case Failure(exception) =>
+        println(exception.getMessage)
+        this
+    }
+  }
+
+  def tryRemoveCard(card: Card): Try[List[Card]] = {
+    Try(cardList diff List(card))
   }
 
   def getCard(cardNum: Int): Card = {
-    if (cardList.nonEmpty)
-      cardList(cardNum)
-    else
-      null
+    tryGetCard(cardNum) match {
+      case Some(value) => value
+      case None => throw new Exception("Bei den Karten ist etwas schief gelaufen\n")
+    }
+  }
+
+  def tryGetCard(cardNum: Int): Option[Card] = {
+    Try(cardList(cardNum)) match {
+      case Success(value) => Some(value)
+      case Failure(exception) => None
+    }
   }
 
   override def toString: String = name
 }
 
-
+/*
 trait Option[Player] {
   def map(f: Player => Player): Option[Player]
 }
@@ -86,7 +103,7 @@ case class Some[Player](p: Player) extends Option[Player] {
 
 case class None[Player]() extends Option[Player] {
   override def map(f: Player => Player) = new None
-}
+} */
 
 
 case class Piece(var position: Int) {
@@ -101,7 +118,8 @@ object Player {
     var pieceNumber: Int = 4
     var color: String = "blau"
     var name: String = "Bob"
-    var cardsDeck: List[Card] = CardDeck.apply()
+    var amount: Int = 6
+    var cardsDeck: List[Card] = CardDeck.apply(List(1, 1))
 
     def withPieceNumber(pieceNum: Int): PlayerBuilder = {
       pieceNumber = pieceNum
@@ -118,7 +136,7 @@ object Player {
       this
     }
 
-    def withCards(cards: List[Card]): PlayerBuilder = {
+    def withCards(cards: List[Card], amount: Int): PlayerBuilder = {
       cardsDeck = cards
       this
     }

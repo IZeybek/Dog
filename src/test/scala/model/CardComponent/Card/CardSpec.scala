@@ -69,7 +69,7 @@ class CardDeckSpec extends WordSpec with Matchers {
     "created" should {
       val cardDeck = CardDeck
       "have a SpecialCardsDeck as List[Card]" in {
-        cardDeck.apply()
+        cardDeck.apply(List(0, 0)).length should be(0)
       }
     }
   }
