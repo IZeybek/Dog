@@ -127,8 +127,15 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.gameState.players._1(0).cardList should be(empty)
       }
+      "create a Card Deck" in {
+        val cardDeck: (Vector[Card], Int) = controller.createCardDeck(List(0, 0))
+        cardDeck._1.length should be(cardDeck._2)
+      }
       "draw Cards" in {
         controller.drawFewCards(10).foreach(x => be(x.isInstanceOf[Card]))
+      }
+      "draw Card from Deck" in {
+        controller.drawCardFromDeck.isInstanceOf[Card] should be(true)
       }
     }
   }

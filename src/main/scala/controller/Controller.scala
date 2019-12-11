@@ -133,8 +133,8 @@ class Controller() extends Observable {
 
   //Cards
 
-  def createCardDeck: (Vector[Card], Int) = {
-    val array = Random.shuffle(CardDeck.apply(List(10, 10))).toVector
+  def createCardDeck(amounts: List[Int]): (Vector[Card], Int) = {
+    val array = Random.shuffle(CardDeck.apply(amounts)).toVector
     (array, array.length)
   }
 
