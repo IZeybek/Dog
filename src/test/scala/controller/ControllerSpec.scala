@@ -36,6 +36,13 @@ class ControllerSpec extends WordSpec with Matchers {
         players(2).toString should be("Player3")
         players(3).toString should be("Player4")
       }
+      "manage the round" in {
+        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
+        controller.createNewBoard(20)
+        val cardList: List[Card] = Card("3", "move", "blue") :: Card("5", "move", "blue") :: Nil
+        controller.testDistributeCardsToPlayer(playerNum = 0, cardList).cardList should be(cardList)
+        controller.manageRound(0, List(0), 0) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).color}${controller.gameState.players._1(controller.gameState.players._2).name}${Console.RESET}'s turn\n")
+      }
       "move a player by 5" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
         controller.createNewBoard(20)
@@ -120,8 +127,15 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.gameState.players._1(0).cardList should be(empty)
       }
+      "create a Card Deck" in {
+        val cardDeck: (Vector[Card], Int) = controller.createCardDeck(List(0, 0))
+        cardDeck._1.length should be(cardDeck._2)
+      }
       "draw Cards" in {
         controller.drawFewCards(10).foreach(x => be(x.isInstanceOf[Card]))
+      }
+      "draw Card from Deck" in {
+        controller.drawCardFromDeck.isInstanceOf[Card] should be(true)
       }
     }
   }

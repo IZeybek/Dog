@@ -101,7 +101,8 @@ object Player {
     var pieceNumber: Int = 4
     var color: String = "blau"
     var name: String = "Bob"
-    var cardsDeck: List[Card] = CardDeck.apply()
+    var amount: Int = 6
+    var cardsDeck: List[Card] = CardDeck.apply(List(1, 1))
 
     def withPieceNumber(pieceNum: Int): PlayerBuilder = {
       pieceNumber = pieceNum
@@ -118,7 +119,7 @@ object Player {
       this
     }
 
-    def withCards(cards: List[Card]): PlayerBuilder = {
+    def withCards(cards: List[Card], amount: Int): PlayerBuilder = {
       cardsDeck = cards
       this
     }

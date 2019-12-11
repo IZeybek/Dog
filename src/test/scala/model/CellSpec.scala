@@ -17,6 +17,18 @@ class CellSpec extends WordSpec with Matchers {
       "have idx" in {
         cellSpecTrue.idx should be(42)
       }
+      "add Player to Cell" in {
+        cellSpecFalse.addPlayerToCell(player).p should be(Some(player))
+        cellSpecFalse.removePlayerFromCell
+      }
+      "remove Player from Cell" in {
+        cellSpecTrue.removePlayerFromCell.p should be(None())
+        cellSpecFalse.addPlayerToCell(player).p should be(Some(player))
+      }
+      "be printed out" in {
+        cellSpecTrue.toString should be("[" + player.color + "x" + Console.RESET + "]")
+        cellSpecFalse.toString should be("[" + " " + "]")
+      }
     }
   }
 }
