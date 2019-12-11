@@ -48,8 +48,18 @@ class Controller() extends Observable {
     board
   }
 
+  /**
+   * prints the board and houses
+   *
+   * @return the board and houses in a String
+   */
   def toStringBoard: String = toStringHouse + gameState.board.toString()
 
+  /**
+   * prints the houses of each player
+   *
+   * @return the houses in a String
+   */
   def toStringHouse: String = {
     val players: Vector[Player] = gameState.players._1
     val title: String = s"${Console.UNDERLINED}Houses${Console.RESET}"
@@ -65,12 +75,42 @@ class Controller() extends Observable {
   //Player
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   def createPlayers(playerNames: List[String]): GameState = {
-    val colors = Array("gelb", "blau", "grün", "rot")
+    val colors = gameStateMaster.colors
     val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
     gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
     gameState
   }
 
+  /**
+   * Manages the round
+   *
+   * @param otherPlayer is not -1 when e.g. swapping -> user has to know when to insert more or less commands
+   * @param pieceNum    is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   * @param cardNum     is the index of the card in a CardList of the player that is played
+   * @return a String that is returned to the TUI for more information
+   */
+  def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String = {
+    val selectedPlayerList: List[Int] = gameState.players._2 :: otherPlayer :: Nil
+    var returnString: String = ""
+    if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
+      gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+      returnString = s"Player ${gameState.players._1(gameState.players._2).color}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+    } else {
+      undoCommand()
+      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
+    }
+    returnString
+  }
+
+  /**
+   * uses the card and extracts its logic
+   *
+   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
+   *                           managed by manageRound but can also be set manually for testing purposes
+   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   * @param cardNum            is the index of the card in a CardList of the player that is played
+   * @return
+   */
   def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], cardNum: Int): Int = {
     val board: Board = gameState.board
     if (selectedPlayerList != Nil && gameState.players._1(selectedPlayerList.head).cardList.nonEmpty) {
@@ -93,8 +133,8 @@ class Controller() extends Observable {
 
   //Cards
 
-  def createCardDeck: (Vector[Card], Int) = {
-    val array = Random.shuffle(CardDeck.apply()).toVector
+  def createCardDeck(amounts: List[Int]): (Vector[Card], Int) = {
+    val array = Random.shuffle(CardDeck.apply(amounts)).toVector
     (array, array.length)
   }
 

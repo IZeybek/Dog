@@ -2,6 +2,8 @@ package model.CardComponent
 
 import model.{Board, CardTrait, Player}
 
+import scala.collection.mutable.ListBuffer
+
 
 case class Card(symbol: String, task: String, color: String) {
 
@@ -103,16 +105,23 @@ object GenCardDeck {
 }
 
 object CardDeck {
-  def apply(): List[Card] = {
-
-    GenCardDeck.apply("special").getCardDeck ++
-      GenCardDeck.apply("normal").getCardDeck ++
-      GenCardDeck.apply("special").getCardDeck ++
-      GenCardDeck.apply("normal").getCardDeck ++
-      GenCardDeck.apply("special").getCardDeck ++
-      GenCardDeck.apply("normal").getCardDeck ++
-      GenCardDeck.apply("special").getCardDeck ++
-      GenCardDeck.apply("normal").getCardDeck
+  def apply(amounts: List[Int]): List[Card] = {
+    val list = new ListBuffer[Card]()
+    amounts.indices.foreach(i => for (elem <- (0 until amounts(i))) {
+      i match {
+        case 0 => list.++=(GenCardDeck.apply("special").getCardDeck)
+        case 1 => list.++=(GenCardDeck.apply("normal").getCardDeck)
+      }
+    })
+    list.toList
+    //    GenCardDeck.apply("special").getCardDeck ++
+    //      GenCardDeck.apply("normal").getCardDeck ++
+    //      GenCardDeck.apply("special").getCardDeck ++
+    //      GenCardDeck.apply("normal").getCardDeck ++
+    //      GenCardDeck.apply("special").getCardDeck ++
+    //      GenCardDeck.apply("normal").getCardDeck ++
+    //      GenCardDeck.apply("special").getCardDeck ++
+    //      GenCardDeck.apply("normal").getCardDeck
   }
 }
 

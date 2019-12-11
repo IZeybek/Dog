@@ -8,7 +8,7 @@ class Tui(controller: Controller) extends Observer {
   controller.add(this)
 
   def showMenu(): Unit = {
-    println("Menu")
+    print("Menu\n")
     println("normal -> yourCard <-> myPiece <-> (OtherPiece) <-> myPlayerNum <-> (otherPlayerNum)")
     println("swap   -> yourCard <-> myPiece <-> OtherPiece <-> myPlayerNum <-> (otherPlayerNum)")
     controller.doStep()
@@ -49,9 +49,10 @@ class Tui(controller: Controller) extends Observer {
         result = "printed game"
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
-          case cardNum :: pieceNum1 :: pieceNum2 :: selectedPlayerList =>
-            controller.useCardLogic(selectedPlayerList, List(pieceNum1, pieceNum2), cardNum)
-            result = s"player ${if (selectedPlayerList != Nil) selectedPlayerList.head} used card number $cardNum"
+          case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
+            controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), cardNum)
+          case cardNum :: pieceNums =>
+            result = controller.manageRound(-1, pieceNums, cardNum)
           case _ => println("try again!")
         }
     }

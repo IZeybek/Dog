@@ -5,9 +5,6 @@ import util.Observable
 
 case class Board(boardMap: Map[Int, Cell]) extends Observable {
 
-  def updateBoard(mementoBoard: Board): Board = copy(boardMap = mementoBoard.boardMap)
-
-
   //can create a Board with a given size
   def this(size: Int) = {
     this((0 until size).map(i => (i, Cell(i, None()))).toMap)
@@ -54,13 +51,5 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
       case None() => false
     }
   }
-
-  def getPlayerColor(pos: Integer): String = {
-    boardMap(pos).p match {
-      case Some(p) => p.c
-      case None() => "NO COLOR"
-    }
-  }
-
 }
 
