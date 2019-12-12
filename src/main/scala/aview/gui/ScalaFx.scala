@@ -1,66 +1,75 @@
 package aview.gui
 
 
+import javafx.scene.layout.GridPane
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.control._
-import scalafx.scene.layout.BorderPane
+import scalafx.scene.image.ImageView
+import scalafx.scene.layout.{BorderPane, VBox}
 
 import scala.swing.Orientation
 
-object MenuBarTest extends JFXApp {
+object GUI extends JFXApp {
   stage = new PrimaryStage {
     title = "MenuBar Test"
-    scene = new Scene {
+    val vBox = new VBox()
+    scene = new Scene(300, 300) {
 
-        val menuBar: MenuBar = new MenuBar {
-          useSystemMenuBar = true
-          minWidth = 100
-          val menuList: Menu = new Menu("Edit") {
-            items.add(new MenuItem("Undo"))
-            items.add(new MenuItem("Redo"))
-            items.add(new MenuItem("Save"))
-          }
-          menus.add(menuList)
-        }
+      val menuBar: MenuBar = new MenuBar {
+        useSystemMenuBar = true
 
-        val rootPane: BorderPane = new BorderPane{
-          top = menuBar
-          center = initMainFrame()
+        minWidth = 100
+        val menuList: Menu = new Menu("Edit") {
+          items.add(new MenuItem("Undo"))
+          items.add(new MenuItem("Redo"))
+          items.add(new MenuItem("Save"))
         }
+        menus.add(menuList)
+      }
+
+      val rootPane: BorderPane = new BorderPane {
+        top = menuBar
+        center = makeDrawingTab()
+      }
+
       root = rootPane
-//        center = tabPane
-//        //        center = new ImageView("file:groot.jpg") {
-//        //          fitHeight = 1080 - 300
-//        //          fitWidth = 1920
-//        //        }
-//        //
-//        bottom = new Button("asdasd")
     }
   }
 
-  private def initMainFrame(): BorderPane = {
+  private def makeDrawingTab(): BorderPane = {
 
-    val cardViewAndPlayView = new SplitPane {
+    val cardViewAndPlayView: SplitPane = new SplitPane {
       Orientation.Horizontal
-      items.add(new TextArea("first"))
-      items.add(new TextArea("second"))
+
+      val view: GridPane = new GridPane {
+        style = "-fx-background-color:#383838"
+        val view1, view2, view3 = new ImageView("file:AssCard.jpg") {
+          fitHeight = 150
+          fitWidth = 75
+        }
+        add(view1, 0, 0)
+        add(view2, 1, 0)
+        add(view3, 2, 0)
+      }
+      items.add(view)
+      items.add(new TextArea("ss"))
     }
 
     val boardView = new SplitPane {
 
+      style = "-fx-background-color:#383838"
       Orientation.Horizontal
-      items.add(new TextArea("left"))
-      items.add(new TextArea("right"))
+
       dividerPositions = 0.7
     }
 
-    val mainView = new BorderPane {
+    val tab = new BorderPane {
       center = boardView
       bottom = cardViewAndPlayView
     }
-    mainView
+    tab
   }
 }
 
