@@ -6,9 +6,7 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.control._
-import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.BorderPane
-import scalafx.scene.paint.Color
 
 import scala.swing.Orientation
 
@@ -17,32 +15,31 @@ object MenuBarTest extends JFXApp {
     title = "MenuBar Test"
     scene = new Scene {
 
-        val menuBar: MenuBar = new MenuBar {
-          useSystemMenuBar = true
-          minWidth = 100
-          val menuList: Menu = new Menu("Edit") {
-            items.add(new MenuItem("Undo"))
-            items.add(new MenuItem("Redo"))
-            items.add(new MenuItem("Save"))
-          }
-          menus.add(menuList)
+      val menuBar: MenuBar = new MenuBar {
+        useSystemMenuBar = true
+        minWidth = 100
+        val menuList: Menu = new Menu("Edit") {
+          items.add(new MenuItem("Undo"))
+          items.add(new MenuItem("Redo"))
+          items.add(new MenuItem("Save"))
         }
-        val tabPane = new TabPane
-        tabPane += makeDrawingTab()
+        menus.add(menuList)
+      }
+      val tabPane = new TabPane
+      tabPane += makeDrawingTab()
 
-        val rootPane: BorderPane = new BorderPane{
-          top = menuBar
-          center = tabPane
-        }
+      val rootPane: BorderPane = new BorderPane {
+        top = menuBar
+        center = tabPane
+      }
       root = rootPane
-//        center = tabPane
-//        //        center = new ImageView("file:groot.jpg") {
-//        //          fitHeight = 1080 - 300
-//        //          fitWidth = 1920
-//        //        }
-//        //
-//        bottom = new Button("asdasd")
-
+      //        center = tabPane
+      //        //        center = new ImageView("file:groot.jpg") {
+      //        //          fitHeight = 1080 - 300
+      //        //          fitWidth = 1920
+      //        //        }
+      //        //
+      //        bottom = new Button("asdasd")
 
 
     }
@@ -53,7 +50,7 @@ object MenuBarTest extends JFXApp {
     val leftSplit = new SplitPane {
       Orientation.Vertical
       items.add(new TreeView[String])
-      val treeView = new ScrollPane{
+      val treeView = new ScrollPane {
         content = new TreeView[String]
       }
       items.add(treeView)
