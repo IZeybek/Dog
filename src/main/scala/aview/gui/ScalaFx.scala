@@ -27,7 +27,7 @@ object MenuBarTest extends JFXApp {
 
         val rootPane: BorderPane = new BorderPane{
           top = menuBar
-          center = makeDrawingTab()
+          center = initMainFrame()
         }
       root = rootPane
 //        center = tabPane
@@ -40,7 +40,7 @@ object MenuBarTest extends JFXApp {
     }
   }
 
-  private def makeDrawingTab(): BorderPane = {
+  private def initMainFrame(): BorderPane = {
 
     val cardViewAndPlayView = new SplitPane {
       Orientation.Horizontal
