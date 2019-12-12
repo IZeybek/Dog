@@ -24,10 +24,6 @@ object MenuBarTest extends JFXApp {
           }
           menus.add(menuList)
         }
-      //        val tabPane = new BorderPane(){
-      //            cente
-      //        }
-      //        tabPane += makeDrawingTab()
 
         val rootPane: BorderPane = new BorderPane{
           top = menuBar
@@ -41,33 +37,18 @@ object MenuBarTest extends JFXApp {
 //        //        }
 //        //
 //        bottom = new Button("asdasd")
-
-
-
     }
   }
 
   private def makeDrawingTab(): BorderPane = {
 
-    val leftSplit = new SplitPane {
+    val cardViewAndPlayView = new SplitPane {
       Orientation.Horizontal
       items.add(new TextArea("first"))
       items.add(new TextArea("second"))
     }
 
-    //    val topRightBorder = new BorderPane {
-    //      top = new Slider(0, 1000, 0)
-    //      center = new Canvas
-    //    }
-    //
-    //    val bottomRightBorder = new BorderPane {
-    //      top = new TextArea("hallo")
-    //      center = new TextArea("ssdsad") {
-    //        editable = false
-    //      }
-    //    }
-
-    val rightSplit = new SplitPane {
+    val boardView = new SplitPane {
 
       Orientation.Horizontal
       items.add(new TextArea("left"))
@@ -75,17 +56,11 @@ object MenuBarTest extends JFXApp {
       dividerPositions = 0.7
     }
 
-    val topSplit = new SplitPane {
-      items.add(leftSplit)
-      items.add(rightSplit)
-      dividerPositions = 0.3
+    val mainView = new BorderPane {
+      center = boardView
+      bottom = cardViewAndPlayView
     }
-
-    val tab = new BorderPane {
-      center = rightSplit
-      bottom = leftSplit
-    }
-    tab
+    mainView
   }
 }
 
