@@ -4,11 +4,8 @@ package aview.gui
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
-import scalafx.scene.canvas.Canvas
 import scalafx.scene.control._
-import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.BorderPane
-import scalafx.scene.paint.Color
 
 import scala.swing.Orientation
 
@@ -27,12 +24,14 @@ object MenuBarTest extends JFXApp {
           }
           menus.add(menuList)
         }
-        val tabPane = new TabPane
-        tabPane += makeDrawingTab()
+      //        val tabPane = new BorderPane(){
+      //            cente
+      //        }
+      //        tabPane += makeDrawingTab()
 
         val rootPane: BorderPane = new BorderPane{
           top = menuBar
-          center = tabPane
+          center = makeDrawingTab()
         }
       root = rootPane
 //        center = tabPane
@@ -48,33 +47,31 @@ object MenuBarTest extends JFXApp {
     }
   }
 
-  private def makeDrawingTab(): Tab = {
+  private def makeDrawingTab(): BorderPane = {
 
     val leftSplit = new SplitPane {
-      Orientation.Vertical
-      items.add(new TreeView[String])
-      val treeView = new ScrollPane{
-        content = new TreeView[String]
-      }
-      items.add(treeView)
+      Orientation.Horizontal
+      items.add(new TextArea("first"))
+      items.add(new TextArea("second"))
     }
 
-    val topRightBorder = new BorderPane {
-      top = new Slider(0, 1000, 0)
-      center = new Canvas
-    }
-
-    val bottomRightBorder = new BorderPane {
-      top = new TextField
-      center = new TextArea {
-        editable = false
-      }
-    }
+    //    val topRightBorder = new BorderPane {
+    //      top = new Slider(0, 1000, 0)
+    //      center = new Canvas
+    //    }
+    //
+    //    val bottomRightBorder = new BorderPane {
+    //      top = new TextArea("hallo")
+    //      center = new TextArea("ssdsad") {
+    //        editable = false
+    //      }
+    //    }
 
     val rightSplit = new SplitPane {
-      Orientation.Vertical
-      items.add(topRightBorder)
-      items.add(bottomRightBorder)
+
+      Orientation.Horizontal
+      items.add(new TextArea("left"))
+      items.add(new TextArea("right"))
       dividerPositions = 0.7
     }
 
@@ -84,9 +81,9 @@ object MenuBarTest extends JFXApp {
       dividerPositions = 0.3
     }
 
-    val tab = new Tab {
-      text = "untitled"
-      content = topSplit
+    val tab = new BorderPane {
+      center = rightSplit
+      bottom = leftSplit
     }
     tab
   }
