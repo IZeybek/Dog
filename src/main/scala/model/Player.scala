@@ -64,28 +64,31 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
 
   def removeCard(card: Card): Player = {
     tryRemoveCard(card) match {
-      case Success(cardListAfterTry) => copy(cardList = cardListAfterTry)
-      case Failure(exception) =>
-        println(exception.getMessage)
-        this
+      case Some(list) => copy(cardList = list)
+      case None => this
     }
   }
 
-  def tryRemoveCard(card: Card): Try[List[Card]] = {
-    Try(cardList diff List(card))
+  def tryRemoveCard(card: Card): Option[List[Card]] = {
+    Try(cardList diff List(card)) match {
+      case Success(list) => Some(list)
+      case Failure(_) =>
+        println("Es konnte keine Karte entfernt werden!\n")
+        None
+    }
   }
 
   def getCard(cardNum: Int): Card = {
     tryGetCard(cardNum) match {
       case Some(value) => value
-      case None => throw new Exception("Bei den Karten ist etwas schief gelaufen\n")
+      case None => throw new Exception("Es konnte keine Karte ausgewählt!\n")
     }
   }
 
   def tryGetCard(cardNum: Int): Option[Card] = {
     Try(cardList(cardNum)) match {
       case Success(value) => Some(value)
-      case Failure(exception) => None
+      case Failure(_) => None
     }
   }
 
