@@ -8,7 +8,6 @@ import scala.util.Random
 
 class Controller() extends Observable {
 
-
   private val undoManager = new UndoManager
 
   def doStep(): Unit = {
@@ -23,10 +22,6 @@ class Controller() extends Observable {
   def redoCommand(): Unit = {
     undoManager.redoStep
     notifyObservers
-  }
-
-  def replaceController(mementoBoard: Board, mementoPlayer: Vector[Player], mementoCardDeck: (Vector[Card], Int)): Boolean = {
-    true
   }
 
   var gameStateMaster = new GameStateMaster
@@ -73,7 +68,7 @@ class Controller() extends Observable {
   def getBoard: Board = gameState.board
 
   //Player
-  //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
+
   def createPlayers(playerNames: List[String]): GameState = {
     val colors = gameStateMaster.colors
     val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector

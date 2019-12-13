@@ -1,5 +1,7 @@
 package controller
 
+
+import controller.GameStatus.GameStatus
 import model.CardComponent.{Card, CardDeck}
 import model.{Board, Player}
 
@@ -7,13 +9,29 @@ import scala.util.Random
 
 case class GameState(players: (Vector[Player], Int),
                      cardDeck: (Vector[Card], Int),
-                     board: Board) {
+                     board: Board, gameState: GameStatus) {
+}
+
+object GameStatus extends Enumeration {
+  type GameStatus = Value
+  val WELCOME, CREATE, IDLE = Value
+
+  val map: Map[GameStatus, String] = Map[GameStatus, String](
+    WELCOME -> "welcome",
+    CREATE -> "create",
+    IDLE -> "main"
+  )
+
+  def message(gameStatus: GameStatus): String = {
+    map(gameStatus)
+  }
+
 }
 
 class GameStateMaster {
 
-  //player with player pointer
   var tutorial: Boolean = true
+  var gameStatus: GameStatus = GameStatus.WELCOME
   var colors: Array[String] = Array("gelb", "blau", "grün", "rot")
   var playerNames: Array[String] = Array("P1", "P2", "P3", "P4")
   var players: Vector[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
@@ -45,7 +63,12 @@ class GameStateMaster {
 
     def withNextPlayer(): UpdateGame = {
       val newPlayer = actualPlayer + 1
-      actualPlayer = (newPlayer % players.size)
+      actualPlayer = newPlayer % players.size
+      this
+    }
+
+    def withNewState(setNewState: GameStatus): UpdateGame = {
+      gameStatus = setNewState
       this
     }
 
@@ -72,22 +95,8 @@ class GameStateMaster {
     def buildGame: GameState = {
       //      assert(actualPlayer >= 0 && players.length - 1 >= actualPlayer)
       //      assert(cardPointer >= 0 && cardDeck.length - 1 >= cardPointer)
-      GameState((players, actualPlayer), (cardDeck, cardPointer), board)
+      GameState((players, actualPlayer), (cardDeck, cardPointer), board, gameStatus)
     }
   }
 
 }
-
-//object GameState extends Enumeration {
-//  type GameState = Value
-//  val IDLE, MOVE, CREATEPLAYER, CREATEBOARD, DRAWCARD = Value
-//
-//  val map = Map[GameState, String](
-//    IDLE -> "",
-//    MOVE -> "moved player",
-//    CREATEPLAYER -> "created player",
-//    CREATEBOARD -> "created board",
-//    DRAWCARD -> "draw card"
-//  )
-//
-//}

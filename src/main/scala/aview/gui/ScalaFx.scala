@@ -1,54 +1,86 @@
 package aview.gui
 
 
-import controller.Controller
+import controller.{Controller, GameStatus}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control._
-import scalafx.scene.layout.BorderPane
+import scalafx.scene.effect.DropShadow
+import scalafx.scene.layout.{BorderPane, HBox}
+import scalafx.scene.paint.Color.{DodgerBlue, PaleGreen, SeaGreen}
+import scalafx.scene.paint.{Color, LinearGradient, Stops}
+import scalafx.scene.text.Text
 
 class Gui(controller: Controller) {
-  val actualStage: JFXApp = Stages.getStage(0)
+  PrimaryStage.setScene(GameStatus.message(controller.gameState.gameState))
+  val actualStage: PrimaryStage.type = PrimaryStage
 }
 
-object Stages {
-  def getStage(stageNum: Int): JFXApp = {
-    stageNum match {
-      case 0 => PrimStage
+object PrimaryStage extends JFXApp {
+  var setupScene: Scene = Scenes.getScene("welcome")
+
+  def setScene(setScene: String): Unit = {
+    setupScene = Scenes.getScene(setScene)
+  }
+
+  stage = new PrimaryStage {
+    title = "Dog"
+    scene = setupScene
+  }
+}
+
+object Scenes {
+  def getScene(sceneName: String): Scene = {
+    sceneName.toLowerCase match {
+      case "welcome" => new WelcomeScene()
+      case "main" => new MainScene()
       case _ => null
     }
   }
 }
 
-object PrimStage extends JFXApp {
-
-  stage = new PrimaryStage {
-    title = "MenuBar Test"
-    scene = new Scene() {
-
-
-      val menuBar: MenuBar = new MenuBar {
-        useSystemMenuBar = true
-        minWidth = 100
-        val menuList: Menu = new Menu("Edit") {
-          items.add(new MenuItem("Undo"))
-          items.add(new MenuItem("Redo"))
-          items.add(new MenuItem("Save"))
-        }
-        menus.add(menuList)
-      }
-
-      val rootPane: BorderPane = new BorderPane {
-        top = menuBar
-        bottom = CardPanel.newCardViews()
-      }
-
-      root = rootPane
+class MainScene() extends Scene {
+  val menuBar: MenuBar = new MenuBar {
+    useSystemMenuBar = true
+    minWidth = 100
+    val menuList: Menu = new Menu("Edit") {
+      items.add(new MenuItem("Undo"))
+      items.add(new MenuItem("Redo"))
+      items.add(new MenuItem("Save"))
     }
+    menus.add(menuList)
   }
+
+  val rootPane: BorderPane = new BorderPane {
+    top = menuBar
+    center = BoardPanel.newBoardView()
+    bottom = CardPanel.newCardViews()
+  }
+  root = rootPane
 }
 
+class WelcomeScene() extends Scene {
+  content = new HBox {
+    fill = Color.Black
+    padding = Insets(50, 80, 50, 80)
+    children = Seq(
+      new Text {
+        text = s"Dog - Mensch ärgere dich nicht"
+        style = "-fx-font-size: 48pt"
+        fill = new LinearGradient(
+          endX = 0,
+          stops = Stops(PaleGreen, SeaGreen))
+        effect = new DropShadow {
+          color = DodgerBlue
+          radius = 25
+          spread = 0.25
+        }
+      }
+    )
+  }
+}
 
 //val button = new Button("Click Me!")
 //button.layoutX = 100
