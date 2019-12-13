@@ -1,15 +1,19 @@
 package aview.gui
 
 import javafx.scene.layout.GridPane
-import scalafx.Includes.when
+import scalafx.application.JFXApp
+import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
-import scalafx.scene.Node
-import scalafx.scene.control.{Button, SplitPane, TextArea}
-import scalafx.scene.image.ImageView
-import scalafx.scene.layout.BorderPane
+import scalafx.scene.control.{Button, SplitPane}
+import scalafx.scene.effect.DropShadow
+import scalafx.scene.image._
+import scalafx.scene.layout.{HBox, _}
+import scalafx.scene.paint.Color._
+import scalafx.scene.paint.{Color, LinearGradient, Stops}
+import scalafx.scene.text.Text
+import scalafx.scene.{Node, Scene}
 
-import scala.swing.{Component, Orientation}
-import scala.swing.event.ActionEvent
+import scala.swing.Orientation
 
 object CardPanel {
 
@@ -21,7 +25,7 @@ object CardPanel {
       val view: GridPane = new GridPane {
         padding = Insets(100, 5, 10, 500)
 
-        var b1, b2, b3,b4 = new Button("", new ImageView("file:ace.png") {
+        var b1, b2, b3, b4 = new Button("", new ImageView("file:ace.png") {
           fitHeight = 250
           fitWidth = 150
         }) {
@@ -69,5 +73,42 @@ object BoardPanel {
       items.add(view)
     }
     splitPane
+  }
+}
+
+object WelcomePanel extends JFXApp {
+  stage = new PrimaryStage {
+    title = "Welcome to Dog"
+    scene = new Scene {
+      content = new HBox {
+        fill = Color.Black
+        padding = Insets(50, 80, 50, 80)
+        children = Seq(
+          new Text {
+            text = "Dog"
+            style = "-fx-font-size: 48pt"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(PaleGreen, SeaGreen))
+            effect = new DropShadow {
+              color = DodgerBlue
+              radius = 25
+              spread = 0.25
+            }
+          }, new Text {
+            text = "\rAre you ready?"
+            style = "-fx-font-size: 48pt"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(PaleGreen, SeaGreen))
+            effect = new DropShadow {
+              color = DarkSeaGreen
+              radius = 25
+              spread = 0.25
+            }
+          }
+        )
+      }
+    }
   }
 }

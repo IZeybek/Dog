@@ -1,27 +1,31 @@
 package aview.gui
 
 
-import java.beans.EventHandler
-
-import javafx.event
-import javafx.scene.layout.GridPane
+import controller.Controller
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.{Node, Scene}
+import scalafx.scene.Scene
 import scalafx.scene.control._
-import scalafx.scene.input._
-import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, VBox}
-import scalafx.geometry.Insets
-import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.layout.BorderPane
 
-import scala.swing.{Action, Orientation}
-import scala.swing.event.ActionEvent
+class Gui(controller: Controller) {
+  val actualStage: JFXApp = Stages.getStage(0)
+}
 
-object GUI extends JFXApp {
+object Stages {
+  def getStage(stageNum: Int): JFXApp = {
+    stageNum match {
+      case 0 => PrimStage
+      case _ => null
+    }
+  }
+}
+
+object PrimStage extends JFXApp {
+
   stage = new PrimaryStage {
     title = "MenuBar Test"
-    scene = new Scene(300, 300) {
+    scene = new Scene() {
 
 
       val menuBar: MenuBar = new MenuBar {
@@ -37,7 +41,6 @@ object GUI extends JFXApp {
 
       val rootPane: BorderPane = new BorderPane {
         top = menuBar
-        center = BoardPanel.newBoardView()
         bottom = CardPanel.newCardViews()
       }
 

@@ -1,15 +1,18 @@
 package aview
 
+import aview.gui.Gui
 import controller.Controller
 
 object Dog {
 
   val controller = new Controller()
   val tui = new Tui(controller)
+  val gui = new Gui(controller)
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
     tui.showMenu
+    gui.actualStage.main(args)
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
