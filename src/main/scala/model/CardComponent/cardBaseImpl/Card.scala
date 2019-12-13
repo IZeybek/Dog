@@ -1,18 +1,15 @@
-package model.CardComponent
+package model.CardComponent.cardBaseImpl
 
-import model.{Board, CardTrait, Player}
+import controller.Component.GameState
+import model.CardComponent.{CardDeckTrait, CardTrait}
+import model.{Board, Player}
 
 import scala.collection.mutable.ListBuffer
 
 
-case class Card(symbol: String, task: String, color: String) {
+case class Card(symbol: String, task: String, color: String) extends CardTrait {
 
-  def getSymbol: String = symbol
-
-  def getTask: String = task
-
-  def getColor: String = color
-
+  override def getTask: String = task
 
   override def toString: String = {
     "Card(" + s"${
@@ -22,6 +19,10 @@ case class Card(symbol: String, task: String, color: String) {
       }
     }$getSymbol${Console.RESET})"
   }
+
+  override def getSymbol: String = symbol
+
+  override def getColor: String = color
 }
 
 
@@ -78,6 +79,8 @@ object CardLogic {
     (nboard, playerTwoSwapped, isValid)
   }
 
+  val start: (GameState, ) => (GameState) = (gameState: GameState)
+
 
   def setStrategy(callback: (Vector[Player], Board, List[Int], List[Int], Int) => (Board, Vector[Player], Int), player: Vector[Player], board: Board, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (Board, Vector[Player], Int) = {
     callback(player, board, playerNum, pieceNums, moveBy)
@@ -96,7 +99,7 @@ object CardLogic {
 
 object GenCardDeck {
 
-  def apply(typ: String): CardTrait = typ match {
+  def apply(typ: String): CardDeckTrait = typ match {
     case "special" =>
       SpecialCardsDeck()
     case "normal" =>
@@ -126,7 +129,7 @@ object CardDeck {
 }
 
 
-case class SpecialCardsDeck() extends CardTrait {
+case class SpecialCardsDeck() extends CardDeckTrait {
 
   val specialCards: List[Card] = generateDeck
 
@@ -143,7 +146,7 @@ case class SpecialCardsDeck() extends CardTrait {
 }
 
 
-case class NormalCardsDeck() extends CardTrait {
+case class NormalCardsDeck() extends CardDeckTrait {
 
   val normalCards: List[Card] = generateDeck
 

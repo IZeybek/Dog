@@ -1,12 +1,13 @@
 package util
 
-import controller.{Controller, GameState}
+import controller.Component.GameState
+import controller.Component.controllerBaseImpl.Controller
 
 class UndoManager {
   private var undoStack: List[Command] = Nil
   private var redoStack: List[Command] = Nil
 
-  def doStep(command: Command) = {
+  def doStep(command: Command): Unit = {
     undoStack = command :: undoStack
     //    command.doStep
   }
@@ -17,7 +18,7 @@ class UndoManager {
     redoStack == Nil && undoStack == Nil
   }
 
-  def undoStep: Unit = {
+  def undoStep(): Unit = {
     undoStack match {
       case Nil =>
       case head :: stack => {
@@ -28,7 +29,7 @@ class UndoManager {
     }
   }
 
-  def redoStep = {
+  def redoStep(): Unit = {
     redoStack match {
       case Nil =>
       case head :: stack => {
@@ -45,9 +46,9 @@ trait Command {
 
   //  def doStep: Unit
 
-  def undoStep: Unit
+  def undoStep(): Unit
 
-  def redoStep: Unit
+  def redoStep(): Unit
 
 }
 
@@ -55,16 +56,15 @@ class SolveCommand(controller: Controller) extends Command {
 
   var gameState: GameState = controller.gameState
 
-  override def undoStep: Unit = {
-    updateSolveCommand
+  override def undoStep(): Unit = {
+    updateSolveCommand()
   }
 
-  override def redoStep: Unit = {
-    updateSolveCommand
+  override def redoStep(): Unit = {
+    updateSolveCommand()
   }
 
-
-  private def updateSolveCommand: Unit = {
+  private def updateSolveCommand(): Unit = {
 
     val newGameState: GameState = controller.gameState
     controller.gameState = gameState

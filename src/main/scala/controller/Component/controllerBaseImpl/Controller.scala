@@ -1,66 +1,58 @@
-package controller
+package controller.Component.controllerBaseImpl
 
-import model.CardComponent.{Card, CardDeck, CardLogic}
+import controller.Component.{ControllerTrait, GameState, GameStateMaster}
+import model.CardComponent.CardTrait
+import model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import model._
-import util.{Observable, SolveCommand, UndoManager}
+import util.{SolveCommand, UndoManager}
 
 import scala.util.Random
 
-class Controller() extends Observable {
-
+class Controller() extends ControllerTrait {
 
   private val undoManager = new UndoManager
+  override var gameStateMaster = new GameStateMaster
+  override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
 
-  def doStep(): Unit = {
-    undoManager.doStep(new SolveCommand(this))
-  }
-
-  def undoCommand(): Unit = {
-    undoManager.undoStep
-    notifyObservers
-  }
-
-  def redoCommand(): Unit = {
+  override def redoCommand(): Unit = {
     undoManager.redoStep
     notifyObservers
   }
 
-  def replaceController(mementoBoard: Board, mementoPlayer: Vector[Player], mementoCardDeck: (Vector[Card], Int)): Boolean = {
+  override def replaceController(mementoBoard: Board, mementoPlayer: Vector[Player], mementoCardDeck: (Vector[Card], Int)): Boolean = {
     true
   }
 
-  var gameStateMaster = new GameStateMaster
-  var gameState: GameState = gameStateMaster.UpdateGame().buildGame
-  initAndDistributeCardsToPlayer(6)
-
   //Board
-  def createNewBoard(size: Int): Board = {
+  override def createNewBoard(size: Int): Board = {
     val board = new Board(size)
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
     notifyObservers
     board
   }
 
-  def createRandomBoard(size: Int): Board = {
+  override def createRandomBoard(size: Int): Board = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
     notifyObservers
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
     board
   }
 
+  initAndDistributeCardsToPlayer(6)
+
   /**
    * prints the board and houses
    *
    * @return the board and houses in a String
    */
-  def toStringBoard: String = toStringHouse + gameState.board.toString()
+  override def toStringBoard: String = toStringHouse + gameState.board.toString()
 
   /**
    * prints the houses of each player
    *
    * @return the houses in a String
    */
-  def toStringHouse: String = {
+  override def toStringHouse: String = {
     val players: Vector[Player] = gameState.players._1
     val title: String = s"${Console.UNDERLINED}Houses${Console.RESET}"
     val up: String = "‾" * players.length * 3
@@ -70,11 +62,11 @@ class Controller() extends Observable {
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
-  def getBoard: Board = gameState.board
+  override def getBoard: Board = gameState.board
 
   //Player
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
-  def createPlayers(playerNames: List[String]): GameState = {
+  override def createPlayers(playerNames: List[String]): GameState = {
     val colors = gameStateMaster.colors
     val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
     gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
@@ -89,7 +81,7 @@ class Controller() extends Observable {
    * @param cardNum     is the index of the card in a CardList of the player that is played
    * @return a String that is returned to the TUI for more information
    */
-  def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String = {
+  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String = {
     val selectedPlayerList: List[Int] = gameState.players._2 :: otherPlayer :: Nil
     var returnString: String = ""
     if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
@@ -102,6 +94,11 @@ class Controller() extends Observable {
     returnString
   }
 
+  override def undoCommand(): Unit = {
+    undoManager.undoStep
+    notifyObservers
+  }
+
   /**
    * uses the card and extracts its logic
    *
@@ -111,12 +108,12 @@ class Controller() extends Observable {
    * @param cardNum            is the index of the card in a CardList of the player that is played
    * @return
    */
-  def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], cardNum: Int): Int = {
+  override def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], cardNum: Int): Int = {
     val board: Board = gameState.board
     if (selectedPlayerList != Nil && gameState.players._1(selectedPlayerList.head).cardList.nonEmpty) {
 
       doStep()
-      val selectedCard: Card = getSelectedCard(selectedPlayerList.head, cardNum)
+      val selectedCard: CardTrait = getSelectedCard(selectedPlayerList.head, cardNum)
 
       // will be changed later as well since other logic's aren't implemented yet
       val taskMode = CardLogic.getLogic(selectedCard.getTask)
@@ -131,22 +128,13 @@ class Controller() extends Observable {
     -1
   }
 
+  override def doStep(): Unit = {
+    undoManager.doStep(new SolveCommand(this))
+  }
+
   //Cards
 
-  def createCardDeck(amounts: List[Int]): (Vector[Card], Int) = {
-    val array = Random.shuffle(CardDeck.apply(amounts)).toVector
-    (array, array.length)
-  }
-
-  def toStringCardDeck: String = {
-    var cardString: String = "________DECK________\n"
-    val cardDeck: (Vector[Card], Int) = gameState.cardDeck
-    cardDeck._1.indices.foreach(i => if (i < cardDeck._2) cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
-    cardString
-  }
-
-
-  def getSelectedCard(playerNum: Int, cardNum: Integer): Card = {
+  override def getSelectedCard(playerNum: Int, cardNum: Integer): CardTrait = {
     val player: Vector[Player] = gameState.players._1
     val oldCard = player(playerNum).getCard(cardNum)
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
@@ -155,7 +143,32 @@ class Controller() extends Observable {
     oldCard
   }
 
-  def drawCardFromDeck: Card = {
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = {
+    val array = Random.shuffle(CardDeck.apply(amounts)).toVector
+    (array, array.length)
+  }
+
+  override def toStringCardDeck: String = {
+    var cardString: String = "________DECK________\n"
+    val cardDeck: (Vector[Card], Int) = gameState.cardDeck
+    cardDeck._1.indices.foreach(i => if (i < cardDeck._2) cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
+    cardString
+  }
+
+  override def initAndDistributeCardsToPlayer(amount: Int): Unit = {
+    val player: Vector[Player] = gameState.players._1
+    var newPlayer: Vector[Player] = Vector.empty[Player]
+    player.foreach(x => newPlayer = newPlayer.:+(x.copy(cardList = drawFewCards(amount))))
+    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
+  }
+
+  override def drawFewCards(amount: Int): List[CardTrait] = {
+    var hand: List[CardTrait] = Nil
+    (0 until amount).foreach(x => hand = drawCardFromDeck :: hand)
+    hand
+  }
+
+  override def drawCardFromDeck: CardTrait = {
     var cardDeck: (Vector[Card], Int) = gameState.cardDeck
     if (cardDeck._2 != 0)
       cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
@@ -163,20 +176,7 @@ class Controller() extends Observable {
     cardDeck._1(cardDeck._2)
   }
 
-  def drawFewCards(amount: Int): List[Card] = {
-    var hand: List[Card] = Nil
-    (0 until amount).foreach(x => hand = drawCardFromDeck :: hand)
-    hand
-  }
-
-  def initAndDistributeCardsToPlayer(amount: Int): Unit = {
-    val player: Vector[Player] = gameState.players._1
-    var newPlayer: Vector[Player] = Vector.empty[Player]
-    player.foreach(x => newPlayer = newPlayer.:+(x.copy(cardList = drawFewCards(amount))))
-    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-  }
-
-  def toStringPlayerHands: String = {
+  override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
     player.foreach(x => playerHands = playerHands + s"${x.color}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
@@ -186,10 +186,11 @@ class Controller() extends Observable {
 
   //AREA 51-------------------------------------------------------------------------------------------------------
 
-  def testDistributeCardsToPlayer(playerNum: Int, cards: List[Card]): Player = {
+  override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = {
     val player: Vector[Player] = gameState.players._1
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).setHandCards(cards))
     gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
     newPlayer(playerNum)
   }
 }
+

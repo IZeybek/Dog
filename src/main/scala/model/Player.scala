@@ -1,16 +1,12 @@
 package model
 
-import model.CardComponent.{Card, CardDeck}
+import model.CardComponent.CardTrait
+import model.CardComponent.cardBaseImpl.CardDeck
 
 import scala.util.{Failure, Success, Try}
 
 
-case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[Card]) {
-
-  def update(mementoPlayer: Player): Player = copy(inHouse = mementoPlayer.inHouse,
-    start = mementoPlayer.start,
-    cardList = mementoPlayer.cardList)
-
+case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
 
   val color: String = {
     c match {
@@ -22,9 +18,9 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
     }
   }
 
-
-  def getPosition(pieceNum: Int): Int = piece(pieceNum).position
-
+  def update(mementoPlayer: Player): Player = copy(inHouse = mementoPlayer.inHouse,
+    start = mementoPlayer.start,
+    cardList = mementoPlayer.cardList)
 
   def getPieceNum(position: Int): Int = {
     piece.foreach(x => if (x._2.position == position) {
@@ -53,39 +49,43 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
     })
   }
 
+  def getPosition(pieceNum: Int): Int = piece(pieceNum).position
 
-  def setHandCards(myCards: List[Card]): Player = {
+  def setHandCards(myCards: List[CardTrait]): Player = {
     copy(cardList = myCards)
   }
 
-  def this(name: String, c: String, pieceQuantity: Int, cards: List[Card]) = {
+  def this(name: String, c: String, pieceQuantity: Int, cards: List[CardTrait]) = {
     this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
   }
 
-  def removeCard(card: Card): Player = {
+  def removeCard(card: CardTrait): Player = {
     tryRemoveCard(card) match {
-      case Success(cardListAfterTry) => copy(cardList = cardListAfterTry)
-      case Failure(exception) =>
-        println(exception.getMessage)
-        this
+      case Some(list) => copy(cardList = list)
+      case None => this
     }
   }
 
-  def tryRemoveCard(card: Card): Try[List[Card]] = {
-    Try(cardList diff List(card))
+  def tryRemoveCard(card: CardTrait): Option[List[CardTrait]] = {
+    Try(cardList diff List(card)) match {
+      case Success(list) => Some(list)
+      case Failure(_) =>
+        println("Es konnte keine Karte entfernt werden!\n")
+        None
+    }
   }
 
-  def getCard(cardNum: Int): Card = {
+  def getCard(cardNum: Int): CardTrait = {
     tryGetCard(cardNum) match {
       case Some(value) => value
-      case None => throw new Exception("Bei den Karten ist etwas schief gelaufen\n")
+      case None => throw new Exception("Es konnte keine Karte ausgewählt!\n")
     }
   }
 
-  def tryGetCard(cardNum: Int): Option[Card] = {
+  def tryGetCard(cardNum: Int): Option[CardTrait] = {
     Try(cardList(cardNum)) match {
       case Success(value) => Some(value)
-      case Failure(exception) => None
+      case Failure(_) => None
     }
   }
 
@@ -119,7 +119,7 @@ object Player {
     var color: String = "blau"
     var name: String = "Bob"
     var amount: Int = 6
-    var cardsDeck: List[Card] = CardDeck.apply(List(1, 1))
+    var cardsDeck: List[CardTrait] = CardDeck.apply(List(1, 1))
 
     def withPieceNumber(pieceNum: Int): PlayerBuilder = {
       pieceNumber = pieceNum
@@ -136,7 +136,7 @@ object Player {
       this
     }
 
-    def withCards(cards: List[Card], amount: Int): PlayerBuilder = {
+    def withCards(cards: List[CardTrait], amount: Int): PlayerBuilder = {
       cardsDeck = cards
       this
     }

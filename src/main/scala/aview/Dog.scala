@@ -1,6 +1,6 @@
 package aview
 
-import controller.Controller
+import controller.Component.controllerBaseImpl.Controller
 
 object Dog {
 
@@ -9,7 +9,7 @@ object Dog {
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
-    tui.showMenu
+    tui.showMenu()
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")

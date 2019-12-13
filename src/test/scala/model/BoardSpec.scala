@@ -1,6 +1,6 @@
 package model
 
-import controller.Controller
+import controller.Component.controllerBaseImpl.Controller
 import org.scalatest.{Matchers, WordSpec}
 
 class BoardSpec extends WordSpec with Matchers {

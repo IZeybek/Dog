@@ -1,12 +1,13 @@
-package controller
+package controller.Component
 
-import model.CardComponent.{Card, CardDeck}
+import model.CardComponent.CardTrait
+import model.CardComponent.cardBaseImpl.CardDeck
 import model.{Board, Player}
 
 import scala.util.Random
 
 case class GameState(players: (Vector[Player], Int),
-                     cardDeck: (Vector[Card], Int),
+                     cardDeck: (Vector[CardTrait], Int),
                      board: Board) {
 }
 
@@ -21,7 +22,7 @@ class GameStateMaster {
   var roundAndCardsToDistribute: (Int, Int) = (0, 6)
 
   //carddeck of game
-  var cardDeck: Vector[Card] = Random.shuffle(CardDeck.apply(List(10, 10))).toVector
+  var cardDeck: Vector[CardTrait] = Random.shuffle(CardDeck.apply(List(10, 10))).toVector
   var cardPointer: Int = cardDeck.length
 
   //board
@@ -49,7 +50,7 @@ class GameStateMaster {
       this
     }
 
-    def withCardDeck(setCardDeck: Vector[Card]): UpdateGame = {
+    def withCardDeck(setCardDeck: Vector[CardTrait]): UpdateGame = {
       cardDeck = setCardDeck
       this
     }
