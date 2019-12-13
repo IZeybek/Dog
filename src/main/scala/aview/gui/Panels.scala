@@ -1,88 +1,131 @@
 package aview.gui
 
 import javafx.scene.layout.GridPane
-import scalafx.Includes.when
 import scalafx.geometry.Insets
-import scalafx.scene.Node
-import scalafx.scene.control.{Button, SplitPane, TextArea}
+import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, StackPane}
-
-import scala.swing.{Component, Orientation}
-import scala.swing.event.ActionEvent
+import scalafx.scene.layout.StackPane
 
 object CardPanel {
 
-  def newGridOnCard : GridPane ={
-    val gridCard = new GridPane{
-      setPadding(Insets(250, 10, 45, 30))
-      var b1, b2, b3 = new Button("test"){
-        style = "-fx-padding:5;-fx-background-color:#383838;-fx-text-fill:white"
-        onAction = { _ =>
-          println("pressed test")
-        }
-      }
-      add(b1, 0, 3)
-      add(b2, 1, 3)
-      add(b3, 2, 3)
+  val bgColor: String = "-fx-background-color:#383838;"
+
+  def newCardPane(amount: Int): ScrollPane = {
+    //each Card has 3 Button Options. Its amount is not dynamic yet ------------------------------------------------------------------------
+    val gridSeq = Seq.fill(amount)(newButtonsOnCard(3))
+
+    val grid: GridPane = new GridPane {
+
+      setStyle(bgColor + "-fx-padding:2")
+      var offset = 0
+      if (amount < 9) offset = 250
+      setPadding(Insets(0, 0, 0, offset))
+      val cards: Seq[Button] = newCards(amount, "file:ace.png")
+
+      val stackPane: Seq[StackPane] = Seq.fill(amount)(new StackPane())
+
+      stackPane.indices.foreach(i => stackPane(i).getChildren.addAll(cards(i), gridSeq(i)))
+      stackPane.indices.foreach(i => add(stackPane(i), i, 0))
     }
-    gridCard
+
+    new ScrollPane() {
+      fitToWidth = true
+      style = bgColor
+      content() = grid
+    }
   }
 
-  def newCardViews(): SplitPane = {
-    new SplitPane {
-      style = "-fx-padding:5;-fx-background-color:#383838;"
-      val grid = new GridPane {
-        setPadding(Insets(100, 5, 10, 500))
-        var b1, b2, b3 = new Button("", new ImageView("file:ace.png") {
-          fitHeight = 250
-          fitWidth = 150
-        }) {
-          style = "-fx-padding:5;-fx-background-color:#383838;"
-          onAction = { _ =>
-            graphic = new Button("used")
-          }
+  def newButtonsOnCard(amount: Int): GridPane = {
+
+    new GridPane {
+      setPadding(Insets(175, 5, 5, 18))
+      for (i <- 0 until amount) {
+        val icon = new ImageView("file:playbutton.png") {
+          //playButton size
+          fitHeight = 20
+          fitWidth = 20
         }
-        val stackPane1,stackPane2,stackPane3 = new StackPane()
+        val button = new Button("", icon) {
+          //style for circle Button
+          style = "-fx-background-radius: 5em; " +
+            "-fx-min-width: 15px; " +
+            "-fx-min-height: 15px; " +
+            "-fx-max-width: 15px; " +
+            "-fx-max-height: 15px;" +
+            "-fx-padding:5"
 
-        stackPane1.getChildren.addAll(b1,newGridOnCard )
-        stackPane2.getChildren.addAll(b2,newGridOnCard )
-        stackPane3.getChildren.addAll(b3,newGridOnCard )
-
-
-        add(stackPane1, 0, 0)
-        add(stackPane2, 1, 0)
-        add(stackPane3, 2, 0)
+          //PlayButton ActionListener
+          onAction = _ => println("play Button pressed")
+        }
+        // add into gridPane (node, column, row)
+        add(button, i, 0)
       }
-
-      items.add(grid)
     }
+  }
+
+  //generates new Cards and puts it into Seq
+  def newCards(amount: Int, file: String): Seq[Button] = {
+
+    Seq.fill(amount)(new Button("", new ImageView(file) {
+      fitHeight = 200
+      fitWidth = 125
+    }) {
+      style = bgColor
+    })
   }
 }
 
 object BoardPanel {
 
-  def newBoardView(): Node = {
-    val b1, b2, b3, b4, b5 = new Button("", new ImageView("file:field.png")) {
-      style = "-fx-padding:0;-fx-background-color:#383838"
+  val bgColor: String = "-fx-background-color:#383838;"
+
+  def newBoardPane(amount: Int): ScrollPane = {
+
+    val fieldIconSeq = Seq.fill(amount)(new Button("", new ImageView("file:field.png") {
+      fitWidth = 35
+      fitHeight = 35
+    }) {
+      //Padding of FieldButtons
+      style = bgColor + "-fx-padding:0"
+      //field OnClickListener
+      onAction = _ => println("field Button pressed")
+    })
+
+    new ScrollPane() {
+      fitToWidth = true
+      fitToHeight = true
+      style = bgColor
+      content() = newBoardGrid(amount, fieldIconSeq)
     }
+  }
 
-    b1.pressed onChange {
-      println("I am a field")
-    }
+  def newBoardGrid(amount: Int, fieldIconSeq: Seq[Button]): GridPane = {
 
-    val splitPane = new SplitPane {
-      val view: GridPane = new GridPane {
-        padding = Insets(100, 0, 10, 500)
-        style = "-fx-background-color:#383838"
+    new GridPane {
 
+      var offset = 20
+      if (amount < 106) offset = (1920 - ((amount * 2 / 4) + 2) * 35) / 3 + 60
+      setPadding(Insets(75, offset, 75, offset))
+      setStyle(bgColor)
 
-        add(b1, 5, 0)
-        add(b2, 6, 0)
-        add(b3, 7, 0)
+      //computes and displays Board on view, as an horizontal rectangle
+      val leftRightEdge: Int = (amount / 4) / 2
+      val topBottomEdge: Int = (amount / 4) + leftRightEdge
+
+      var fieldIdx = 0
+
+      for (i <- 0 until topBottomEdge) {
+        add(fieldIconSeq(fieldIdx), i + 1, 0); fieldIdx = fieldIdx + 1
       }
-      items.add(view)
+      for (i <- 0 until leftRightEdge) {
+        add(fieldIconSeq(fieldIdx), topBottomEdge + 1, i + 1); fieldIdx = fieldIdx + 1
+      }
+      for (i <- topBottomEdge until 0 by -1) {
+        add(fieldIconSeq(fieldIdx), i, leftRightEdge + 1); fieldIdx = fieldIdx + 1
+      }
+      for (i <- leftRightEdge until 0 by -1) {
+        add(fieldIconSeq(fieldIdx), 0, i); fieldIdx = fieldIdx + 1
+      }
     }
-    splitPane
   }
 }

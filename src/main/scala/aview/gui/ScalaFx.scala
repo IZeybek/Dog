@@ -1,29 +1,16 @@
 package aview.gui
 
-
-import java.beans.EventHandler
-
-import javafx.event
-import javafx.scene.layout.GridPane
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.{Node, Scene}
+import scalafx.scene.Scene
 import scalafx.scene.control._
-import scalafx.scene.input._
-import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, StackPane, VBox}
-import scalafx.geometry.Insets
-import scalafx.scene.control.Alert.AlertType
-
-import scala.swing.{Action, Orientation}
-import scala.swing.event.ActionEvent
+import scalafx.scene.layout.BorderPane
 
 object GUI extends JFXApp {
   stage = new PrimaryStage {
     title = "MenuBar Test"
 
-    scene = new Scene(1200, 900) {
-
+    scene = new Scene(900, 500) {
 
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
@@ -37,11 +24,13 @@ object GUI extends JFXApp {
       }
 
       val rootPane: BorderPane = new BorderPane {
+        style = "-fx-background-color:#383838"
         top = menuBar
-        center = BoardPanel.newBoardView()
-        bottom = CardPanel.newCardViews()
+        // has to be a number that can be devided by 4
+        center = BoardPanel.newBoardPane(64)
+        //number of Cards can be set here
+        bottom = CardPanel.newCardPane(20)
       }
-
       root = rootPane
     }
   }
