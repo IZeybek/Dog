@@ -20,21 +20,22 @@ object CardPanel {
       style = "-fx-background-color:#383838"
       val view: GridPane = new GridPane {
         padding = Insets(100, 5, 10, 500)
-        val b1, b2, b3 = new Button("", new ImageView("file:ace.png") {
+
+        var b1, b2, b3,b4 = new Button("", new ImageView("file:ace.png") {
           fitHeight = 250
           fitWidth = 150
         }) {
-          //style = "-fx-padding:5;-fx-background-color:#383838"
+          style = "-fx-padding:5;-fx-background-color:#383838"
+          onAction = { _ =>
+            graphic = new Button("used")
+          }
         }
-        b1.pressed onChange {
-          println("HALLO IHR MOTHER FUCKER!")
-        }
+
         add(b1, 0, 0)
         add(b2, 1, 0)
         add(b3, 2, 0)
       }
       items.add(view)
-      // items.add(new TextArea("ss"))
     }
 
     val cardPane = new BorderPane {
@@ -50,8 +51,8 @@ object BoardPanel {
     val b1, b2, b3, b4, b5 = new Button("", new ImageView("file:field.png")) {
       style = "-fx-padding:0;-fx-background-color:#383838"
     }
-    On
-    b1.pressed onChange{
+
+    b1.pressed onChange {
       println("I am a field")
     }
 
@@ -59,7 +60,6 @@ object BoardPanel {
       val view: GridPane = new GridPane {
         padding = Insets(100, 0, 10, 500)
         style = "-fx-background-color:#383838"
-
 
 
         add(b1, 5, 0)
