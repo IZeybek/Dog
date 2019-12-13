@@ -11,7 +11,7 @@ import scalafx.scene.{Node, Scene}
 import scalafx.scene.control._
 import scalafx.scene.input._
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, VBox}
+import scalafx.scene.layout.{BorderPane, StackPane, VBox}
 import scalafx.geometry.Insets
 import scalafx.scene.control.Alert.AlertType
 
@@ -21,7 +21,8 @@ import scala.swing.event.ActionEvent
 object GUI extends JFXApp {
   stage = new PrimaryStage {
     title = "MenuBar Test"
-    scene = new Scene(300, 300) {
+
+    scene = new Scene(1200, 900) {
 
 
       val menuBar: MenuBar = new MenuBar {
