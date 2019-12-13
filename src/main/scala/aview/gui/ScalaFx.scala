@@ -15,40 +15,48 @@ class Gui(controller: Controller) {
 object Stages {
   def getStage(stageNum: Int): JFXApp = {
     stageNum match {
-      case 0 => PrimStage
+      case 0 => PrimaryStage
       case _ => null
     }
   }
 }
 
-object PrimStage extends JFXApp {
-
-  stage = new PrimaryStage {
-    title = "MenuBar Test"
-    scene = new Scene() {
-
-
-      val menuBar: MenuBar = new MenuBar {
-        useSystemMenuBar = true
-        minWidth = 100
-        val menuList: Menu = new Menu("Edit") {
-          items.add(new MenuItem("Undo"))
-          items.add(new MenuItem("Redo"))
-          items.add(new MenuItem("Save"))
-        }
-        menus.add(menuList)
-      }
-
-      val rootPane: BorderPane = new BorderPane {
-        top = menuBar
-        bottom = CardPanel.newCardViews()
-      }
-
-      root = rootPane
+object Scenes {
+  def getScene(sceneName: String): Scene = {
+    sceneName.toLowerCase match {
+      case "main" => new MainScene()
+      case _ => null
     }
   }
 }
 
+object PrimaryStage extends JFXApp {
+
+  stage = new PrimaryStage {
+    title = "Dog"
+    scene = Scenes.getScene("main")
+  }
+}
+
+class MainScene() extends Scene {
+  val menuBar: MenuBar = new MenuBar {
+    useSystemMenuBar = true
+    minWidth = 100
+    val menuList: Menu = new Menu("Edit") {
+      items.add(new MenuItem("Undo"))
+      items.add(new MenuItem("Redo"))
+      items.add(new MenuItem("Save"))
+    }
+    menus.add(menuList)
+  }
+
+  val rootPane: BorderPane = new BorderPane {
+    top = menuBar
+    center = BoardPanel.newBoardView()
+    bottom = CardPanel.newCardViews()
+  }
+  root = rootPane
+}
 
 //val button = new Button("Click Me!")
 //button.layoutX = 100
