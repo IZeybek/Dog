@@ -1,15 +1,22 @@
 package aview.gui
 
 
+import java.beans.EventHandler
+
+import javafx.event
 import javafx.scene.layout.GridPane
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.Scene
+import scalafx.scene.{Node, Scene}
 import scalafx.scene.control._
+import scalafx.scene.input._
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, VBox}
+import scalafx.geometry.Insets
+import scalafx.scene.control.Alert.AlertType
 
-import scala.swing.Orientation
+import scala.swing.{Action, Orientation}
+import scala.swing.event.ActionEvent
 
 object GUI extends JFXApp {
   stage = new PrimaryStage {
@@ -17,9 +24,9 @@ object GUI extends JFXApp {
     val vBox = new VBox()
     scene = new Scene(300, 300) {
 
+
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
-
         minWidth = 100
         val menuList: Menu = new Menu("Edit") {
           items.add(new MenuItem("Undo"))
@@ -31,45 +38,12 @@ object GUI extends JFXApp {
 
       val rootPane: BorderPane = new BorderPane {
         top = menuBar
-        center = makeDrawingTab()
+        center = BoardPanel.newBoardView()
+        bottom = CardPanel.newCardViews()
       }
 
       root = rootPane
     }
-  }
-
-  private def makeDrawingTab(): BorderPane = {
-
-    val cardViewAndPlayView: SplitPane = new SplitPane {
-      Orientation.Horizontal
-
-      val view: GridPane = new GridPane {
-        style = "-fx-background-color:#383838"
-        val view1, view2, view3 = new ImageView("file:AssCard.jpg") {
-          fitHeight = 150
-          fitWidth = 75
-        }
-        add(view1, 0, 0)
-        add(view2, 1, 0)
-        add(view3, 2, 0)
-      }
-      items.add(view)
-      items.add(new TextArea("ss"))
-    }
-
-    val boardView = new SplitPane {
-
-      style = "-fx-background-color:#383838"
-      Orientation.Horizontal
-
-      dividerPositions = 0.7
-    }
-
-    val tab = new BorderPane {
-      center = boardView
-      bottom = cardViewAndPlayView
-    }
-    tab
   }
 }
 
