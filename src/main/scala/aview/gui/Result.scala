@@ -1,24 +1,33 @@
 package aview.gui
+
 import scalafx.Includes._
-import scalafx.application.JFXApp
-import scalafx.scene.Scene
-import scalafx.scene.paint.Color._
-import scalafx.scene.shape.Rectangle
+import scalafx.geometry.Orientation
+import scalafx.scene.Group
+import scalafx.scene.control.{Label, Button, ToolBar}
 
-object HelloStageDemo extends JFXApp {
-  stage = new JFXApp.PrimaryStage {
-    title.value = "Hello Stage"
-    width = 600
-    height = 450
-    scene = new Scene {
-      fill = LightGreen
-      content = new Rectangle {
-        x = 25
-        y = 40
-        width = 100
-        height = 100
 
-      }
+object Sidebar extends ToolBar {
+  orientation = Orientation.Vertical
+
+  class SidebarButton(labelText: String) extends Button {
+    private val buttonLabel = new Label(labelText) {
+      rotate = -90
+    }
+
+    def buttonText = buttonLabel.text
+    def buttonText_=(inText: String): Unit = {
+      buttonLabel.text = inText
+    }
+
+    graphic = new Group(buttonLabel)
+  }
+
+  private lazy val factsButton = new SidebarButton("Hide facts") {
+    onAction = { _ =>
+        buttonText = "Show facts"
     }
   }
+
+  items += factsButton
+
 }

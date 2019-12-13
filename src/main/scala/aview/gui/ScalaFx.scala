@@ -21,7 +21,6 @@ import scala.swing.event.ActionEvent
 object GUI extends JFXApp {
   stage = new PrimaryStage {
     title = "MenuBar Test"
-    val vBox = new VBox()
     scene = new Scene(300, 300) {
 
 
