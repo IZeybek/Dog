@@ -50,6 +50,7 @@ object BoardPanel {
     val b1, b2, b3, b4, b5 = new Button("", new ImageView("file:field.png")) {
       style = "-fx-padding:0;-fx-background-color:#383838"
     }
+    On
     b1.pressed onChange{
       println("I am a field")
     }
