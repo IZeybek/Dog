@@ -31,7 +31,7 @@ object GameStatus extends Enumeration {
 class GameStateMaster {
 
   var tutorial: Boolean = true
-  var gameStatus: GameStatus = GameStatus.WELCOME
+  var gameStatus: GameStatus = GameStatus.IDLE
   var colors: Array[String] = Array("gelb", "blau", "grün", "rot")
   var playerNames: Array[String] = Array("P1", "P2", "P3", "P4")
   var players: Vector[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector

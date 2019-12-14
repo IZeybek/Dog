@@ -7,12 +7,12 @@ object Dog {
 
   val controller = new Controller()
   val tui = new Tui(controller)
-  val gui = new Gui(controller)
+  val gui = new Gui
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
-    tui.showMenu
-    gui.actualStage.main(args)
+    tui.showMenu()
+    gui.main(args)
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")

@@ -1,69 +1,60 @@
 package aview.gui
 
 
-import controller.{Controller, GameStatus}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.control._
+import scalafx.scene.control.{Menu, MenuBar, MenuItem}
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.paint.Color.{DodgerBlue, PaleGreen, SeaGreen}
-import scalafx.scene.paint.{Color, LinearGradient, Stops}
+import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
 
-class Gui(controller: Controller) {
-  PrimaryStage.setScene(GameStatus.message(controller.gameState.gameState))
-  val actualStage: PrimaryStage.type = PrimaryStage
-}
-
-object PrimaryStage extends JFXApp {
-  var setupScene: Scene = Scenes.getScene("welcome")
-
-  def setScene(setScene: String): Unit = {
-    setupScene = Scenes.getScene(setScene)
-  }
-
+class Gui extends JFXApp {
   stage = new PrimaryStage {
     title = "Dog"
-    scene = setupScene
+    scene = new SceneHandler
   }
 }
 
-object Scenes {
-  def getScene(sceneName: String): Scene = {
+class SceneHandler extends Scene {
+  def setScene(sceneName: String): Unit = {
     sceneName.toLowerCase match {
-      case "welcome" => new WelcomeScene()
-      case "main" => new MainScene()
-      case _ => null
+      case "welcome" => root = new WelcomeScene().rootPane
+      case "main" => root = new MainScene().rootPane
     }
   }
+
+  root = new WelcomeScene().rootPane
 }
 
-class MainScene() extends Scene {
-  val menuBar: MenuBar = new MenuBar {
-    useSystemMenuBar = true
-    minWidth = 100
-    val menuList: Menu = new Menu("Edit") {
-      items.add(new MenuItem("Undo"))
-      items.add(new MenuItem("Redo"))
-      items.add(new MenuItem("Save"))
-    }
-    menus.add(menuList)
-  }
-
+class MainScene extends Scene {
   val rootPane: BorderPane = new BorderPane {
+    val menuBar: MenuBar = new MenuBar {
+      useSystemMenuBar = true
+      minWidth = 100
+      val menuList: Menu = new Menu("Edit") {
+        items.add(new MenuItem("Undo"))
+        items.add(new MenuItem("Redo"))
+        items.add(new MenuItem("Save"))
+      }
+      menus.add(menuList)
+    }
+    style = "-fx-background-color:#383838"
     top = menuBar
-    center = BoardPanel.newBoardView()
-    bottom = CardPanel.newCardViews()
+    // has to be a number that can be devided by 4
+    center = BoardPanel.newBoardPane(64)
+    //number of Cards can be set here
+    bottom = CardPanel.newCardPane(20)
   }
-  root = rootPane
 }
 
-class WelcomeScene() extends Scene {
-  content = new HBox {
-    fill = Color.Black
+class WelcomeScene extends Scene {
+
+  val rootPane: HBox = new HBox {
+    style = "-fx-background-color:#383838"
     padding = Insets(50, 80, 50, 80)
     children = Seq(
       new Text {
@@ -81,6 +72,7 @@ class WelcomeScene() extends Scene {
     )
   }
 }
+
 
 //val button = new Button("Click Me!")
 //button.layoutX = 100

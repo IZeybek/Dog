@@ -9,7 +9,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.1.1"
 
-
+libraryDependencies += "com.google.inject" % "guice" % "4.1.0"
 
 //// Add dependency on ScalaFX library
 libraryDependencies += "org.scalafx" %% "scalafx" % "12.0.2-R18"
