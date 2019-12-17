@@ -7,7 +7,7 @@ object Dog {
 
   val controller = new Controller()
   val tui = new Tui(controller)
-  val gui = new Gui
+  val gui = new Gui(controller)
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {

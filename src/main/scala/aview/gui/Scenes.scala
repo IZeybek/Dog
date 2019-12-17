@@ -1,6 +1,6 @@
 package aview.gui
 
-
+import controller.Controller
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
@@ -11,11 +11,17 @@ import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.paint.Color.{DodgerBlue, PaleGreen, SeaGreen}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
+import util.Observer
 
-class Gui extends JFXApp {
+class Gui(controller: Controller) extends JFXApp with Observer {
+  controller.add(this)
   stage = new PrimaryStage {
     title = "Dog"
     scene = new SceneHandler
+  }
+
+  override def update: Unit = {
+    println("updated something")
   }
 }
 
