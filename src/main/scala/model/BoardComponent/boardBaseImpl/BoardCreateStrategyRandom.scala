@@ -1,4 +1,6 @@
-package model
+package model.BoardComponent.boardBaseImpl
+
+import model.Player
 
 import scala.util.Random
 

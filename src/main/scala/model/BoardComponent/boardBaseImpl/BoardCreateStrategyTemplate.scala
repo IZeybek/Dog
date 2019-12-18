@@ -1,4 +1,6 @@
-package model
+package model.BoardComponent.boardBaseImpl
+
+import model.Player
 
 trait BoardCreateStrategyTemplate {
   def createNewBoard(size: Int): Board = {

@@ -1,5 +1,7 @@
-package model
+package model.BoardComponent
 
+import model.BoardComponent.boardBaseImpl.Cell
+import model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class CellSpec extends WordSpec with Matchers {

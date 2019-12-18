@@ -1,13 +1,13 @@
 package controller.Component
 
+import model.BoardComponent.boardBaseImpl.Board
 import model.CardComponent.CardTrait
-import model.CardComponent.cardBaseImpl.Card
-import model.{Board, Player}
-import util.Observable
+import model.Player
+import util.{Observable, UndoManager}
 
 trait ControllerTrait extends Observable {
 
-  var gameStateMaster: GameStateMaster
+  val undoManager: UndoManager
   var gameState: GameState
 
   def doStep(): Unit
@@ -15,8 +15,6 @@ trait ControllerTrait extends Observable {
   def undoCommand(): Unit
 
   def redoCommand(): Unit
-
-  def replaceController(mementoBoard: Board, mementoPlayer: Vector[Player], mementoCardDeck: (Vector[Card], Int)): Boolean
 
   //Board
   def createNewBoard(size: Int): Board
@@ -79,4 +77,6 @@ trait ControllerTrait extends Observable {
   def toStringPlayerHands: String
 
   def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player
+
+  var gameStateMaster: GameStateMasterTrait
 }

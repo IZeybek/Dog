@@ -1,11 +1,9 @@
 package model.CardComponent
 
-import model.CardComponent.cardBaseImpl.Card
-
 trait CardDeckTrait {
 
-  def generateDeck: List[Card]
+  def generateDeck: List[CardTrait]
 
-  def getCardDeck: List[Card]
+  def getCardDeck: List[CardTrait]
 
 }

@@ -1,6 +1,8 @@
-package model
+package model.BoardComponent
 
 import controller.Component.controllerBaseImpl.Controller
+import model.BoardComponent.boardBaseImpl.Cell
+import model.{Piece, Player}
 import org.scalatest.{Matchers, WordSpec}
 
 class BoardSpec extends WordSpec with Matchers {

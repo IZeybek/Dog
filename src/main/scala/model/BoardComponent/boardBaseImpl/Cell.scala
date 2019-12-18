@@ -1,22 +1,25 @@
-package model
+package model.BoardComponent.boardBaseImpl
 
-case class Cell(idx: Int, p: Option[Player]) {
+import model.BoardComponent.CellTrait
+import model.Player
 
-  def removePlayerFromCell(): Cell = {
+case class Cell(idx: Int, p: Option[Player]) extends CellTrait {
+
+  override def removePlayerFromCell(): Cell = {
     this.p match {
       case Some(_) => copy(p = None)
       case None => this
     }
   }
 
-  def addPlayerToCell(p: Player): Cell = {
+  override def addPlayerToCell(p: Player): Cell = {
     this.p match {
       case Some(_) => copy(p = Some(p))
       case None => copy(p = Some(p))
     }
   }
 
-  def getColor: String = {
+  override def getColor: String = {
     this.p match {
       case Some(p) => p.color
       case None => " "

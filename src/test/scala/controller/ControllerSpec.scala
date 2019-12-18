@@ -2,6 +2,7 @@ package controller
 
 import controller.Component.ControllerTrait
 import controller.Component.controllerBaseImpl.Controller
+import model.BoardComponent.BoardTrait
 import model.CardComponent.CardTrait
 import model.CardComponent.cardBaseImpl.Card
 import model._
@@ -17,11 +18,11 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "create a random Board" in {
         controller.createRandomBoard(10)
-        val board: Board = controller.gameState.board
-        controller.toStringBoard should be(controller.toStringHouse + board.toString())
+        val board: BoardTrait = controller.gameState.board
+        controller.toStringBoard should be(controller.toStringHouse + board.toString)
       }
       "print board" in {
-        val board: Board = controller.gameState.board
+        val board: BoardTrait = controller.gameState.board
         controller.toStringBoard should be(controller.toStringHouse + board.toString)
       }
       "create a player" in {

@@ -1,6 +1,7 @@
 package model
 
 import controller.Component.controllerBaseImpl.Controller
+import model.BoardComponent.boardBaseImpl.Board
 import model.CardComponent._
 import model.CardComponent.cardBaseImpl._
 import org.scalatest.{Matchers, WordSpec}
@@ -64,25 +65,12 @@ class GenCardDeckSpec extends WordSpec with Matchers {
   }
 }
 
-
-class CardDeckSpec extends WordSpec with Matchers {
-  "A CardDeck" when {
-    "created" should {
-      val cardDeck = CardDeck
-      "have a SpecialCardsDeck as List[Card]" in {
-        cardDeck.apply(List(0, 0)).length should be(0)
-      }
-    }
-  }
-}
-
-
 class SpecialCardsDeckSpec extends WordSpec with Matchers {
   "A CardDeck" when {
     "generated" should {
       val specialCard = SpecialCardsDeck()
       "have a SpecialCardsDeck as List[Card]" in {
-        specialCard.generateDeck shouldBe a[List[CardTrait]]
+        specialCard.generateDeck.isInstanceOf[List[CardTrait]] should be(true)
       }
       "have a SpecialCardsDeck " in {
         specialCard.getCardDeck should be(List(Card("1 11 start", "move;move;start", "red"),
@@ -101,7 +89,7 @@ class NormalCardsDeckSpec extends WordSpec with Matchers {
     "generated" should {
       val normalCard = NormalCardsDeck()
       "have a NormalCardsDeck as List[Card]" in {
-        normalCard.generateDeck shouldBe a[List[CardTrait]]
+        normalCard.generateDeck.isInstanceOf[List[CardTrait]] should be(true)
       }
       "have a SpecialCardsDeck " in {
         normalCard.getCardDeck should be(List(Card("2", "move", "blue"),

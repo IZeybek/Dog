@@ -1,27 +1,24 @@
 package controller.Component.controllerBaseImpl
 
-import controller.Component.{ControllerTrait, GameState, GameStateMaster}
+import controller.Component.{ControllerTrait, GameState, GameStateMaster, GameStateMasterTrait}
+import model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import model.CardComponent.CardTrait
-import model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
+import model.CardComponent.cardBaseImpl.{CardDeck, CardLogic}
 import model._
 import util.{SolveCommand, UndoManager}
 
-import scala.util.Random
-
 class Controller() extends ControllerTrait {
 
-  private val undoManager = new UndoManager
-  override var gameStateMaster = new GameStateMaster
+  override val undoManager = new UndoManager
+  override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
 
   override def redoCommand(): Unit = {
-    undoManager.redoStep
+    undoManager.redoStep()
     notifyObservers
   }
 
-  override def replaceController(mementoBoard: Board, mementoPlayer: Vector[Player], mementoCardDeck: (Vector[Card], Int)): Boolean = {
-    true
-  }
+  initAndDistributeCardsToPlayer(6)
 
   //Board
   override def createNewBoard(size: Int): Board = {
@@ -38,14 +35,12 @@ class Controller() extends ControllerTrait {
     board
   }
 
-  initAndDistributeCardsToPlayer(6)
-
   /**
    * prints the board and houses
    *
    * @return the board and houses in a String
    */
-  override def toStringBoard: String = toStringHouse + gameState.board.toString()
+  override def toStringBoard: String = toStringHouse + gameState.board.toString
 
   /**
    * prints the houses of each player
@@ -95,7 +90,7 @@ class Controller() extends ControllerTrait {
   }
 
   override def undoCommand(): Unit = {
-    undoManager.undoStep
+    undoManager.undoStep()
     notifyObservers
   }
 
@@ -128,9 +123,7 @@ class Controller() extends ControllerTrait {
     -1
   }
 
-  override def doStep(): Unit = {
-    undoManager.doStep(new SolveCommand(this))
-  }
+  override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
 
   //Cards
 
@@ -143,17 +136,9 @@ class Controller() extends ControllerTrait {
     oldCard
   }
 
-  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = {
-    val array = Random.shuffle(CardDeck.apply(amounts)).toVector
-    (array, array.length)
-  }
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeck().withAmount(List(2, 2)).withShuffle.buildCardVectorWithLength
 
-  override def toStringCardDeck: String = {
-    var cardString: String = "________DECK________\n"
-    val cardDeck: (Vector[Card], Int) = gameState.cardDeck
-    cardDeck._1.indices.foreach(i => if (i < cardDeck._2) cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
-    cardString
-  }
+  override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
 
   override def initAndDistributeCardsToPlayer(amount: Int): Unit = {
     val player: Vector[Player] = gameState.players._1
@@ -169,7 +154,7 @@ class Controller() extends ControllerTrait {
   }
 
   override def drawCardFromDeck: CardTrait = {
-    var cardDeck: (Vector[Card], Int) = gameState.cardDeck
+    var cardDeck: (Vector[CardTrait], Int) = gameState.cardDeck
     if (cardDeck._2 != 0)
       cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
     gameState = gameStateMaster.UpdateGame().withCardDeck(cardDeck._1).withCardPointer(cardDeck._2).buildGame
@@ -182,7 +167,6 @@ class Controller() extends ControllerTrait {
     player.foreach(x => playerHands = playerHands + s"${x.color}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
     playerHands
   }
-
 
   //AREA 51-------------------------------------------------------------------------------------------------------
 

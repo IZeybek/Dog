@@ -18,9 +18,6 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
     }
   }
 
-  def update(mementoPlayer: Player): Player = copy(inHouse = mementoPlayer.inHouse,
-    start = mementoPlayer.start,
-    cardList = mementoPlayer.cardList)
 
   def getPieceNum(position: Int): Int = {
     piece.foreach(x => if (x._2.position == position) {
@@ -92,19 +89,6 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
   override def toString: String = name
 }
 
-/*
-trait Option[Player] {
-  def map(f: Player => Player): Option[Player]
-}
-
-case class Some[Player](p: Player) extends Option[Player] {
-  override def map(f: Player => Player): Some[Player] = Some(f(p))
-}
-
-case class None[Player]() extends Option[Player] {
-  override def map(f: Player => Player) = new None
-} */
-
 
 case class Piece(var position: Int) {
   def setPosition(newPosition: Int): Piece = copy(position = newPosition)
@@ -113,13 +97,12 @@ case class Piece(var position: Int) {
 }
 
 object Player {
+  var pieceNumber: Int = 4
+  var color: String = "blau"
+  var name: String = "Bob"
+  var cardsDeck: List[CardTrait] = CardDeck.CardDeck().withAmount(List(1, 1)).withCardDeck.withShuffle.buildCardList
 
   case class PlayerBuilder() {
-    var pieceNumber: Int = 4
-    var color: String = "blau"
-    var name: String = "Bob"
-    var amount: Int = 6
-    var cardsDeck: List[CardTrait] = CardDeck.apply(List(1, 1))
 
     def withPieceNumber(pieceNum: Int): PlayerBuilder = {
       pieceNumber = pieceNum
@@ -136,7 +119,7 @@ object Player {
       this
     }
 
-    def withCards(cards: List[CardTrait], amount: Int): PlayerBuilder = {
+    def withCards(cards: List[CardTrait]): PlayerBuilder = {
       cardsDeck = cards
       this
     }
@@ -145,5 +128,4 @@ object Player {
       new Player(name, color, pieceNumber, cardsDeck)
     }
   }
-
 }
