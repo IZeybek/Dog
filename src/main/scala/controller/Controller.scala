@@ -10,6 +10,16 @@ class Controller() extends Observable {
 
   private val undoManager = new UndoManager
 
+  //  def newRoot(): Unit ={
+  //    val rootPane: BorderPane = new BorderPane {
+  //      style = "-fx-background-color:#383838"
+  //      // has to be a number that can be devided by 4
+  //      //number of Cards can be set here
+  //      bottom = CardPanel.newCardPane(20)
+  //    }
+  //    gui.stage.getScene.setRoot(rootPane)
+  //  }
+
   def doStep(): Unit = {
     undoManager.doStep(new SolveCommand(this))
   }

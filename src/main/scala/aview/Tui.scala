@@ -1,10 +1,11 @@
 package aview
 
+import aview.gui.Gui
 import controller.Controller
 import util.Observer
 
 
-class Tui(controller: Controller) extends Observer {
+class Tui(controller: Controller, gui: Gui) extends Observer {
   controller.add(this)
 
   def showMenu(): Unit = {
@@ -18,6 +19,7 @@ class Tui(controller: Controller) extends Observer {
     var result: String = ""
 
     input.split("\\s+").toList match {
+
       case "n" :: "player" :: player =>
         if (player.nonEmpty) {
           controller.createPlayers(player)

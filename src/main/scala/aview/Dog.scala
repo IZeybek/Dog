@@ -6,7 +6,7 @@ import controller.Controller
 object Dog {
 
   val controller = new Controller()
-  val tui = new Tui(controller)
+  val tui = new Tui(controller, gui)
   val gui = new Gui(controller)
   controller.notifyObservers
 

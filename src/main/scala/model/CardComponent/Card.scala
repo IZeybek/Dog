@@ -131,12 +131,12 @@ case class SpecialCardsDeck() extends CardTrait {
   val specialCards: List[Card] = generateDeck
 
   override def generateDeck: List[Card] = {
-    List(Card("1 11 start", "move;move;start", "red"),
-      Card("4", "forwardBackward", "red"),
+    List(Card("1 11 play", "move move play", "red"),
+      Card("4", "backward forward", "red"),
       Card("7", "burn", "red"),
-      Card("swap", "swap", "red"),
-      Card("?", "joker", "red"),
-      Card("13 play", "move;start", "red"))
+      Card("swapCard", "swap", "red"),
+      Card("questionmark", "joker", "red"),
+      Card("13 play", "move play", "red"))
   }
 
   override def getCardDeck: List[Card] = specialCards
