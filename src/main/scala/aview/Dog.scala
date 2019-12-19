@@ -7,9 +7,9 @@ import controller.Component.controllerBaseImpl.Controller
 object Dog {
 
   val controller: ControllerTrait = new Controller()
-  val tui = new Tui(controller)
   val gui = new Gui(controller)
-  controller.notifyObservers
+  val tui = new Tui(gui, controller)
+
 
   def main(args: Array[String]): Unit = {
     tui.showMenu()

@@ -1,9 +1,8 @@
 package controller.Component
 
-import model.BoardComponent.boardBaseImpl.Board
 import model.CardComponent.CardTrait
 import model.CardComponent.cardBaseImpl.CardDeck
-import model.Player
+import model.{Board, Player}
 
 case class GameState(players: (Vector[Player], Int),
                      cardDeck: (Vector[CardTrait], Int),

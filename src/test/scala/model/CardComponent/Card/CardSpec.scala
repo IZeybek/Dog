@@ -1,7 +1,8 @@
 package model
 
-import controller.Controller
-import model.CardComponent._
+import controller.Component.ControllerTrait
+import controller.Component.controllerBaseImpl.Controller
+import model.CardComponent.cardBaseImpl._
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {
@@ -28,7 +29,7 @@ class CardSpec extends WordSpec with Matchers {
 class CardLogicSpec extends WordSpec with Matchers {
   "A CardLogic" when {
     "created" should {
-      val controller = new Controller()
+      val controller: ControllerTrait = new Controller()
       val player: Vector[Player] = controller.gameState.players._1
       val board: Board = controller.gameState.board
       val cardLogic = CardLogic
@@ -67,7 +68,6 @@ class GenCardDeckSpec extends WordSpec with Matchers {
 class CardDeckSpec extends WordSpec with Matchers {
   "A CardDeck" when {
     "created" should {
-      val cardDeck = CardDeck
     }
   }
 }

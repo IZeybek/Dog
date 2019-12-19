@@ -1,8 +1,7 @@
 package controller.Component
 
-import model.BoardComponent.boardBaseImpl.Board
 import model.CardComponent.CardTrait
-import model.Player
+import model.{Board, Player}
 
 trait GameStateMasterTrait {
 

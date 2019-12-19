@@ -1,10 +1,11 @@
 package aview
 
+import aview.gui.{GenGui, Gui}
 import controller.Component.ControllerTrait
 import util.Observer
 
 
-class Tui(controller: ControllerTrait) extends Observer {
+class Tui(gui: Gui,controller: ControllerTrait) extends Observer {
   controller.add(this)
 
   def showMenu(): Unit = {
@@ -18,6 +19,7 @@ class Tui(controller: ControllerTrait) extends Observer {
     var result: String = ""
 
     input.split("\\s+").toList match {
+
       case "n" :: "player" :: player =>
         if (player.nonEmpty) {
           controller.createPlayers(player)
@@ -60,6 +62,8 @@ class Tui(controller: ControllerTrait) extends Observer {
   }
 
   override def update: Unit = {
+    //TODO add Publisher instead of this ----------------------------------------------------------------------------------------------------------
+    gui.stage = GenGui.newGUI(controller)
     println(controller.toStringBoard)
     println(controller.toStringPlayerHands)
   }

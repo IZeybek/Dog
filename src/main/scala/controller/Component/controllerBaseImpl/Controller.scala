@@ -1,7 +1,7 @@
 package controller.Component.controllerBaseImpl
 
 import controller.Component.{ControllerTrait, GameState, GameStateMaster, GameStateMasterTrait}
-import model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
+import model.BoardComponent.boardBaseImpl.BoardCreateStrategyRandom
 import model.CardComponent.CardTrait
 import model.CardComponent.cardBaseImpl.{CardDeck, CardLogic}
 import model._
@@ -30,8 +30,8 @@ class Controller() extends ControllerTrait {
 
   override def createRandomBoard(size: Int): Board = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
-    notifyObservers
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
+    notifyObservers
     board
   }
 
@@ -82,6 +82,7 @@ class Controller() extends ControllerTrait {
     if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
       returnString = s"Player ${gameState.players._1(gameState.players._2).color}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+      notifyObservers
     } else {
       undoCommand()
       returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
@@ -116,7 +117,7 @@ class Controller() extends ControllerTrait {
       val updateGame: (Board, Vector[Player], Int) = CardLogic.setStrategy(taskMode, gameState.players._1, board, selectedPlayerList, pieceNum, moveInInt)
       if (updateGame._3 == 0) {
         gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
-        notifyObservers
+
       }
       return updateGame._3
     }
@@ -168,6 +169,7 @@ class Controller() extends ControllerTrait {
     playerHands
   }
 
+
   //AREA 51-------------------------------------------------------------------------------------------------------
 
   override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = {
@@ -177,4 +179,3 @@ class Controller() extends ControllerTrait {
     newPlayer(playerNum)
   }
 }
-

@@ -128,4 +128,5 @@ object Player {
       new Player(name, color, pieceNumber, cardsDeck)
     }
   }
+
 }

@@ -1,15 +1,16 @@
-package model.BoardComponent.boardBaseImpl
+package model
 
 import model.BoardComponent.BoardTrait
-import model.Player
-import util.Observable
+import model.BoardComponent.boardBaseImpl.Cell
 
-case class Board(boardMap: Map[Int, Cell]) extends Observable with BoardTrait {
+case class Board(boardMap: Map[Int, Cell]) extends BoardTrait {
 
   //can create a Board with a given size
   def this(size: Int) = {
     this((0 until size).map(i => (i, Cell(i, None))).toMap)
   }
+
+  override def getBoardMap: Map[Int, Cell] = boardMap
 
   override def toString: String = {
     var box = ""
@@ -53,3 +54,4 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable with BoardTrait {
     }
   }
 }
+
