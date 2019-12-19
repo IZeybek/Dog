@@ -89,7 +89,7 @@ object CardLogic {
       case "swap" => swap
       //      case "start" => Nil
       //      case "forwardBackward" => Nil
-      case _ => throw new IllegalArgumentException("Unsupported Card Type")
+      case _ => move
     }
   }
 }

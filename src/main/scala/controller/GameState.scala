@@ -43,7 +43,7 @@ class GameStateMaster {
   var cardPointer: Int = cardDeck.length
 
   //board
-  var board: Board = new Board(100)
+  var board: Board = new Board(26)
 
   case class UpdateGame() {
 

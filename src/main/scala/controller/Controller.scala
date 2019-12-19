@@ -1,5 +1,6 @@
 package controller
 
+import aview.gui.{GenGui, Gui}
 import model.CardComponent.{Card, CardDeck, CardLogic}
 import model._
 import util.{Observable, SolveCommand, UndoManager}
@@ -9,7 +10,7 @@ import scala.util.Random
 class Controller() extends Observable {
 
   private val undoManager = new UndoManager
-
+  var gui: Gui = null
   //  def newRoot(): Unit ={
   //    val rootPane: BorderPane = new BorderPane {
   //      style = "-fx-background-color:#383838"
@@ -19,6 +20,10 @@ class Controller() extends Observable {
   //    }
   //    gui.stage.getScene.setRoot(rootPane)
   //  }
+
+  def setGui(guii: Gui) = {
+    gui = guii
+  }
 
   def doStep(): Unit = {
     undoManager.doStep(new SolveCommand(this))
@@ -104,7 +109,7 @@ class Controller() extends Observable {
       undoCommand()
       returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
     }
-
+    gui.stage = GenGui.newGUI(this) //TODO add Publisher instead of this ----------------------------------------------------------------------------------------------------------
     returnString
   }
 

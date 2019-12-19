@@ -14,10 +14,33 @@ class Gui(controller: Controller) extends JFXApp with Observer {
   //    title = "Dog"
   //    scene = new SceneHandler
   //  }
-  stage = new PrimaryStage {
+
+
+  stage = GenGui.newGUI(controller)
+
+
+  override def update: Unit = {
+    println("updated something")
+  }
+
+  //
+  //object SceneHandler extends Scene {
+  //  def setScene(sceneName: String): Scene = {
+  //    sceneName.toLowerCase match {
+  ////      case "welcome" => new WelcomeScene()
+  ////      case "main" =>  new MainScene()
+  //    }
+  //  }
+
+  //  root = new WelcomeScene().rootPane
+}
+
+object GenGui {
+
+  def newGUI(controller: Controller): PrimaryStage = new PrimaryStage {
     title = "MenuBar Test"
 
-    scene = new Scene(900, 500) {
+    scene = new Scene(1000, 1000) {
 
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
@@ -42,21 +65,6 @@ class Gui(controller: Controller) extends JFXApp with Observer {
       root = rootPane
     }
   }
-
-  override def update: Unit = {
-    println("updated something")
-  }
-
-  //
-  //object SceneHandler extends Scene {
-  //  def setScene(sceneName: String): Scene = {
-  //    sceneName.toLowerCase match {
-  ////      case "welcome" => new WelcomeScene()
-  ////      case "main" =>  new MainScene()
-  //    }
-  //  }
-
-  //  root = new WelcomeScene().rootPane
 }
 
 //class MainScene extends Scene {
