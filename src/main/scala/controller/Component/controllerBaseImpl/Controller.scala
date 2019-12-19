@@ -1,5 +1,6 @@
 package controller.Component.controllerBaseImpl
 
+import controller.BoardChanged
 import controller.Component.{ControllerTrait, GameState, GameStateMaster, GameStateMasterTrait}
 import model.BoardComponent.boardBaseImpl.BoardCreateStrategyRandom
 import model.CardComponent.CardTrait
@@ -15,7 +16,7 @@ class Controller() extends ControllerTrait {
 
   override def redoCommand(): Unit = {
     undoManager.redoStep()
-    notifyObservers
+    publish(new BoardChanged)
   }
 
   initAndDistributeCardsToPlayer(6)
@@ -24,14 +25,14 @@ class Controller() extends ControllerTrait {
   override def createNewBoard(size: Int): Board = {
     val board = new Board(size)
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
-    notifyObservers
+    publish(new BoardChanged)
     board
   }
 
   override def createRandomBoard(size: Int): Board = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
-    notifyObservers
+    publish(new BoardChanged)
     board
   }
 
@@ -82,7 +83,7 @@ class Controller() extends ControllerTrait {
     if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
       returnString = s"Player ${gameState.players._1(gameState.players._2).color}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
-      notifyObservers
+      publish(new BoardChanged)
     } else {
       undoCommand()
       returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
@@ -92,7 +93,7 @@ class Controller() extends ControllerTrait {
 
   override def undoCommand(): Unit = {
     undoManager.undoStep()
-    notifyObservers
+    publish(new BoardChanged)
   }
 
   /**

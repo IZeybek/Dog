@@ -1,12 +1,14 @@
 package aview
 
-import aview.gui.{GenGui, Gui}
+import controller.BoardChanged
 import controller.Component.ControllerTrait
-import util.Observer
+
+import scala.swing.Reactor
 
 
-class Tui(gui: Gui,controller: ControllerTrait) extends Observer {
-  controller.add(this)
+class Tui(controller: ControllerTrait) extends Reactor {
+
+  listenTo(controller)
 
   def showMenu(): Unit = {
     print("Menu\n")
@@ -57,16 +59,13 @@ class Tui(gui: Gui,controller: ControllerTrait) extends Observer {
             result = controller.manageRound(-1, pieceNums, cardNum)
           case _ => println("try again!")
         }
+        reactions += {
+          case event: BoardChanged => println(controller.toStringBoard); println(controller.toStringPlayerHands)
+        }
     }
     result
   }
 
-  override def update: Unit = {
-    //TODO add Publisher instead of this ----------------------------------------------------------------------------------------------------------
-    gui.stage = GenGui.newGUI(controller)
-    println(controller.toStringBoard)
-    println(controller.toStringPlayerHands)
-  }
 
 }
 

@@ -2,9 +2,11 @@ package controller.Component
 
 import model.CardComponent.CardTrait
 import model.{Board, Player}
-import util.{Observable, UndoManager}
+import util.UndoManager
 
-trait ControllerTrait extends Observable {
+import scala.swing.Publisher
+
+trait ControllerTrait extends Publisher {
 
   val undoManager: UndoManager
   var gameState: GameState

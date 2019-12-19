@@ -90,7 +90,7 @@ object CardLogic {
       case "swap" => swap
       //      case "start" => Nil
       //      case "forwardBackward" => Nil
-      case _ => throw new IllegalArgumentException("Unsupported Card Type")
+      case _ => move
     }
   }
 }
@@ -162,7 +162,7 @@ case class SpecialCardsDeck() extends CardDeckTrait {
 
   override def generateDeck: List[CardTrait] = {
     List(Card("1 11 play", "move move play", "red"),
-      Card("4", "forward backward", "red"),
+      Card("4", "backward forward", "red"),
       Card("7", "burn", "red"),
       Card("swapCard", "swap", "red"),
       Card("questionmark", "joker", "red"),

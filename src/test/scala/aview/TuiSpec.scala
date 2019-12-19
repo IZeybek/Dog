@@ -1,7 +1,6 @@
 package aview
 
 
-import aview.gui.Gui
 import controller.Component.controllerBaseImpl.Controller
 import org.scalatest._
 
@@ -10,8 +9,7 @@ class TuiSpec extends WordSpec with Matchers {
   "Tui" when {
     "executed" should {
       val controller = new Controller()
-      val gui = new Gui(controller)
-      val tui = new Tui(gui, controller)
+      val tui = new Tui(controller)
       var input = ""
       "create new players" in {
         input = "n player Bobby BobRoss Ross"

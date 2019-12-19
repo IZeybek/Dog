@@ -1,33 +1,24 @@
 package aview.gui
 
+import controller.BoardChanged
 import controller.Component.ControllerTrait
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.control.{Menu, MenuBar, MenuItem}
 import scalafx.scene.layout.BorderPane
-import util.Observer
 
-class Gui(controller: ControllerTrait) extends JFXApp with Observer {
+import scala.swing.Reactor
 
-  controller.add(this)
+class Gui(controller: ControllerTrait) extends JFXApp with Reactor {
+
+  listenTo(controller)
 
   stage = GenGui.newGUI(controller)
 
-  override def update: Unit = {
-    println("updated something")
+  reactions += {
+    case event: BoardChanged => this.stage = GenGui.newGUI(controller)
   }
-
-  //
-  //object SceneHandler extends Scene {
-  //  def setScene(sceneName: String): Scene = {
-  //    sceneName.toLowerCase match {
-  ////      case "welcome" => new WelcomeScene()
-  ////      case "main" =>  new MainScene()
-  //    }
-  //  }
-
-  //  root = new WelcomeScene().rootPane
 }
 
 object GenGui {

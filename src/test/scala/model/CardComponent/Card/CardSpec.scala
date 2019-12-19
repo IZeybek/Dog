@@ -79,11 +79,11 @@ class SpecialCardsDeckSpec extends WordSpec with Matchers {
       val specialCard = SpecialCardsDeck()
       "have a SpecialCardsDeck " in {
         specialCard.getCardDeck should be(List(Card("1 11 start", "move;move;start", "red"),
-          Card("4", "forwardBackward", "red"),
+          Card("4", "backward forward", "red"),
           Card("7", "burn", "red"),
           Card("swap", "swap", "red"),
           Card("?", "joker", "red"),
-          Card("13 play", "move;start", "red")))
+          Card("13 play", "move play", "red")))
       }
     }
   }

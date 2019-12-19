@@ -8,7 +8,7 @@ object Dog {
 
   val controller: ControllerTrait = new Controller()
   val gui = new Gui(controller)
-  val tui = new Tui(gui, controller)
+  val tui = new Tui(controller)
 
 
   def main(args: Array[String]): Unit = {
