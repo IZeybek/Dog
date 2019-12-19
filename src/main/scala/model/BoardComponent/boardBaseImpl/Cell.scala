@@ -29,7 +29,7 @@ case class Cell(idx: Int, p: Option[Player]) extends CellTrait {
   override def toString: String = {
     var player: String = ""
     p match {
-      case Some(p) => player = p.color + "x" + Console.RESET
+      case Some(p) => player = p.consoleColor + "x" + Console.RESET
       case None => player = " "
     }
     "[" + player + "]"

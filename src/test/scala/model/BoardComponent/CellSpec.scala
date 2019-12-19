@@ -28,7 +28,7 @@ class CellSpec extends WordSpec with Matchers {
         cellSpecFalse.addPlayerToCell(player).p should be(Some(player))
       }
       "be printed out" in {
-        cellSpecTrue.toString should be("[" + player.color + "x" + Console.RESET + "]")
+        cellSpecTrue.toString should be("[" + player.consoleColor + "x" + Console.RESET + "]")
         cellSpecFalse.toString should be("[" + " " + "]")
       }
     }

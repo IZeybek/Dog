@@ -8,7 +8,7 @@ import scala.util.{Failure, Success, Try}
 
 case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
 
-  val color: String = {
+  val consoleColor: String = {
     c match {
       case "grün" => Console.GREEN
       case "blau" => Console.BLUE

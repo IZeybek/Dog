@@ -53,7 +53,7 @@ class Controller() extends ControllerTrait {
     val up: String = "‾" * players.length * 3
     val down: String = "_" * players.length * 3
     var house: String = ""
-    players.indices.foreach(i => house = house + s" ${players(i).color}${players(i).inHouse}${Console.RESET} ")
+    players.indices.foreach(i => house = house + s" ${players(i).consoleColor}${players(i).inHouse}${Console.RESET} ")
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
@@ -81,11 +81,11 @@ class Controller() extends ControllerTrait {
     var returnString: String = ""
     if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).color}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
       notifyObservers
     } else {
       undoCommand()
-      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
+      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
     }
     returnString
   }
@@ -165,7 +165,7 @@ class Controller() extends ControllerTrait {
   override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
-    player.foreach(x => playerHands = playerHands + s"${x.color}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
+    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
     playerHands
   }
 

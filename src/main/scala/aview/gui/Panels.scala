@@ -80,7 +80,7 @@ object CardPanel {
       //style for circle Button
       print(task(idx) + ", ")
       idx = idx + 1
-      val styleFirst = "-fx-background-radius: 5em; " +
+      val styleFirst: String = "-fx-background-radius: 5em; " +
         "-fx-min-width: 30px; " +
         "-fx-min-height: 30px; " +
         "-fx-max-width: 100px; " +

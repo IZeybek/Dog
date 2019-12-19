@@ -13,7 +13,7 @@ class PlayerSpec extends WordSpec with Matchers {
         player.toString should be(player.name)
       }
       "have a color" in {
-        player.color should be(player.color)
+        player.consoleColor should be(player.consoleColor)
       }
       "have a map of pieces on the field" in {
         player.getPosition(2) should be(6)
