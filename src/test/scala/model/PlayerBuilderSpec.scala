@@ -29,6 +29,7 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
         val cardList: List[Card] = Card("0", "0", "0") :: Nil
         playerBuilder.withCards(cardList)
         Player.cardsDeck should be(cardList)
+
       }
     }
   }
