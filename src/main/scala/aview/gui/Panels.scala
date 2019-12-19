@@ -168,15 +168,15 @@ object BoardPanel {
         fitWidth = 35
         fitHeight = 35
       }) {
+        id = idx.toString
         idx = idx + 1
+
         //Padding of FieldButtons
         val styleFirst: String = bgColor + "-fx-padding:0;"
         style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
-
         //field OnClickListener
         onAction = _ => {
-          val i = idx
-          println("pressed field = " + i)
+          println("pressed field = " + this.getId)
         }
       })
 
