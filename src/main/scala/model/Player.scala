@@ -66,7 +66,7 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
   }
 
   def getCard(cardNum: Int): Card = {
-    if (cardList.nonEmpty)
+    if (cardList.nonEmpty && cardNum < cardList.size)
       cardList(cardNum)
     else
       null

@@ -6,10 +6,10 @@ import controller.Controller
 object Dog {
 
   val controller = new Controller()
-  val tui = new Tui(controller)
   val gui = new Gui(controller)
-  controller.setGui(gui)
-  controller.notifyObservers
+
+  val tui = new Tui(gui, controller)
+  //  controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
     tui.showMenu()

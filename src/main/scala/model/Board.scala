@@ -1,9 +1,7 @@
 package model
 
-import util.Observable
 
-
-case class Board(boardMap: Map[Int, Cell]) extends Observable {
+case class Board(boardMap: Map[Int, Cell]) {
 
   //can create a Board with a given size
   def this(size: Int) = {

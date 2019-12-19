@@ -9,15 +9,10 @@ import scalafx.scene.layout.BorderPane
 import util.Observer
 
 class Gui(controller: Controller) extends JFXApp with Observer {
-  controller.add(this)
-  //  stage = new PrimaryStage {
-  //    title = "Dog"
-  //    scene = new SceneHandler
-  //  }
 
+  controller.add(this)
 
   stage = GenGui.newGUI(controller)
-
 
   override def update: Unit = {
     println("updated something")
@@ -37,10 +32,9 @@ class Gui(controller: Controller) extends JFXApp with Observer {
 
 object GenGui {
 
-  def newGUI(controller: Controller): PrimaryStage = new PrimaryStage {
-    title = "MenuBar Test"
+  def newGUI(controller: Controller): PrimaryStage = {
 
-    scene = new Scene(1000, 1000) {
+    val mainScene = new Scene(1500, 700) {
 
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
@@ -52,18 +46,21 @@ object GenGui {
         }
         menus.add(menuList)
       }
-      var board = BoardPanel.newBoardPane(controller);
-      var rootPane: BorderPane = new BorderPane() {
-        board
+      root = new BorderPane() {
 
         top = menuBar
         // has to be a number that can be devided by 4
-        center = board
+        center = BoardPanel.newBoardPane(controller)
         //number of Cards can be set here
         bottom = CardPanel.newCardPane(controller)
       }
-      root = rootPane
     }
+    val stage = new PrimaryStage {
+      title = "main"
+    }
+    //    stage.setFullScreen(true)
+    stage.scene = mainScene
+    stage
   }
 }
 

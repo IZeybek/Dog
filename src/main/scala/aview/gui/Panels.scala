@@ -5,9 +5,9 @@ import javafx.scene.layout.GridPane
 import model.CardComponent.Card
 import scalafx.Includes.when
 import scalafx.geometry.Insets
-import scalafx.scene.control.{Button, ScrollPane}
+import scalafx.scene.control.{Button, Label, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.StackPane
+import scalafx.scene.layout.{BorderPane, StackPane}
 
 object CardPanel {
 
@@ -32,6 +32,7 @@ object CardPanel {
         else if (amount == 3) setPadding(Insets(0, 5, 5, 43))
 
         val icon: Seq[Button] = newIcons(controller, amount, card, idx);
+        println("------------------------------::::: + " + idx)
         println(amount)
         // add into gridPane (node, column, row)
         if (amount == 3) icon.indices.foreach(i => add(icon(i), 0, i))
@@ -88,6 +89,7 @@ object CardPanel {
 
       //PlayButton ActionListener
       onAction = _ => {
+        print("--------------------------------------------------------> " + cardNum)
         controller.manageRound(-1, List(0), cardNum)
       }
 
@@ -100,20 +102,18 @@ object CardPanel {
     var idx = 0;
     Seq.fill(amount)(new Button("", GenImages.genCard(cardList(idx).getSymbol)) {
       style = bgColor
-
       idx = idx + 1
-
     })
   }
 
   object GenImages {
 
     def genCard(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
-      fitHeight = 200;
+      fitHeight = 200
       fitWidth = 125
     }
 
-    def genIcon(typ: String) = new ImageView(stdPath + typ + ".png") {
+    def genIcon(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
       //playButton size
       fitHeight = 20
       fitWidth = 20
@@ -122,43 +122,74 @@ object CardPanel {
 
 }
 
+object CardDeckPanel {
+  val bgColor: String = "-fx-background-color:#383838;"
+
+  val stdPath = "file:src/main/scala/resources/"
+
+  def newCardDeck(c: Controller): StackPane = {
+
+    val amountLabel = new Label(c.gameState.cardDeck._1.size.toString)
+    val stackPane = new StackPane() {
+      padding = Insets(30, 30, 30, 30)
+    }
+
+    new GridPane {
+
+      val cardDeckIcon = new ImageView(stdPath + "green_back.png") {
+        fitHeight = 200
+        fitWidth = 125
+      }
+
+
+      stackPane.getChildren.addAll(cardDeckIcon, amountLabel)
+      add(stackPane, 0, 0)
+    }
+    stackPane
+  }
+}
+
 object BoardPanel {
   val stdPath = "file:src/main/scala/resources/"
   val bgColor: String = "-fx-background-color:#383838;"
 
-  def newBoardPane(controller: Controller): ScrollPane = {
-    val amount = controller.gameState.board.boardMap.size
-    val bm = controller.gameState.board.boardMap
-    println("----------------" + bm(0).getColor)
-    var idx = 0;
-    val fieldIconSeq = Seq.fill(amount)(new Button("", new ImageView(
-      stdPath +
-        (if (!bm(idx).getColor.equals(" ")) bm(idx).getColor
-        else "field") + ".png") {
-      fitWidth = 35
-      fitHeight = 35
-    }) {
-      idx = idx + 1
-      //Padding of FieldButtons
-      val styleFirst = bgColor + "-fx-padding:0;"
-      style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
+  def newBoardPane(controller: Controller): BorderPane = {
+    new BorderPane() {
+      style = bgColor
+      val amount = controller.gameState.board.boardMap.size
+      val bm = controller.gameState.board.boardMap
+      println("----------------" + bm(0).getColor)
+      var idx = 0;
+      val fieldIconSeq = Seq.fill(amount)(new Button("", new ImageView(
+        stdPath +
+          (if (!bm(idx).getColor.equals(" ")) bm(idx).getColor
+          else "field") + ".png") {
+        fitWidth = 35
+        fitHeight = 35
+      }) {
+        idx = idx + 1
+        //Padding of FieldButtons
+        val styleFirst = bgColor + "-fx-padding:0;"
+        style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
 
-      //field OnClickListener
-      onAction = _ => print(controller.gameState.gameState)
-    })
+        //field OnClickListener
+        onAction = _ => print(controller.gameState.gameState)
+      })
 
-    new ScrollPane() {
-      fitToWidth = true
-      fitToHeight = true
+      center = new ScrollPane() {
+        fitToWidth = true
+        fitToHeight = true
 
-      content() = newBoardGrid(amount, fieldIconSeq)
+        content() = newBoardGrid(amount, fieldIconSeq)
+      }
+      right = CardDeckPanel.newCardDeck(controller)
+
     }
   }
 
   def newBoardGrid(amount: Int, fieldIconSeq: Seq[Button]): GridPane = {
 
     new GridPane {
-
       var offset = 20
       if (amount < 106) offset = (1920 - ((amount * 2 / 4) + 2) * 35) / 3 + 60
       setPadding(Insets(75, offset, 75, offset))

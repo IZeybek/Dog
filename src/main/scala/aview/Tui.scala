@@ -1,10 +1,11 @@
 package aview
 
+import aview.gui.{GenGui, Gui}
 import controller.Controller
 import util.Observer
 
 
-class Tui(controller: Controller) extends Observer {
+class Tui(gui: Gui, controller: Controller) extends Observer {
   controller.add(this)
 
   def showMenu(): Unit = {
@@ -53,7 +54,10 @@ class Tui(controller: Controller) extends Observer {
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
             controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), cardNum)
           case cardNum :: pieceNums =>
+
             result = controller.manageRound(-1, pieceNums, cardNum)
+
+
           case _ => println("try again!")
         }
     }
@@ -61,6 +65,8 @@ class Tui(controller: Controller) extends Observer {
   }
 
   override def update: Unit = {
+    //TODO add Publisher instead of this ----------------------------------------------------------------------------------------------------------
+    gui.stage = GenGui.newGUI(controller)
     println(controller.toStringBoard)
     println(controller.toStringPlayerHands)
   }

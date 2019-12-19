@@ -1,6 +1,5 @@
 package controller
 
-import aview.gui.{GenGui, Gui}
 import model.CardComponent.{Card, CardDeck, CardLogic}
 import model._
 import util.{Observable, SolveCommand, UndoManager}
@@ -10,7 +9,6 @@ import scala.util.Random
 class Controller() extends Observable {
 
   private val undoManager = new UndoManager
-  var gui: Gui = null
   //  def newRoot(): Unit ={
   //    val rootPane: BorderPane = new BorderPane {
   //      style = "-fx-background-color:#383838"
@@ -21,9 +19,7 @@ class Controller() extends Observable {
   //    gui.stage.getScene.setRoot(rootPane)
   //  }
 
-  def setGui(guii: Gui) = {
-    gui = guii
-  }
+
 
   def doStep(): Unit = {
     undoManager.doStep(new SolveCommand(this))
@@ -53,8 +49,8 @@ class Controller() extends Observable {
 
   def createRandomBoard(size: Int): Board = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
-    notifyObservers
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
+    notifyObservers
     board
   }
 
@@ -109,7 +105,7 @@ class Controller() extends Observable {
       undoCommand()
       returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
     }
-    gui.stage = GenGui.newGUI(this) //TODO add Publisher instead of this ----------------------------------------------------------------------------------------------------------
+    notifyObservers
     returnString
   }
 
@@ -135,7 +131,7 @@ class Controller() extends Observable {
       val updateGame: (Board, Vector[Player], Int) = CardLogic.setStrategy(taskMode, gameState.players._1, board, selectedPlayerList, pieceNum, moveInInt)
       if (updateGame._3 == 0) {
         gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(updateGame._1).buildGame
-        notifyObservers
+
       }
       return updateGame._3
     }
@@ -163,7 +159,7 @@ class Controller() extends Observable {
     val oldCard = player(playerNum).getCard(cardNum)
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).copy(cardList = player(playerNum).removeCard(player(playerNum).getCard(cardNum))))
     gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-    println(s"$oldCard with ${oldCard.getTask}")
+    if (oldCard != null) println(s"$oldCard with ${oldCard.getTask}")
     oldCard
   }
 
