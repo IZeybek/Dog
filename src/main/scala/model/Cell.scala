@@ -18,7 +18,7 @@ case class Cell(idx: Int, p: Option[Player]) {
 
   def getColor: String = {
     this.p match {
-      case Some(p) => p.color
+      case Some(p) => p.c
       case None() => " "
     }
   }

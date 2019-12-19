@@ -104,6 +104,7 @@ class Controller() extends Observable {
       undoCommand()
       returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).color}${gameState.players._2}${Console.RESET} ;)\n"
     }
+
     returnString
   }
 
@@ -133,6 +134,7 @@ class Controller() extends Observable {
       }
       return updateGame._3
     }
+
     -1
   }
 

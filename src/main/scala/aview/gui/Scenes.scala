@@ -30,8 +30,9 @@ class Gui(controller: Controller) extends JFXApp with Observer {
         menus.add(menuList)
       }
       var board = BoardPanel.newBoardPane(controller);
-      var rootPane: BorderPane = new BorderPane {
-        style = "-fx-background-color:#383838"
+      var rootPane: BorderPane = new BorderPane() {
+        board
+
         top = menuBar
         // has to be a number that can be devided by 4
         center = board

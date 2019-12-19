@@ -31,7 +31,7 @@ object CardPanel {
         if (amount == 2) setPadding(Insets(0, 5, 5, 24))
         else if (amount == 3) setPadding(Insets(0, 5, 5, 43))
 
-        val icon: Seq[Button] = newIcons(amount, card);
+        val icon: Seq[Button] = newIcons(controller, amount, card, idx);
         println(amount)
         // add into gridPane (node, column, row)
         if (amount == 3) icon.indices.foreach(i => add(icon(i), 0, i))
@@ -46,7 +46,7 @@ object CardPanel {
       var offset = 0
       if (amount < 9) offset = 250
       setPadding(Insets(0, 0, 0, offset))
-      val cards: Seq[Button] = newCards(amount, cardList)
+      val cards: Seq[Button] = newCards(gridSeq, amount, cardList)
 
       val stackPane: Seq[StackPane] = Seq.fill(amount)(new StackPane())
       stackPane.indices.foreach(i => stackPane(i).getChildren.addAll(cards(i), gridSeq(i)))
@@ -64,7 +64,7 @@ object CardPanel {
 
 
   //generates new Cards and puts it into Seq
-  def newIcons(amount: Int, card: Card): Seq[Button] = {
+  def newIcons(controller: Controller, amount: Int, card: Card, cardNum: Int): Seq[Button] = {
     var idx = 0;
     val task = card.getTask.split("\\s+") //GenImages.genIcon()
     val symbol: Array[String] = card.getSymbol.split("\\s+")
@@ -84,20 +84,23 @@ object CardPanel {
         "-fx-max-width: 100px; " +
         "-fx-max-height: 50px;" +
         "-fx-padding:5;"
-      style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
-
+      style <== when(armed) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
 
       //PlayButton ActionListener
-      onAction = _ => println(s"${card.getSymbol} Button pressed")
+      onAction = _ => {
+        controller.manageRound(-1, List(0), cardNum)
+      }
 
     })
   }
 
   //generates new Cards and puts it into Seq
-  def newCards(amount: Int, cardList: List[Card]): Seq[Button] = {
+  def newCards(gridSeq: Seq[GridPane], amount: Int, cardList: List[Card]): Seq[Button] = {
+
     var idx = 0;
     Seq.fill(amount)(new Button("", GenImages.genCard(cardList(idx).getSymbol)) {
       style = bgColor
+
       idx = idx + 1
 
     })
@@ -125,10 +128,17 @@ object BoardPanel {
 
   def newBoardPane(controller: Controller): ScrollPane = {
     val amount = controller.gameState.board.boardMap.size
-    val fieldIconSeq = Seq.fill(amount)(new Button("", new ImageView(stdPath + "field.png") {
+    val bm = controller.gameState.board.boardMap
+    println("----------------" + bm(0).getColor)
+    var idx = 0;
+    val fieldIconSeq = Seq.fill(amount)(new Button("", new ImageView(
+      stdPath +
+        (if (!bm(idx).getColor.equals(" ")) bm(idx).getColor
+        else "field") + ".png") {
       fitWidth = 35
       fitHeight = 35
     }) {
+      idx = idx + 1
       //Padding of FieldButtons
       val styleFirst = bgColor + "-fx-padding:0;"
       style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
@@ -140,7 +150,7 @@ object BoardPanel {
     new ScrollPane() {
       fitToWidth = true
       fitToHeight = true
-      style = bgColor
+
       content() = newBoardGrid(amount, fieldIconSeq)
     }
   }
