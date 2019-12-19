@@ -1,11 +1,13 @@
 name := "Dog"
-version := "prealpha.beta.gamma0001"
+version := "0.5"
 organization := "dog"
 scalaVersion := "2.12.7"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.8"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+libraryDependencies += "com.google.inject" % "guice" % "4.1.0"
+libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.1.1"
 

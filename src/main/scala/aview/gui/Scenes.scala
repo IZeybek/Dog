@@ -1,6 +1,6 @@
 package aview.gui
 
-import controller.Controller
+import controller.Component.ControllerTrait
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
@@ -13,7 +13,7 @@ import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
 import util.Observer
 
-class Gui(controller: Controller) extends JFXApp with Observer {
+class Gui(controller: ControllerTrait) extends JFXApp with Observer {
   controller.add(this)
   stage = new PrimaryStage {
     title = "Dog"

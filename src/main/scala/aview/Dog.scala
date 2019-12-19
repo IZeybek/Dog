@@ -1,11 +1,12 @@
 package aview
 
 import aview.gui.Gui
-import controller.Controller
+import controller.Component.ControllerTrait
+import controller.Component.controllerBaseImpl.Controller
 
 object Dog {
 
-  val controller = new Controller()
+  val controller: ControllerTrait = new Controller()
   val tui = new Tui(controller)
   val gui = new Gui(controller)
   controller.notifyObservers

@@ -1,13 +1,14 @@
-package model
+package model.BoardComponent.boardBaseImpl
 
+import model.BoardComponent.BoardTrait
+import model.Player
 import util.Observable
 
-
-case class Board(boardMap: Map[Int, Cell]) extends Observable {
+case class Board(boardMap: Map[Int, Cell]) extends Observable with BoardTrait {
 
   //can create a Board with a given size
   def this(size: Int) = {
-    this((0 until size).map(i => (i, Cell(i, None()))).toMap)
+    this((0 until size).map(i => (i, Cell(i, None))).toMap)
   }
 
   override def toString: String = {
@@ -22,17 +23,17 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     box
   }
 
-  def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
+  override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
     val oldPos: Integer = player.getPosition(pieceNum)
 
     //set old Cell unoccupied
-    var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell)
+    var nBoard: Map[Int, Cell] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell())
     //set new Pos as occupied
     nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayerToCell(p = player))
     copy(boardMap = nBoard)
   }
 
-  def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
+  override def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
 
     val p: Player = player(playerNums(0))
     val swapPlayer: Player = player(playerNums(1))
@@ -45,11 +46,10 @@ case class Board(boardMap: Map[Int, Cell]) extends Observable {
     copy(boardMap = nBoard)
   }
 
-  def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = {
+  override def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = {
     boardMap(newPos).p match {
       case Some(_) => true
-      case None() => false
+      case None => false
     }
   }
 }
-

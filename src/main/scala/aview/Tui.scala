@@ -1,10 +1,10 @@
 package aview
 
-import controller.Controller
+import controller.Component.ControllerTrait
 import util.Observer
 
 
-class Tui(controller: Controller) extends Observer {
+class Tui(controller: ControllerTrait) extends Observer {
   controller.add(this)
 
   def showMenu(): Unit = {

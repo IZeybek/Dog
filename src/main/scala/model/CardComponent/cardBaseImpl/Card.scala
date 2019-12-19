@@ -1,18 +1,16 @@
-package model.CardComponent
+package model.CardComponent.cardBaseImpl
 
-import model.{Board, CardTrait, Player}
+import model.BoardComponent.boardBaseImpl.Board
+import model.CardComponent.{CardDeckTrait, CardTrait}
+import model.Player
 
 import scala.collection.mutable.ListBuffer
+import scala.util.Random
 
 
-case class Card(symbol: String, task: String, color: String) {
+case class Card(symbol: String, task: String, color: String) extends CardTrait {
 
-  def getSymbol: String = symbol
-
-  def getTask: String = task
-
-  def getColor: String = color
-
+  override def getTask: String = task
 
   override def toString: String = {
     "Card(" + s"${
@@ -22,11 +20,14 @@ case class Card(symbol: String, task: String, color: String) {
       }
     }$getSymbol${Console.RESET})"
   }
+
+  override def getSymbol: String = symbol
+
+  override def getColor: String = color
 }
 
 
 object CardLogic {
-
 
   val move: (Vector[Player], Board, List[Int], List[Int], Int) => (Board, Vector[Player], Int) = (player: Vector[Player], board: Board, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
@@ -96,7 +97,7 @@ object CardLogic {
 
 object GenCardDeck {
 
-  def apply(typ: String): CardTrait = typ match {
+  def apply(typ: String): CardDeckTrait = typ match {
     case "special" =>
       SpecialCardsDeck()
     case "normal" =>
@@ -105,32 +106,61 @@ object GenCardDeck {
 }
 
 object CardDeck {
-  def apply(amounts: List[Int]): List[Card] = {
-    val list = new ListBuffer[Card]()
-    amounts.indices.foreach(i => for (elem <- (0 until amounts(i))) {
-      i match {
-        case 0 => list.++=(GenCardDeck.apply("special").getCardDeck)
-        case 1 => list.++=(GenCardDeck.apply("normal").getCardDeck)
-      }
-    })
-    list.toList
-    //    GenCardDeck.apply("special").getCardDeck ++
-    //      GenCardDeck.apply("normal").getCardDeck ++
-    //      GenCardDeck.apply("special").getCardDeck ++
-    //      GenCardDeck.apply("normal").getCardDeck ++
-    //      GenCardDeck.apply("special").getCardDeck ++
-    //      GenCardDeck.apply("normal").getCardDeck ++
-    //      GenCardDeck.apply("special").getCardDeck ++
-    //      GenCardDeck.apply("normal").getCardDeck
+  var cardDeck: Vector[CardTrait] = GenCardDeck.apply("special").getCardDeck.toVector
+  var lengthOfCardDeck: Int = cardDeck.length
+  var amount: List[Int] = List(2, 2)
+
+  def toStringCardDeck(cardDeck: (Vector[CardTrait], Int)): String = {
+    var cardString: String = "________DECK________\n"
+    cardDeck._1.indices.foreach(i => if (i < cardDeck._2) cardString += s"$i: ${cardDeck._1(i)}\n") + "\n"
+    cardString
   }
+
+  case class CardDeck() {
+
+    def withAmount(setAmount: List[Int]): CardDeck = {
+      amount = setAmount
+      withCardDeck
+      this
+    }
+
+    def withCardDeck: CardDeck = {
+      val list = new ListBuffer[CardTrait]()
+      amount.indices.foreach(f = i => for (_ <- 0 until amount(i)) {
+        i match {
+          case 0 => list.++=(GenCardDeck.apply("special").getCardDeck)
+          case 1 => list.++=(GenCardDeck.apply("normal").getCardDeck)
+        }
+      })
+      cardDeck = list.toVector
+      lengthOfCardDeck = cardDeck.length
+      this
+    }
+
+    def withShuffle: CardDeck = {
+      val shuffledCardDeck: Vector[CardTrait] = Random.shuffle(cardDeck)
+      cardDeck = shuffledCardDeck
+      this
+    }
+
+    def buildCardVectorWithLength: (Vector[CardTrait], Int) = (cardDeck, lengthOfCardDeck)
+
+    def buildCardVector: Vector[CardTrait] = cardDeck
+
+    def buildCardListWithLength: (List[CardTrait], Int) = (cardDeck.toList, lengthOfCardDeck)
+
+    def buildCardList: List[CardTrait] = cardDeck.toList
+
+  }
+
 }
 
 
-case class SpecialCardsDeck() extends CardTrait {
+case class SpecialCardsDeck() extends CardDeckTrait {
 
-  val specialCards: List[Card] = generateDeck
+  val specialCards: List[CardTrait] = generateDeck
 
-  override def generateDeck: List[Card] = {
+  override def generateDeck: List[CardTrait] = {
     List(Card("1 11 start", "move;move;start", "red"),
       Card("4", "forwardBackward", "red"),
       Card("7", "burn", "red"),
@@ -139,15 +169,15 @@ case class SpecialCardsDeck() extends CardTrait {
       Card("13 play", "move;start", "red"))
   }
 
-  override def getCardDeck: List[Card] = specialCards
+  override def getCardDeck: List[CardTrait] = specialCards
 }
 
 
-case class NormalCardsDeck() extends CardTrait {
+case class NormalCardsDeck() extends CardDeckTrait {
 
-  val normalCards: List[Card] = generateDeck
+  val normalCards: List[CardTrait] = generateDeck
 
-  override def generateDeck: List[Card] = {
+  override def generateDeck: List[CardTrait] = {
     List(Card("2", "move", "blue"),
       Card("3", "move", "blue"),
       Card("5", "move", "blue"),
@@ -158,6 +188,6 @@ case class NormalCardsDeck() extends CardTrait {
       Card("12", "move", "blue"))
   }
 
-  override def getCardDeck: List[Card] = normalCards
+  override def getCardDeck: List[CardTrait] = normalCards
 }
 
