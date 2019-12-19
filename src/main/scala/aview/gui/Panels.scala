@@ -91,7 +91,7 @@ object CardPanel {
       //PlayButton ActionListener
       onAction = _ => {
         print("--------------------------------------------------------> " + cardNum)
-        controller.manageRound(-1, List(0), cardNum)
+        controller.manageRound(0, List(0, 0), cardNum)
       }
 
     })
