@@ -38,6 +38,14 @@ trait GameStateMasterTrait {
       this
     }
 
+    def withLastPlayed(setCard: CardTrait): UpdateGame = {
+      lastPlayedCard match {
+        case Some(_) => lastPlayedCard = Some(setCard)
+        case None => lastPlayedCard = Some(setCard)
+      }
+      this
+    }
+
     def withPlayers(setPlayers: Vector[Player]): UpdateGame = {
       players = setPlayers
       this
