@@ -133,6 +133,7 @@ object CardDeck {
   }
 
   case class CardDeckBuilder() {
+
     def withAmount(setAmount: List[Int]): CardDeckBuilder = {
       amount = setAmount
       withCardDeck

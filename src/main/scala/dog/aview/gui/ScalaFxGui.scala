@@ -48,7 +48,7 @@ object GenGui {
         // has to be a number that can be devided by 4
         center = BoardPanel.newBoardPane(controller)
         //number of Cards can be set here
-        bottom = CardPanel.newCardPane(controller)
+        bottom = PanelMaster.CardPaneBuilder(controller).withCards().withIcons().buildCardPane()
       }
     }
     val stage = new PrimaryStage {

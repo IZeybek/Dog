@@ -1,5 +1,6 @@
 package dog.aview.gui
 
+import dog.aview.gui.CardPanel.stdPath
 import dog.controller.ControllerTrait
 import dog.model.BoardComponent.boardBaseImpl.Cell
 import dog.model.CardComponent.CardTrait
@@ -12,60 +13,7 @@ import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, StackPane, VBox}
 import scalafx.scene.paint.Color._
 
-object CardPanel {
-
-  val stdPath = "file:src/main/scala/resources/"
-  val bgColor: String = "-fx-background-color:#383838;"
-
-  def newCardPane(controller: ControllerTrait): ScrollPane = {
-    val actualPlayer = controller.gameState.players._2
-    val cardList = controller.gameState.players._1(actualPlayer).cardList
-    val amount = cardList.size
-
-    //each Card has 3 Button Options. Its amount is not dynamic yet ------------------------------------------------------------------------
-    var idx = 0
-    val gridSeq = {
-      Seq.fill(amount)(new GridPane {
-        setPadding(Insets(0, 5, 5, 55))
-        val card: CardTrait = cardList(idx)
-        val task: Array[String] = card.getTask.split("\\s+")
-        val amount: Int = task.length
-
-        if (amount == 2) setPadding(Insets(0, 5, 5, 24))
-        else if (amount == 3) setPadding(Insets(0, 5, 5, 43))
-
-        val icon: Seq[Button] = newIcons(controller, amount, card, idx)
-        if (amount == 3) icon.indices.foreach(i => add(icon(i), 0, i))
-        else icon.indices.foreach(i => add(icon(i), i, 0))
-        idx = idx + 1
-      })
-
-    }
-
-    val grid: GridPane = new GridPane {
-      setStyle(bgColor + "-fx-padding:2")
-      var offset = 0
-      if (amount < 9) offset = 250
-      setPadding(Insets(0, 0, 0, offset))
-      val cards: Seq[Button] = newCards(gridSeq, amount, cardList)
-
-      val stackPane: Seq[StackPane] = Seq.fill(amount)(new StackPane())
-      stackPane.indices.foreach(i => stackPane(i).getChildren.addAll(cards(i), gridSeq(i)))
-      stackPane.indices.foreach(i => add(stackPane(i), i, 0))
-    }
-
-    new ScrollPane() {
-
-      prefHeight = 229
-      fitToWidth = true
-      fitToHeight = true
-      maxHeight = 229
-      minHeight = 150
-      this.style = bgColor
-      content() = grid
-    }
-  }
-
+object CardPanel extends PanelMaster {
 
   //generates new Cards and puts it into Seq
   def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardNum: Int): Seq[Button] = {
@@ -77,7 +25,7 @@ object CardPanel {
       if (symbol(0).equals("4")) (if (idx == 0) "-" else "+") + symbol(0)
       else if (sbsize > 1 && idx != sbsize - 1) "+" + symbol(idx)
       else "",
-      GenImages.genIcon(task(idx))) {
+      GenImages.genIconImage(task(idx))) {
 
       //style for circle Button
       print(task(idx) + ", ")
@@ -102,26 +50,26 @@ object CardPanel {
   def newCards(gridSeq: Seq[GridPane], amount: Int, cardList: List[CardTrait]): Seq[Button] = {
 
     var idx = 0
-    Seq.fill(amount)(new Button("", GenImages.genCard(cardList(idx).getSymbol)) {
+    Seq.fill(amount)(new Button("", GenImages.genCardImage(cardList(idx).getSymbol)) {
       style = bgColor
       idx = idx + 1
     })
   }
 
-  object GenImages {
+}
 
-    def genCard(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
-      fitHeight = 200
-      fitWidth = 125
-    }
+object GenImages {
 
-    def genIcon(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
-      //playButton size
-      fitHeight = 20
-      fitWidth = 20
-    }
+  def genCardImage(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
+    fitHeight = 200
+    fitWidth = 125
   }
 
+  def genIconImage(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
+    //playButton size
+    fitHeight = 20
+    fitWidth = 20
+  }
 }
 
 object CardDeckPanel {
@@ -152,6 +100,7 @@ object CardDeckPanel {
 }
 
 object PlayerStatusPanel {
+
   def newStatusPane(controller: ControllerTrait): BorderPane = new BorderPane() {
     top = PlayerStatusPanel.newStatusDisplay(controller)
     center = PlayerStatusPanel.newLaidCard(controller)
@@ -221,6 +170,7 @@ object PlayerStatusPanel {
 }
 
 object BoardPanel {
+
   val stdPath = "file:src/main/scala/resources/"
   val bgColor: String = "-fx-background-color:#383838;"
 

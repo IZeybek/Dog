@@ -10,11 +10,12 @@ object Dog {
   val controller: ControllerTrait = injector.getInstance(classOf[ControllerTrait])
   val tui = new Tui(controller)
   val gui = new Gui(controller)
-  gui.main(Array(""))
-  tui.showMenu()
+
   controller.publish(new BoardChanged)
 
   def main(args: Array[String]): Unit = {
+    tui.showMenu()
+    gui.main(Array(""))
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")
