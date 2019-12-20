@@ -35,9 +35,6 @@ object CardPanel {
         else if (amount == 3) setPadding(Insets(0, 5, 5, 43))
 
         val icon: Seq[Button] = newIcons(controller, amount, card, idx);
-        println("------------------------------::::: + " + idx)
-        println(amount)
-        // add into gridPane (node, column, row)
         if (amount == 3) icon.indices.foreach(i => add(icon(i), 0, i))
         else icon.indices.foreach(i => add(icon(i), i, 0))
         idx = idx + 1
@@ -95,7 +92,6 @@ object CardPanel {
 
       //PlayButton ActionListener
       onAction = _ => {
-        print("--------------------------------------------------------> " + cardNum)
         controller.manageRound(0, List(0, 0), cardNum)
       }
 
@@ -162,7 +158,7 @@ object PlayerStatusPanel {
   }
 
   def newLaidCard(c: ControllerTrait): Button = {
-    val lastCard = if (c.gameStateMaster.getLastPlayedCard.getSymbol.equals("pseudo")) c.gameStateMaster.getLastPlayedCard.getSymbol else "laidcarddeck"
+    val lastCard = if (!c.gameStateMaster.getLastPlayedCard.getSymbol.equals("pseudo")) c.gameStateMaster.getLastPlayedCard.getSymbol else "laidcarddeck"
 
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = 200
@@ -234,7 +230,7 @@ object BoardPanel {
 
       val amount: Int = controller.gameState.board.getBoardMap.size
       val bm: Map[Int, Cell] = controller.gameState.board.getBoardMap
-      println("----------------" + bm(0).getColor)
+      //      println("----------------" + bm(0).getColor)
       var idx = 0;
       val fieldIconSeq: Seq[Button] = Seq.fill(amount)(new Button("", new ImageView(
         stdPath +
