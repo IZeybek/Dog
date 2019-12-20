@@ -187,14 +187,16 @@ object PlayerStatusPanel {
         case _ => Black
       }
     }
-    val inHouse = Seq.fill(player.inHouse)(new Button("") {
-
-      val colorHouses: String = player.c match {
+    var idx = 0;
+    val inHouse = Seq.fill(4)(new Button("") {
+      val color: String = if (player.inHouse <= idx) "" else player.c
+      idx = idx + 1
+      val colorHouses: String = color match {
         case "grün" => "-fx-background-color:#008000;";
         case "white" => "-fx-background-color:#FFFFFF;"
         case "gelb" => "-fx-background-color:#FFFF00;"
         case "rot" => "-fx-background-color:#FF0000;"
-        case _ => "-fx-background-color:#000000;"
+        case _ => "-fx-background-color:#979797;"
       }
       style = "-fx-padding:10;-fx-background-radius: 5em; " +
         "-fx-min-width: 30px; " +
