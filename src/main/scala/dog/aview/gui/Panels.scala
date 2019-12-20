@@ -1,12 +1,10 @@
-package dog.gui
+package dog.aview.gui
 
 import dog.controller.ControllerTrait
 import dog.model.BoardComponent.boardBaseImpl.Cell
 import dog.model.CardComponent.CardTrait
+import dog.model.Player
 import javafx.scene.layout.GridPane
-import model.BoardComponent.boardBaseImpl.Cell
-import model.CardComponent.CardTrait
-import model.Player
 import scalafx.Includes.when
 import scalafx.geometry.Insets
 import scalafx.scene.control.{Button, Label, ScrollPane}
@@ -184,7 +182,7 @@ object PlayerStatusPanel {
     val player: Player = c.gameState.players._1(c.gameState.players._2)
     val playerStateLabel = new Label(player.toString) {
       style = "-fxf-font-size: 20pt"
-      textFill = player.c match {
+      textFill = player.color match {
         case "grün" => Green;
         case "white" => White;
         case "gelb" => Yellow;
@@ -194,7 +192,7 @@ object PlayerStatusPanel {
     }
     var idx = 0;
     val inHouse = Seq.fill(4)(new Button("") {
-      val color: String = if (player.inHouse <= idx) "" else player.c
+      val color: String = if (player.inHouse <= idx) "" else player.color
       idx = idx + 1
       val colorHouses: String = color match {
         case "grün" => "-fx-background-color:#008000;";

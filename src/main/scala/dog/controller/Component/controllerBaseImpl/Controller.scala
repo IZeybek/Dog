@@ -1,16 +1,9 @@
 package dog.controller.Component.controllerBaseImpl
 
-import controller.BoardChanged
-import controller.Component.{ControllerTrait, GameState, GameStateMaster, GameStateMasterTrait}
-import model.BoardComponent.boardBaseImpl.BoardCreateStrategyRandom
-import model.CardComponent.CardTrait
-import model.CardComponent.cardBaseImpl.{CardDeck, CardLogic}
-import model._
-import util.{SolveCommand, UndoManager}
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
-import dog.controller.{ControllerTrait, GameState, GameStateMaster, GameStateMasterTrait}
+import dog.controller._
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import dog.model.CardComponent.CardTrait

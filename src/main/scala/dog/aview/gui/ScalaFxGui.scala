@@ -1,6 +1,6 @@
-package dog.gui
+package dog.aview.gui
 
-import dog.controller.ControllerTrait
+import dog.controller.{BoardChanged, ControllerTrait}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -30,8 +30,14 @@ object GenGui {
         useSystemMenuBar = true
         minWidth = 100
         val menuList: Menu = new Menu("Edit") {
-          items.add(new MenuItem("Undo"))
-          items.add(new MenuItem("Redo"))
+          val undo: MenuItem = new MenuItem("Undo") {
+            onAction = _ => controller.undoCommand()
+          }
+          val redo: MenuItem = new MenuItem("Redo") {
+            onAction = _ => controller.redoCommand()
+          }
+          items.add(undo)
+          items.add(redo)
           items.add(new MenuItem("Save"))
         }
         menus.add(menuList)

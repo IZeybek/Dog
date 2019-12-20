@@ -1,9 +1,6 @@
-package aview
+package dog.aview
 
-import dog.controller.ControllerTrait
-import dog.gui.{GenGui, Gui}
-import controller.BoardChanged
-import controller.Component.ControllerTrait
+import dog.controller.{BoardChanged, ControllerTrait}
 
 import scala.swing.Reactor
 
@@ -11,6 +8,13 @@ import scala.swing.Reactor
 class Tui(controller: ControllerTrait) extends Reactor {
 
   listenTo(controller)
+
+  reactions += {
+    case event: BoardChanged =>
+      println(controller.toStringBoard);
+      println(controller.toStringPlayerHands)
+
+  }
 
   def showMenu(): Unit = {
     print("Menu\n")
@@ -61,9 +65,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
             result = controller.manageRound(-1, pieceNums, cardNum)
           case _ => println("try again!")
         }
-        reactions += {
-          case event: BoardChanged => println(controller.toStringBoard); println(controller.toStringPlayerHands)
-        }
+
     }
     result
   }

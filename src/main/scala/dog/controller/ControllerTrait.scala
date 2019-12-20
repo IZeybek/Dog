@@ -1,9 +1,9 @@
-package controller.Component
+package dog.controller
 
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
-import dog.util.{Observable, UndoManager}
+import dog.util.UndoManager
 
 import scala.swing.Publisher
 

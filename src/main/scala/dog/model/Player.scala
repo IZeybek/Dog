@@ -6,10 +6,10 @@ import dog.model.CardComponent.cardBaseImpl.Card
 import scala.util.{Failure, Success, Try}
 
 
-case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
+case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
 
   val consoleColor: String = {
-    c match {
+    color match {
       case "grün" => Console.GREEN
       case "blau" => Console.BLUE
       case "rot" => Console.RED
@@ -53,7 +53,7 @@ case class Player(name: String, c: String, piece: Map[Int, Piece], inHouse: Int,
   }
 
   def this(name: String, c: String, pieceQuantity: Int, cards: List[CardTrait]) = {
-    this(name, c = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
+    this(name, color = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
   }
 
   def removeCard(card: CardTrait): Player = {
