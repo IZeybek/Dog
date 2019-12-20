@@ -24,5 +24,5 @@ class GameStateMaster extends GameStateMasterTrait {
   override var roundAndCardsToDistribute: (Int, Int) = (0, 6)
 
   //board
-  override var board: Board = new Board(70)
+  override var board: Board = new Board(80)
 }

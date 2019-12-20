@@ -25,7 +25,7 @@ object GenGui {
 
   def newGUI(controller: ControllerTrait): PrimaryStage = {
 
-    val mainScene: Scene = new Scene(1500, 700) {
+    val mainScene: Scene = new Scene(1550, 800) {
 
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
@@ -38,7 +38,7 @@ object GenGui {
         menus.add(menuList)
       }
       root = new BorderPane() {
-
+        style = "-fx-background-color:#3d3d3d"
         top = menuBar
         // has to be a number that can be devided by 4
         center = BoardPanel.newBoardPane(controller)

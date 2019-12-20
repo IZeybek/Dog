@@ -59,9 +59,12 @@ object CardPanel {
 
     new ScrollPane() {
 
+      prefHeight = 229
       fitToWidth = true
       fitToHeight = true
-      style = bgColor
+      maxHeight = 229
+      minHeight = 150
+      this.style = bgColor
       content() = grid
     }
   }
@@ -132,7 +135,7 @@ object CardDeckPanel {
 
   def newCardDeck(c: ControllerTrait): StackPane = {
 
-    val amountLabel = new Label(c.gameState.cardDeck._1.size.toString)
+    val amountLabel = new Label(c.gameState.cardDeck._2.toString)
     val stackPane = new StackPane() {
       padding = Insets(30, 30, 30, 30)
     }
@@ -226,6 +229,7 @@ object BoardPanel {
   def newBoardPane(controller: ControllerTrait): BorderPane = {
     new BorderPane() {
       style = bgColor
+
       val amount: Int = controller.gameState.board.getBoardMap.size
       val bm: Map[Int, Cell] = controller.gameState.board.getBoardMap
       println("----------------" + bm(0).getColor)
@@ -264,7 +268,7 @@ object BoardPanel {
 
     new GridPane {
 
-      setPadding(Insets(50, 30, 30, 30))
+      setPadding(Insets(50, 30, 30, 20))
       setStyle(bgColor)
 
       //computes and displays Board on view, as an horizontal rectangle
