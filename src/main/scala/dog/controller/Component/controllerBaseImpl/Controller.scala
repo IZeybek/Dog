@@ -126,6 +126,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
       doStep()
       val selectedCard: CardTrait = getSelectedCard(selectedPlayerList.head, cardNum)
+      gameState = gameStateMaster.UpdateGame().withLastPlayed(selectedCard).buildGame
 
       // will be changed later as well since other logic's aren't implemented yet
       val taskMode = CardLogic.getLogic(selectedCard.getTask)
