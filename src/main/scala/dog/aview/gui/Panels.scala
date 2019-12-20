@@ -162,7 +162,9 @@ object PlayerStatusPanel {
   }
 
   def newLaidCard(c: ControllerTrait): Button = {
-    new Button("", new ImageView(stdPath + "laidcarddeck.png") {
+    val lastCard = if (c.gameState.lastPlayedCard.isDefined) c.gameStateMaster.getLastPlayedCard.getSymbol else "laidcarddeck"
+
+    new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = 200
       fitWidth = 125
     }) {
