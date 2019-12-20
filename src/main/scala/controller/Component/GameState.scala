@@ -13,8 +13,8 @@ class GameStateMaster extends GameStateMasterTrait {
 
   //player with player pointer
   override var tutorial: Boolean = true
-  override var colors: Array[String] = Array("gelb", "blau", "grün", "rot")
-  override var playerNames: Array[String] = Array("P1", "P2", "P3", "P4")
+  override var colors: Array[String] = Array("gelb", "white", "grün", "rot")
+  override var playerNames: Array[String] = Array("Player 1", "Player 2", "Player 3", "Player 4")
   override var players: Vector[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
   override var actualPlayer: Int = 0
 

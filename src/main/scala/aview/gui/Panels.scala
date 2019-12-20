@@ -4,11 +4,13 @@ import controller.Component.ControllerTrait
 import javafx.scene.layout.GridPane
 import model.BoardComponent.boardBaseImpl.Cell
 import model.CardComponent.CardTrait
+import model.Player
 import scalafx.Includes.when
 import scalafx.geometry.Insets
 import scalafx.scene.control.{Button, Label, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, StackPane}
+import scalafx.scene.layout.{BorderPane, StackPane, VBox}
+import scalafx.scene.paint.Color._
 
 object CardPanel {
 
@@ -150,6 +152,65 @@ object CardDeckPanel {
   }
 }
 
+object PlayerStatusPanel {
+  val bgColor: String = "-fx-background-color:#383838;"
+  val stdPath = "file:src/main/scala/resources/"
+
+  def newStatus(c: ControllerTrait): VBox = {
+    val player: Player = c.gameState.players._1(c.gameState.players._2)
+    val playerStateLabel = new Label(player.toString) {
+      style = "-fxf-font-size: 20pt"
+      textFill = player.c match {
+        case "grün" => Green;
+        case "white" => White;
+        case "gelb" => Yellow;
+        case "rot" => Red;
+        case _ => Black
+      }
+    }
+    val inHouse = Seq.fill(player.inHouse)(new Button("") {
+
+      val colorHouses: String = player.c match {
+        case "grün" => "-fx-background-color:#008000;";
+        case "white" => "-fx-background-color:#FFFFFF;"
+        case "gelb" => "-fx-background-color:#FFFF00;"
+        case "rot" => "-fx-background-color:#FF0000;"
+        case _ => "-fx-background-color:#000000;"
+      }
+      style = "-fx-padding:10;-fx-background-radius: 5em; " +
+        "-fx-min-width: 30px; " +
+        "-fx-min-height: 30px; " +
+        "-fx-max-width: 30px; " +
+        "-fx-max-height: 30px;" + colorHouses
+
+    })
+
+    val layedCard: Button = new Button("", new ImageView(stdPath + "layedcarddeck.png") {
+      fitHeight = 200
+      fitWidth = 125
+    }) {
+      style = "-fx-background-radius: 5em; " +
+        "-fx-min-width: 30px; " +
+        "-fx-min-height: 30px; " +
+        "-fx-max-width: 100px; " +
+        "-fx-max-height: 50px;" +
+        "-fx-padding:5;"
+    }
+
+    val gridHouse = new GridPane {
+      setPadding(Insets(10, 20, 20, 20))
+      inHouse.indices.foreach(i => add(inHouse(i), i, 0))
+      //      add(layedCard, 0, 10)
+    }
+
+    new VBox() {
+      padding = Insets(100, 20, 20, 20)
+      children.add(playerStateLabel)
+      children.add(gridHouse)
+    }
+  }
+}
+
 object BoardPanel {
   val stdPath = "file:src/main/scala/resources/"
   val bgColor: String = "-fx-background-color:#383838;"
@@ -179,7 +240,7 @@ object BoardPanel {
           println("pressed field = " + this.getId)
         }
       })
-
+      //
       center = new ScrollPane() {
         fitToWidth = true
         fitToHeight = true
@@ -187,16 +248,15 @@ object BoardPanel {
         content() = newBoardGrid(amount, fieldIconSeq)
       }
       right = CardDeckPanel.newCardDeck(controller)
-
+      left = PlayerStatusPanel.newStatus(controller)
     }
   }
 
   def newBoardGrid(amount: Int, fieldIconSeq: Seq[Button]): GridPane = {
 
     new GridPane {
-      var offset = 20
-      if (amount < 106) offset = (1920 - ((amount * 2 / 4) + 2) * 35) / 3 + 60
-      setPadding(Insets(75, offset, 75, offset))
+
+      setPadding(Insets(50, 30, 30, 30))
       setStyle(bgColor)
 
       //computes and displays Board on view, as an horizontal rectangle
