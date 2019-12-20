@@ -153,10 +153,29 @@ object CardDeckPanel {
 }
 
 object PlayerStatusPanel {
+  def newStatusPane(controller: ControllerTrait): BorderPane = new BorderPane() {
+    top = PlayerStatusPanel.newStatusDisplay(controller)
+    center = PlayerStatusPanel.newLaidCard(controller)
+  }
+
+  def newLaidCard(c: ControllerTrait): Button = {
+    new Button("", new ImageView(stdPath + "laidcarddeck.png") {
+      fitHeight = 200
+      fitWidth = 125
+    }) {
+      style = "-fx-background-radius: 5em; " +
+        "-fx-min-width: 30px; " +
+        "-fx-min-height: 30px; " +
+        "-fx-max-width: 100px; " +
+        "-fx-max-height: 50px;" +
+        "-fx-padding:5;"
+    }
+  }
+
   val bgColor: String = "-fx-background-color:#383838;"
   val stdPath = "file:src/main/scala/resources/"
 
-  def newStatus(c: ControllerTrait): VBox = {
+  def newStatusDisplay(c: ControllerTrait): VBox = {
     val player: Player = c.gameState.players._1(c.gameState.players._2)
     val playerStateLabel = new Label(player.toString) {
       style = "-fxf-font-size: 20pt"
@@ -185,22 +204,9 @@ object PlayerStatusPanel {
 
     })
 
-    val layedCard: Button = new Button("", new ImageView(stdPath + "layedcarddeck.png") {
-      fitHeight = 200
-      fitWidth = 125
-    }) {
-      style = "-fx-background-radius: 5em; " +
-        "-fx-min-width: 30px; " +
-        "-fx-min-height: 30px; " +
-        "-fx-max-width: 100px; " +
-        "-fx-max-height: 50px;" +
-        "-fx-padding:5;"
-    }
-
     val gridHouse = new GridPane {
       setPadding(Insets(10, 20, 20, 20))
       inHouse.indices.foreach(i => add(inHouse(i), i, 0))
-      //      add(layedCard, 0, 10)
     }
 
     new VBox() {
@@ -248,7 +254,7 @@ object BoardPanel {
         content() = newBoardGrid(amount, fieldIconSeq)
       }
       right = CardDeckPanel.newCardDeck(controller)
-      left = PlayerStatusPanel.newStatus(controller)
+      left = PlayerStatusPanel.newStatusPane(controller)
     }
   }
 
