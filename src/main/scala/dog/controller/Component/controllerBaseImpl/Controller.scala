@@ -26,13 +26,14 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   //Board
   override def createNewBoard(size: Int): BoardTrait = {
-    val board = new Board(size)
-    gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
+    val newBoard = new Board(size)
+    board = newBoard
+    gameState = gameStateMaster.UpdateGame().withBoard(newBoard).buildGame
     publish(new BoardChanged)
-    board
+    newBoard
   }
 
-  override def createNewBoard: Unit = {
+  override def createNewBoard: BoardTrait = {
     board.getBoardMap.size match {
       case 1 => board = injector.instance[BoardTrait](Names.named("nano"))
       case 9 => board = injector.instance[BoardTrait](Names.named("micro"))
@@ -41,7 +42,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       case _ =>
     }
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
-    println(gameState.board.toString)
+    publish(new BoardChanged)
+    board
   }
 
   def createRandomBoard(size: Int): BoardTrait = {
@@ -151,7 +153,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val oldCard = player(playerNum).getCard(cardNum)
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
     gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-    println(s"$oldCard with ${oldCard.getTask}")
+    //    println(s"$oldCard with ${oldCard.getTask}")
     oldCard
   }
 

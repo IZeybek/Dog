@@ -21,6 +21,8 @@ class DogModule extends AbstractModule with ScalaModule {
     bind[BoardTrait].annotatedWithName(name = "micro").toInstance(new Board(9))
     bind[BoardTrait].annotatedWithName(name = "small").toInstance(new Board(20))
     bind[BoardTrait].annotatedWithName(name = " normal").toInstance(new Board(64))
+
+    bind[FileIOTrait].to[fileIoJsonImpl.FileIO]
   }
 
 }
