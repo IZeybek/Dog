@@ -74,5 +74,5 @@ class Controller extends ControllerTrait {
 
   override def createNewBoard(size: Int): BoardTrait = new Board(size)
 
-  override def createNewBoard: Unit = new Board(20)
+  override def createNewBoard: BoardTrait = new Board(20)
 }

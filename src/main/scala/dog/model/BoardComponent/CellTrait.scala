@@ -1,11 +1,8 @@
 package dog.model.BoardComponent
 
-import dog.model.BoardComponent.boardBaseImpl.Cell
 import dog.model.Player
 
 trait BoardTrait {
-  def copy(boardMap: Map[Int, Cell]): BoardTrait
-
   def createNewBoard: BoardTrait
 
   def toString: String
@@ -16,11 +13,18 @@ trait BoardTrait {
 
   def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean
 
-  def getBoardMap: Map[Int, Cell]
+  def cell(idx: Int): CellTrait
+
+  def size: Int
+
+  def fill(cell: CellTrait, pos: Int): BoardTrait
+
+  def fill(boardMap: Map[Int, CellTrait]): BoardTrait
 }
 
 trait CellTrait {
-  this: CellTrait =>
+
+  def p: Option[Player]
 
   def removePlayerFromCell(): CellTrait
 
@@ -29,4 +33,6 @@ trait CellTrait {
   def getColor: String
 
   def toString: String
+
+  def isFilled: Boolean
 }

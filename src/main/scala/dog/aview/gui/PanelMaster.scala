@@ -30,7 +30,7 @@ trait PanelMaster {
       iconGrids = Seq.fill(amount)(new GridPane {
         setPadding(Insets(0, 5, 5, 55))
         val card: CardTrait = cardList(idx)
-        val task: Array[String] = card.getTask.split("\\s+")
+        val task: Array[String] = card.task.split("\\s+")
         val iconAmount: Int = task.length
 
         if (iconAmount == 2) setPadding(Insets(0, 5, 5, 24))

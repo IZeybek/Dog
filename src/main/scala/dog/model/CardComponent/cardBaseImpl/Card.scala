@@ -12,18 +12,12 @@ case class Card(symbol: String, task: String, color: String) extends CardTrait {
 
   override def toString: String = {
     "Card(" + s"${
-      getColor match {
+      color match {
         case "blue" => Console.BLUE;
         case "red" => Console.RED
       }
-    }$getSymbol${Console.RESET})"
+    }$symbol${Console.RESET})"
   }
-
-  override def getSymbol: String = symbol
-
-  override def getColor: String = color
-
-  override def getTask: String = task
 }
 
 
@@ -36,13 +30,13 @@ object CardLogic {
     val players: Vector[Player] = player
     var finalPlayer: Vector[Player] = Vector.empty[Player]
     val p: Player = player(selectedPlayerIndices.head)
-    val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.getBoardMap.size)
+    val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.size)
 
     //overriding player
     if (board.checkOverrideOtherPlayer(p, pieceNum.head, newPos)) {
 
       //get indexes and pieces
-      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.getBoardMap(newPos).getColor)
+      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
 
       //check whether move valid or not

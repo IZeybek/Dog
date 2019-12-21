@@ -2,7 +2,7 @@ package dog.aview.gui
 
 import dog.aview.gui.CardPanel.stdPath
 import dog.controller.ControllerTrait
-import dog.model.BoardComponent.boardBaseImpl.Cell
+import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
 import javafx.scene.layout.GridPane
@@ -18,8 +18,8 @@ object CardPanel extends PanelMaster {
   //generates new Cards and puts it into Seq
   def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardNum: Int): Seq[Button] = {
     var idx = 0
-    val task = card.getTask.split("\\s+") //GenImages.genIcon()
-    val symbol: Array[String] = card.getSymbol.split("\\s+")
+    val task = card.task.split("\\s+") //GenImages.genIcon()
+    val symbol: Array[String] = card.symbol.split("\\s+")
     val sbsize = symbol.length
     Seq.fill(amount)(new Button(
       if (symbol(0).equals("4")) (if (idx == 0) "-" else "+") + symbol(0)
@@ -50,7 +50,7 @@ object CardPanel extends PanelMaster {
   def newCards(gridSeq: Seq[GridPane], amount: Int, cardList: List[CardTrait]): Seq[Button] = {
 
     var idx = 0
-    Seq.fill(amount)(new Button("", GenImages.genCardImage(cardList(idx).getSymbol)) {
+    Seq.fill(amount)(new Button("", GenImages.genCardImage(cardList(idx).symbol)) {
       style = bgColor
       idx = idx + 1
     })
@@ -107,7 +107,7 @@ object PlayerStatusPanel {
   }
 
   def newLaidCard(c: ControllerTrait): Button = {
-    val lastCard = if (!c.gameStateMaster.getLastPlayedCard.getSymbol.equals("pseudo")) c.gameStateMaster.getLastPlayedCard.getSymbol else "laidcarddeck"
+    val lastCard = if (!c.gameStateMaster.getLastPlayedCard.symbol.equals("pseudo")) c.gameStateMaster.getLastPlayedCard.symbol else "laidcarddeck"
 
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = 200
@@ -178,13 +178,13 @@ object BoardPanel {
     new BorderPane() {
       style = bgColor
 
-      val amount: Int = controller.gameState.board.getBoardMap.size
-      val bm: Map[Int, Cell] = controller.gameState.board.getBoardMap
+      val board: BoardTrait = controller.gameState.board
+      val amount: Int = board.size
       //      println("----------------" + bm(0).getColor)
       var idx = 0
       val fieldIconSeq: Seq[Button] = Seq.fill(amount)(new Button("", new ImageView(
         stdPath +
-          (if (!bm(idx).getColor.equals(" ")) bm(idx).getColor
+          (if (!board.cell(idx).getColor.equals(" ")) board.cell(idx).getColor
           else "field") + ".png") {
         fitWidth = 35
         fitHeight = 35

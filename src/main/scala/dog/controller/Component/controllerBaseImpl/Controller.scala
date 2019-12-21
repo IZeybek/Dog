@@ -34,7 +34,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   override def createNewBoard: BoardTrait = {
-    board.getBoardMap.size match {
+    board.size match {
       case 1 => board = injector.instance[BoardTrait](Names.named("nano"))
       case 9 => board = injector.instance[BoardTrait](Names.named("micro"))
       case 20 => board = injector.instance[BoardTrait](Names.named("small"))
@@ -131,8 +131,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       gameState = gameStateMaster.UpdateGame().withLastPlayed(selectedCard).buildGame
 
       // will be changed later as well since other logic's aren't implemented yet
-      val taskMode = CardLogic.getLogic(selectedCard.getTask)
-      val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
+      val taskMode = CardLogic.getLogic(selectedCard.task)
+      val moveInInt = if (selectedCard.task.equals("move")) selectedCard.symbol.toInt else 0
       val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(taskMode, gameState.players._1, board, selectedPlayerList, pieceNum, moveInInt)
       if (updateGame._3 == 0) {
         this.board = updateGame._1

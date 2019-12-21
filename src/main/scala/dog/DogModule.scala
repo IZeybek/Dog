@@ -6,6 +6,7 @@ import dog.controller.Component.controllerBaseImpl.Controller
 import dog.controller.ControllerTrait
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardAdvancedImpl.Board
+import dog.model.FileIOComponent._
 import net.codingwell.scalaguice.ScalaModule
 
 
@@ -22,7 +23,7 @@ class DogModule extends AbstractModule with ScalaModule {
     bind[BoardTrait].annotatedWithName(name = "small").toInstance(new Board(20))
     bind[BoardTrait].annotatedWithName(name = " normal").toInstance(new Board(64))
 
-    bind[FileIOTrait].to[fileIoJsonImpl.FileIO]
+    bind[FileIOTrait].to[fileIOXmlImpl.FileIO]
   }
 
 }

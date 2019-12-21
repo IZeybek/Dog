@@ -4,6 +4,7 @@ import dog.controller.Component.controllerBaseImpl.Controller
 import dog.controller.ControllerTrait
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
+import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl._
 import dog.model.Player
 import org.scalatest.{Matchers, WordSpec}
@@ -11,18 +12,18 @@ import org.scalatest.{Matchers, WordSpec}
 class CardSpec extends WordSpec with Matchers {
   "A Card" when {
     "created" should {
-      val card = Card("2", "move", "blau")
+      val card: CardTrait = Card("2", "move", "blau")
       "have a CaseClass" in {
         card should not be null
       }
       "have a Symbol" in {
-        card.getSymbol should be("2")
+        card.symbol should be("2")
       }
       "have a Task" in {
-        card.getTask should be("move")
+        card.task should be("move")
       }
       "have a Color" in {
-        card.getColor should be("blau")
+        card.color should be("blau")
       }
     }
   }

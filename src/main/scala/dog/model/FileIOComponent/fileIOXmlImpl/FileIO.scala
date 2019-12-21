@@ -4,6 +4,7 @@ import java.io.{File, PrintWriter}
 
 import dog.controller.GameState
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
+import dog.model.CardComponent.CardTrait
 import dog.model.FileIOComponent.FileIOTrait
 import dog.model.{Piece, Player}
 
@@ -21,10 +22,8 @@ class FileIO extends FileIOTrait {
     pw.close()
   }
 
-  def gameStateToXml(gameState: GameState): _root_.scala.xml.Node = {
-    <gamestate>
-      {gameState.players._1.foreach(x => playerToXml(x))
-    gameState.board}
+  def gameStateToXml(gameState: GameState) = {
+    <gamestate actPlayer={gameState.players._2.toString} cardDeckPointer={gameState.cardDeck._2.toString}>
     </gamestate>
   }
 
@@ -39,14 +38,22 @@ class FileIO extends FileIOTrait {
     </piece>
   }
 
-  def gridToXml(board: BoardTrait) = {
-    <board size={board.getBoardMap.size.toString}>
-      {board.getBoardMap.foreach(x => cellToXml(x))}
+  def cardToXml(card: CardTrait) = {
+    <card>
+      {card}
+    </card>
+  }
+
+  def boardToXml(board: BoardTrait) = {
+    <board size={board.size.toString}>
+      {(0 until board.size).foreach(x => cellToXml(board.cell(x)))}
     </board>
   }
 
   def cellToXml(cell: CellTrait) = {
-    <cell>
+    <cell player={cell.p match {
+      case Some(p) => playerToXml(p).toString()
+    }}>
     </cell>
   }
 }
