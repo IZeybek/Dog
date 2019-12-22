@@ -12,10 +12,11 @@ class ControllerSpec extends WordSpec with Matchers {
 
   "A Controller" when {
     "initialized" should {
-      val board = new Board(20)
+      val board = new Board(30)
       val controller: Controller = new Controller(board)
       "create a board " in {
         controller.createNewBoard(16) should be(controller.getBoard)
+        controller.gameState.board should be(controller.getBoard)
       }
       "create a random Board" in {
         controller.createRandomBoard(10)
