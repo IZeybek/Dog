@@ -15,6 +15,7 @@ case class Card(symbol: String, task: String, color: String) extends CardTrait {
       color match {
         case "blue" => Console.BLUE;
         case "red" => Console.RED
+        case _ => ""
       }
     }$symbol${Console.RESET})"
   }

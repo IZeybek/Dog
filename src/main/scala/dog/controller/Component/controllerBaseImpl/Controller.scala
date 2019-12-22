@@ -48,6 +48,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   def createRandomBoard(size: Int): BoardTrait = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
+    this.board = board
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
     publish(new BoardChanged)
     board
@@ -99,7 +100,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     var returnString: String = ""
     if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).color}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
       publish(new BoardChanged)
     } else {
       undoCommand()
