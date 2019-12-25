@@ -45,11 +45,11 @@ object GenGui {
       root = new BorderPane() {
         style = "-fx-background-color:#3d3d3d"
         top = menuBar
-        val s = new PanelMaster {}
+        val paneMaster = new PanelMaster {}
         // has to be a number that can be devided by 4
         center = BoardPanel.newBoardPane(controller)
         //number of Cards can be set here
-        bottom = s.CardPaneBuilder(controller).withCards().withIcons().buildCardPane()
+        bottom = paneMaster.CardPaneBuilder(controller).withCards().withIcons().buildCardPane()
       }
     }
     val stage = new PrimaryStage {

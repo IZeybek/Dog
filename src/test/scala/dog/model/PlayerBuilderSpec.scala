@@ -1,5 +1,6 @@
 package dog.model
 
+import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 import org.scalatest.{Matchers, WordSpec}
 
@@ -29,7 +30,13 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
         val cardList: List[Card] = Card("0", "0", "0") :: Nil
         playerBuilder.withCards(cardList)
         Player.cardsDeck should be(cardList)
-
+      }
+      "set default attributes" in {
+        Player.reset()
+        Player.name should be("Bob")
+        Player.color should be("blau")
+        Player.pieceNumber should be(4)
+        Player.cardsDeck.isInstanceOf[List[CardTrait]] should be(true)
       }
     }
   }

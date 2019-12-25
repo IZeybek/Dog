@@ -9,6 +9,7 @@ import scala.util.{Failure, Success, Try}
 case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
 
   val consoleColor: String = {
+
     color match {
       case "grün" => Console.GREEN
       case "blau" => Console.BLUE
@@ -38,7 +39,9 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     })
   }
 
-  def getPosition(pieceNum: Int): Int = piece(pieceNum).position
+  def getPosition(pieceNum: Int): Int = {
+    piece(pieceNum).position
+  }
 
   def swapPiece(pieceNum: Int, newPos: Int): Player = {
     copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(position = newPos)), inHouse = {
@@ -53,7 +56,7 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
   }
 
   def this(name: String, c: String, pieceQuantity: Int, cards: List[CardTrait]) = {
-    this(name, color = c, (0 to pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = 4, 0, cards)
+    this(name, color = c, (0 until pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = pieceQuantity, 0, cards)
   }
 
   def removeCard(card: CardTrait): Player = {
@@ -101,6 +104,13 @@ object Player {
   var color: String = "blau"
   var name: String = "Bob"
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
+
+  def reset(): Unit = {
+    pieceNumber = 4
+    color = "blau"
+    name = "Bob"
+    cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
+  }
 
   case class PlayerBuilder() {
 

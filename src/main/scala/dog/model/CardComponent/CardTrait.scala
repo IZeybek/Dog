@@ -1,15 +1,9 @@
 package dog.model.CardComponent
 
-import dog.model.CardComponent.cardBaseImpl.Card
-
 trait CardTrait {
-  this: Card =>
+  def symbol: String
 
-  def getTask: String
+  def task: String
 
-  def toString: String
-
-  def getSymbol: String
-
-  def getColor: String
+  def color: String
 }

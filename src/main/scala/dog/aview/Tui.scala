@@ -37,15 +37,15 @@ class Tui(controller: ControllerTrait) extends Reactor {
         } else {
           result = "no players created"
         }
-      case "p" :: "card" :: Nil =>
-        print(controller.toStringCardDeck)
-        result = "printed cards"
       case "undo" :: Nil =>
         controller.undoCommand()
         result = "undone"
       case "redo" :: Nil =>
         controller.redoCommand()
         result = "redone"
+      case "p" :: "card" :: Nil =>
+        print(controller.toStringCardDeck)
+        result = "printed cards"
       case "p" :: "board" :: Nil =>
         print(controller.toStringBoard)
         result = "printed board"

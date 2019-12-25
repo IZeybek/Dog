@@ -26,14 +26,15 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   //Board
   override def createNewBoard(size: Int): BoardTrait = {
-    val board = new Board(size)
-    gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
+    val newBoard = new Board(size)
+    board = newBoard
+    gameState = gameStateMaster.UpdateGame().withBoard(newBoard).buildGame
     publish(new BoardChanged)
-    board
+    newBoard
   }
 
-  override def createNewBoard: Unit = {
-    board.getBoardMap.size match {
+  override def createNewBoard: BoardTrait = {
+    board.size match {
       case 1 => board = injector.instance[BoardTrait](Names.named("nano"))
       case 9 => board = injector.instance[BoardTrait](Names.named("micro"))
       case 20 => board = injector.instance[BoardTrait](Names.named("small"))
@@ -41,11 +42,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       case _ =>
     }
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
-    println(gameState.board.toString)
+    publish(new BoardChanged)
+    board
   }
 
   def createRandomBoard(size: Int): BoardTrait = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
+    this.board = board
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
     publish(new BoardChanged)
     board
@@ -97,7 +100,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     var returnString: String = ""
     if (useCardLogic(selectedPlayerList, pieceNum, cardNum) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).color}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
       publish(new BoardChanged)
     } else {
       undoCommand()
@@ -129,8 +132,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       gameState = gameStateMaster.UpdateGame().withLastPlayed(selectedCard).buildGame
 
       // will be changed later as well since other logic's aren't implemented yet
-      val taskMode = CardLogic.getLogic(selectedCard.getTask)
-      val moveInInt = if (selectedCard.getTask == "move") selectedCard.getSymbol.toInt else 0
+      val taskMode = CardLogic.getLogic(selectedCard.task)
+      val moveInInt = if (selectedCard.task.equals("move")) selectedCard.symbol.toInt else 0
       val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(taskMode, gameState.players._1, board, selectedPlayerList, pieceNum, moveInInt)
       if (updateGame._3 == 0) {
         this.board = updateGame._1
@@ -151,7 +154,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val oldCard = player(playerNum).getCard(cardNum)
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(player(playerNum).getCard(cardNum)))
     gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-    println(s"$oldCard with ${oldCard.getTask}")
+    //    println(s"$oldCard with ${oldCard.getTask}")
     oldCard
   }
 

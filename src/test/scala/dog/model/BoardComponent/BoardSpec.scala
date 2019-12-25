@@ -10,16 +10,23 @@ class BoardSpec extends WordSpec with Matchers {
       var board: BoardTrait = new Board(20)
       "have a Map" when {
         "created" in {
-          (0 until board.getBoardMap.size).foreach(i => board.getBoardMap(i).idx should be(i))
+          (0 until board.size).foreach(i => board.cell(i) should not be null)
         }
       }
       "return map " in {
-        (0 until board.getBoardMap.size).foreach(i => board.getBoardMap(i).idx should be(i))
+        (0 until board.size).foreach(i => board.cell(i) should not be null)
       }
       "check if player has to be overridden" in {
-        board = board.copy(board.getBoardMap.updated(6, Cell(6, Some(Player("P1", "grün", Map(1 -> Piece(6)), 3, 0, Nil)))))
-        board.checkOverrideOtherPlayer(Player("P1", "grün", Map(0 -> Piece(0), 1 -> Piece(6)), 3, 0, Nil), 0, 6) should be(true)
-        board.checkOverrideOtherPlayer(Player("P1", "grün", Map(0 -> Piece(0), 1 -> Piece(6)), 3, 0, Nil), 0, 3) should be(false)
+        val player = Player("P1", "grün", Map(0 -> Piece(6)), 3, 0, Nil)
+        board = board.fill(Cell(Some(player)), 6)
+        board.checkOverrideOtherPlayer(player, 0, 6) should be(true)
+        board.checkOverrideOtherPlayer(player, 0, 3) should be(false)
+      }
+      "fill a board with a Map" in {
+        val player = Player.PlayerBuilder().build()
+        board = board.fill(Map(8 -> Cell(Some(player)), 3 -> Cell(None)))
+        board.cell(8).isFilled should be(true)
+        board.cell(3).isFilled should be(false)
       }
     }
   }

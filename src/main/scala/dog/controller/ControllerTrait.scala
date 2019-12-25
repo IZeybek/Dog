@@ -77,5 +77,5 @@ trait ControllerTrait extends Publisher {
   //Board
   def createNewBoard(size: Int): BoardTrait
 
-  def createNewBoard: Unit
+  def createNewBoard: BoardTrait
 }
