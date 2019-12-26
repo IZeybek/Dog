@@ -16,7 +16,7 @@ import scalafx.scene.paint.Color._
 object CardPanel extends PanelMaster {
 
   //generates new Cards and puts it into Seq
-  def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardNum: Int): Seq[Button] = {
+  def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardNum: (Int, Int)): Seq[Button] = {
     var idx = 0
     val task = card.task.split("\\s+") //GenImages.genIcon()
     val symbol: Array[String] = card.symbol.split("\\s+")

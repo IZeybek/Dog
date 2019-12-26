@@ -25,7 +25,7 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     box
   }
 
-  override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
+  override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait = {
     val oldPos: Integer = player.getPosition(pieceNum)
 
     //set old Cell unoccupied
@@ -35,17 +35,18 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     copy(boardMap = nBoard)
   }
 
-  override def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
+  override def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): BoardTrait = {
 
     val p: Player = player(playerNums.head)
     val swapPlayer: Player = player(playerNums(1))
 
     //set cell to swapPlayer
-    var nBoard: Map[Int, CellTrait] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).addPlayerToCell(swapPlayer))
-
+    //    var nBoard: Map[Int, CellTrait] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).addPlayerToCell(swapPlayer))
+    var nBoard: BoardTrait = fill(cell(p.getPosition(pieceNums.head)).addPlayerToCell(swapPlayer), p.getPosition(pieceNums.head))
     //set cell to player
-    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).addPlayerToCell(p))
-    copy(boardMap = nBoard)
+    nBoard = nBoard.fill(cell(swapPlayer.getPosition(pieceNums.head)).addPlayerToCell(p), swapPlayer.getPosition(pieceNums(1)))
+    //    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).addPlayerToCell(p))
+    nBoard
   }
 
   override def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = {

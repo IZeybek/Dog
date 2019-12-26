@@ -3,6 +3,7 @@ package dog.model.BoardComponent
 import dog.model.Player
 
 trait BoardTrait {
+
   def createNewBoard: BoardTrait
 
   def toString: String

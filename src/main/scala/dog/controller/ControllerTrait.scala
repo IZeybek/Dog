@@ -39,32 +39,9 @@ trait ControllerTrait extends Publisher {
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   def createPlayers(playerNames: List[String]): GameState
 
-  /**
-   * Manages the round
-   *
-   * @param otherPlayer is not -1 when e.g. swapping -> user has to know when to insert more or less commands
-   * @param pieceNum    is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param cardNum     is the index of the card in a CardList of the player that is played
-   * @return a String that is returned to the TUI for more information
-   */
-  def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String
-
-  /**
-   * uses the card and extracts its logic
-   *
-   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
-   *                           managed by manageRound but can also be set manually for testing purposes
-   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param cardNum            is the index of the card in a CardList of the player that is played
-   * @return
-   */
-  def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], cardNum: Int): Int
-
   def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int)
 
   def toStringCardDeck: String
-
-  def getSelectedCard(playerNum: Int, cardNum: Integer): CardTrait
 
   def drawCardFromDeck: CardTrait
 
@@ -80,4 +57,27 @@ trait ControllerTrait extends Publisher {
   def createNewBoard: BoardTrait
 
   def toStringActivePlayerHand: String
+
+  /**
+   * uses the card and extracts its logic
+   *
+   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
+   *                           managed by manageRound but can also be set manually for testing purposes
+   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   * @param selectedCard       is the index of the card in a CardList of the player that is played
+   * @return
+   */
+  def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], selectedCard: CardTrait): Int
+
+  def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait
+
+  /**
+   * Manages the round
+   *
+   * @param otherPlayer is not -1 when e.g. swapping -> user has to know when to insert more or less commands
+   * @param pieceNum    is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   * @param cardNum     is the index of the card in a CardList of the player that is played
+   * @return a String that is returned to the TUI for more information
+   */
+  def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int)): String
 }

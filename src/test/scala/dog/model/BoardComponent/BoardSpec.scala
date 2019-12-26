@@ -28,6 +28,9 @@ class BoardSpec extends WordSpec with Matchers {
         board.cell(8).isFilled should be(true)
         board.cell(3).isFilled should be(false)
       }
+      "swap two player" in {
+        board.updateSwapPlayers(Vector(Player.PlayerBuilder())
+      }
     }
   }
 }
