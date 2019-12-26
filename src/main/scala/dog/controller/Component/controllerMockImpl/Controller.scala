@@ -24,14 +24,14 @@ class Controller extends ControllerTrait {
    *
    * @return the board and houses in a String
    */
-  override def toStringBoard: String = "This is a Board"
+  override def toStringBoard: String = ""
 
   /**
    * prints the houses of each player
    *
    * @return the houses in a String
    */
-  override def toStringHouse: String = "This is a House"
+  override def toStringHouse: String = ""
 
   override def getBoard: BoardTrait = new Board(20)
 
@@ -45,7 +45,7 @@ class Controller extends ControllerTrait {
    * @param cardNum     is the index of the card in a CardList of the player that is played
    * @return a String that is returned to the TUI for more information
    */
-  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String = "This is a new Round"
+  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String = ""
 
   /**
    * uses the card and extracts its logic
@@ -60,7 +60,7 @@ class Controller extends ControllerTrait {
 
   override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector(Card("5", "move", "blau")), 0)
 
-  override def toStringCardDeck: String = "Das ist das Kartendeck"
+  override def toStringCardDeck: String = ""
 
   override def getSelectedCard(playerNum: Int, cardNum: Integer): CardTrait = Card("5", "move", "blau")
 
@@ -68,11 +68,13 @@ class Controller extends ControllerTrait {
 
   override def drawFewCards(amount: Int): List[CardTrait] = Card("5", "move", "blau") :: Nil
 
-  override def toStringPlayerHands: String = "Das sind die Handkarten"
+  override def toStringPlayerHands: String = ""
 
   override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = gameState.players._1(0)
 
   override def createNewBoard(size: Int): BoardTrait = new Board(size)
 
   override def createNewBoard: BoardTrait = new Board(20)
+
+  override def toStringActivePlayerHand: String = ""
 }

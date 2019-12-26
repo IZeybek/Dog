@@ -78,4 +78,6 @@ trait ControllerTrait extends Publisher {
   def createNewBoard(size: Int): BoardTrait
 
   def createNewBoard: BoardTrait
+
+  def toStringActivePlayerHand: String
 }

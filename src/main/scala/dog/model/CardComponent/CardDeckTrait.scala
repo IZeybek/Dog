@@ -4,6 +4,6 @@ trait CardDeckTrait {
 
   def generateDeck: List[CardTrait]
 
-  def getCardDeck: List[CardTrait]
+  def cardDeck: List[CardTrait]
 
 }

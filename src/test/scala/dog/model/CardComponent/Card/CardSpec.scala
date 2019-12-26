@@ -44,7 +44,7 @@ class CardLogicSpec extends WordSpec with Matchers {
         cardLogic.getLogic("move") should be(cardLogic.move)
       }
       "have a Strategy" in {
-        cardLogic.setStrategy(mode, player, board, List(2), List(2), 2) should not be null
+        cardLogic.setStrategy(mode, controller.gameState, List(2), List(2), 2) should not be null
       }
       "have a move" in {
         cardLogic.move should not be null
@@ -81,7 +81,7 @@ class SpecialCardsDeckSpec extends WordSpec with Matchers {
     "generated" should {
       val specialCard = SpecialCardsDeck()
       "have a SpecialCardsDeck " in {
-        specialCard.getCardDeck should be(List(Card("1 11 play", "move move play", "red"),
+        specialCard.cardDeck should be(List(Card("1 11 play", "move move play", "red"),
           Card("4", "backward forward", "red"),
           Card("7", "burn", "red"),
           Card("swapCard", "swap", "red"),
@@ -97,7 +97,7 @@ class NormalCardsDeckSpec extends WordSpec with Matchers {
     "generated" should {
       val normalCard = NormalCardsDeck()
       "have a SpecialCardsDeck " in {
-        normalCard.getCardDeck should be(List(Card("2", "move", "blue"),
+        normalCard.cardDeck should be(List(Card("2", "move", "blue"),
           Card("3", "move", "blue"),
           Card("5", "move", "blue"),
           Card("6", "move", "blue"),

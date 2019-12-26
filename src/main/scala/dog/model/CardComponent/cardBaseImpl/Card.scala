@@ -1,5 +1,6 @@
 package dog.model.CardComponent.cardBaseImpl
 
+import dog.controller.GameState
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.{CardDeckTrait, CardTrait}
 import dog.model.Player
@@ -24,13 +25,14 @@ case class Card(symbol: String, task: String, color: String) extends CardTrait {
 
 object CardLogic {
 
-  val move: (Vector[Player], BoardTrait, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = (player: Vector[Player], board: BoardTrait, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
+  val move: (GameState, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, selectedPlayerIndices: List[Int], pieceNum: List[Int], moveBy: Int) => {
 
     var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val players: Vector[Player] = player
+    val players: Vector[Player] = gameState.players._1
     var finalPlayer: Vector[Player] = Vector.empty[Player]
-    val p: Player = player(selectedPlayerIndices.head)
+    val p: Player = players(selectedPlayerIndices.head)
+    var board: BoardTrait = gameState.board
     val newPos: Int = Math.floorMod(moveBy + p.getPosition(pieceNum.head), board.size)
 
     //overriding player
@@ -56,30 +58,32 @@ object CardLogic {
   }
 
 
-  val swap: (Vector[Player], BoardTrait, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = (player: Vector[Player], board: BoardTrait, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
+  val swap: (GameState, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
     var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
-    val p: Player = player(selectedPlayerIndices.head)
-    val swapPlayer: Player = player(selectedPlayerIndices(1))
+    val p: Player = gameState.players._1(selectedPlayerIndices.head)
+    val swapPlayer: Player = gameState.players._1(selectedPlayerIndices(1))
     val swapPos: (Int, Int) = (p.getPosition(pieceNums.head), swapPlayer.getPosition(pieceNums(1)))
 
     if (swapPos._2 == 0) isValid = -1 //Second Player is not on the field
 
-    val playerOneSwapped: Vector[Player] = player.updated(selectedPlayerIndices.head, p.swapPiece(pieceNums.head, swapPos._2)) //swap with second player
+    val playerOneSwapped: Vector[Player] = gameState.players._1.updated(selectedPlayerIndices.head, p.swapPiece(pieceNums.head, swapPos._2)) //swap with second player
     val playerTwoSwapped: Vector[Player] = playerOneSwapped.updated(selectedPlayerIndices(1), swapPlayer.swapPiece(pieceNums(1), swapPos._1)) //swap with first player
 
-    val nBoard: BoardTrait = board.updateSwapPlayers(playerTwoSwapped, selectedPlayerIndices, pieceNums)
+    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(playerTwoSwapped, selectedPlayerIndices, pieceNums)
 
     (nBoard, playerTwoSwapped, isValid)
   }
 
+  //  val four: (Vector[Player], BoardTrait, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = (player: Vector[Player], board: BoardTrait, selectedPlayerIndices: List[Int], pieceNums: List[Int], moveBy: Int) => {
 
-  def setStrategy(callback: (Vector[Player], BoardTrait, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int), player: Vector[Player], board: BoardTrait, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (BoardTrait, Vector[Player], Int) = {
-    callback(player, board, playerNum, pieceNums, moveBy)
+
+  def setStrategy(callback: (GameState, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int), gameState: GameState, playerNum: List[Int], pieceNums: List[Int], moveBy: Int): (BoardTrait, Vector[Player], Int) = {
+    callback(gameState, playerNum, pieceNums, moveBy)
   }
 
-  def getLogic(mode: String): (Vector[Player], BoardTrait, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = {
+  def getLogic(mode: String): (GameState, List[Int], List[Int], Int) => (BoardTrait, Vector[Player], Int) = {
     mode match {
       case "move" => move
       case "swap" => swap
@@ -117,7 +121,7 @@ object GenCardDeck {
 }
 
 object CardDeck {
-  var cardDeck: Vector[CardTrait] = GenCardDeck.apply("special").getCardDeck.toVector
+  var cardDeck: Vector[CardTrait] = GenCardDeck.apply("special").cardDeck.toVector
   var lengthOfCardDeck: Int = cardDeck.length
   var amount: List[Int] = List(2, 2)
 
@@ -139,8 +143,8 @@ object CardDeck {
       val list = new ListBuffer[CardTrait]()
       amount.indices.foreach(f = i => for (_ <- 0 until amount(i)) {
         i match {
-          case 0 => list.++=(GenCardDeck.apply("special").getCardDeck)
-          case 1 => list.++=(GenCardDeck.apply("normal").getCardDeck)
+          case 0 => list.++=(GenCardDeck.apply("special").cardDeck)
+          case 1 => list.++=(GenCardDeck.apply("normal").cardDeck)
         }
       })
       cardDeck = list.toVector
@@ -169,7 +173,7 @@ object CardDeck {
 
 case class SpecialCardsDeck() extends CardDeckTrait {
 
-  val specialCards: List[CardTrait] = generateDeck
+  override val cardDeck: List[CardTrait] = generateDeck
 
   override def generateDeck: List[CardTrait] = {
     List(Card("1 11 play", "move move play", "red"),
@@ -180,13 +184,12 @@ case class SpecialCardsDeck() extends CardDeckTrait {
       Card("13 play", "move play", "red"))
   }
 
-  override def getCardDeck: List[CardTrait] = specialCards
 }
 
 
 case class NormalCardsDeck() extends CardDeckTrait {
 
-  val normalCards: List[CardTrait] = generateDeck
+  override val cardDeck: List[CardTrait] = generateDeck
 
   override def generateDeck: List[CardTrait] = {
     List(Card("2", "move", "blue"),
@@ -198,6 +201,4 @@ case class NormalCardsDeck() extends CardDeckTrait {
       Card("10", "move", "blue"),
       Card("12", "move", "blue"))
   }
-
-  override def getCardDeck: List[CardTrait] = normalCards
 }

@@ -15,7 +15,7 @@ object Dog {
 
   def main(args: Array[String]): Unit = {
     tui.showMenu()
-    gui.main(Array(""))
+//    gui.main(Array(""))
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")

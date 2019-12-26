@@ -12,7 +12,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
   reactions += {
     case event: BoardChanged =>
       println(controller.toStringBoard)
-      println(controller.toStringPlayerHands)
+      println(controller.toStringActivePlayerHand)
   }
 
   def showMenu(): Unit = {
