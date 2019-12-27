@@ -109,6 +109,9 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.gameState.players._1(2).getPosition(2) should be(9)
 
         //check position on board
+        controller.gameState.board.cell(9).p.get.name should be("Player3")
+        controller.gameState.board.cell(0).p.get.name should be("Player4")
+
         controller.board.cell(9).p.get.name should be("Player3")
         controller.board.cell(0).p.get.name should be("Player4")
       }

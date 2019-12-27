@@ -55,8 +55,8 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     copy(cardList = myCards)
   }
 
-  def this(name: String, c: String, pieceQuantity: Int, cards: List[CardTrait]) = {
-    this(name, color = c, (0 until pieceQuantity).map(i => (i, Piece(0))).toMap, inHouse = pieceQuantity, 0, cards)
+  def this(name: String, c: String, pieces: Map[Int, Piece], cards: List[CardTrait]) = {
+    this(name, color = c, piece = pieces, inHouse = pieces.size, 0, cards)
   }
 
   def removeCard(card: CardTrait): Player = {
@@ -104,18 +104,27 @@ object Player {
   var color: String = "blau"
   var name: String = "Bob"
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
+  var pieces: Map[Int, Piece] = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
 
   def reset(): Unit = {
     pieceNumber = 4
     color = "blau"
     name = "Bob"
     cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
+    pieces = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
   }
 
   case class PlayerBuilder() {
 
     def withPieceNumber(pieceNum: Int): PlayerBuilder = {
       pieceNumber = pieceNum
+      pieces = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
+      this
+    }
+
+    def withPieces(setPieces: Map[Int, Piece]): PlayerBuilder = {
+      pieces = setPieces
+      pieceNumber = pieces.size
       this
     }
 
@@ -140,7 +149,9 @@ object Player {
     }
 
     def build(): Player = {
-      new Player(name, color, pieceNumber, cardsDeck)
+      val player: Player = new Player(name, color, pieces, cardsDeck)
+      reset()
+      player
     }
   }
 

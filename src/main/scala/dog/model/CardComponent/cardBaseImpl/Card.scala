@@ -83,6 +83,7 @@ object CardLogic {
     if (swapPos._2 == 0) isValid = -1 //Second Player is not on the field
 
     var players: Vector[Player] = gameState.players._1.updated(selectedPlayerIndices.head, p.swapPiece(pieceNums.head, swapPos._2)) //swap with second player
+
     players = players.updated(selectedPlayerIndices(1), swapPlayer.swapPiece(pieceNums(1), swapPos._1)) //swap with first player
 
     val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players, selectedPlayerIndices, pieceNums)
