@@ -46,7 +46,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createNewBoard(20)
         val cardList: List[CardTrait] = Card("3", "move", "blue") :: Card("5", "move", "blue") :: Nil
         controller.testDistributeCardsToPlayer(playerNum = 0, cardList).cardList should be(cardList)
-        controller.manageRound(0, List(0), 0) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).name}${Console.RESET}'s turn\n")
+        controller.manageRound(0, List(0), (0, 0)) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).name}${Console.RESET}'s turn\n")
       }
       "move a player by 5" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
@@ -54,10 +54,10 @@ class ControllerSpec extends WordSpec with Matchers {
         val cardList: List[CardTrait] = Card("3", "move", "blue") :: Card("5", "move", "blue") :: Nil
         controller.testDistributeCardsToPlayer(playerNum = 3, cardList).cardList should be(cardList)
 
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), cardNum = 0) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), selectedCard = cardList.head) should be(0)
         controller.gameState.players._1(3).piece(0).position should be(3)
 
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(1), cardNum = 0) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(1), selectedCard = cardList(1)) should be(0)
         controller.gameState.players._1(3).piece(1).position should be(5)
 
       }
@@ -65,9 +65,9 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
         controller.createNewBoard(20)
         val cardList: List[CardTrait] = Card("0", "move", "blue") :: Nil
-        controller.testDistributeCardsToPlayer(playerNum = 3, cardList).getCard(0) should be(cardList(0))
+        controller.testDistributeCardsToPlayer(playerNum = 3, cardList).getCard(0) should be(cardList.head)
 
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), cardNum = 0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), selectedCard = cardList.head) should be(0)
         controller.gameState.players._1(3).piece(0).position should be(0)
       }
       "override a player" in {
@@ -77,8 +77,8 @@ class ControllerSpec extends WordSpec with Matchers {
         var p: Player = controller.gameState.players._1(3)
         controller.testDistributeCardsToPlayer(playerNum = 3, cardList)
 
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), cardNum = 0) should be(0)
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(1), cardNum = 0) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), selectedCard = cardList.head) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(1), selectedCard = cardList(1)) should be(0)
         p = controller.gameState.players._1(3)
 
         p.getPosition(0) should be(5)
@@ -96,17 +96,24 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.testDistributeCardsToPlayer(playerNum = 3, cardListP3).cardList should be(cardListP3)
 
         //use CardLogic
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), cardNum = 0) should be(0)
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(1), cardNum = 0) should be(0)
-        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(2), cardNum = 0) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(0), selectedCard = cardListP3.head) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(1), selectedCard = cardListP3(1)) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(3), pieceNum = List(2), selectedCard = cardListP3(2)) should be(0)
 
         controller.gameState.players._1(3).getPosition(2) should be(9)
 
-        controller.useCardLogic(selectedPlayerList = List(2, 3), pieceNum = List(2, 2), cardNum = 0) should be(0)
+        controller.useCardLogic(selectedPlayerList = List(2, 3), pieceNum = List(2, 2), selectedCard = cardListP2.head) should be(0)
 
         //check position
         controller.gameState.players._1(3).getPosition(2) should be(0)
         controller.gameState.players._1(2).getPosition(2) should be(9)
+
+        //check position on board
+        controller.gameState.board.cell(9).p.get.name should be("Player3")
+        controller.gameState.board.cell(0).p.get.name should be("Player4")
+
+        controller.board.cell(9).p.get.name should be("Player3")
+        controller.board.cell(0).p.get.name should be("Player4")
       }
       "swap two players when no player is on the field" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
@@ -117,7 +124,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.testDistributeCardsToPlayer(playerNum = 1, cardListP1).cardList should be(cardListP1)
 
         //use CardLogic
-        controller.useCardLogic(selectedPlayerList = List(1, 2), pieceNum = List(2, 3), cardNum = 0) should be(-1)
+        controller.useCardLogic(selectedPlayerList = List(1, 2), pieceNum = List(2, 3), cardListP1.head) should be(-1)
 
         //check if player stays the same
         controller.gameState.players._1(1).getPosition(2) should be(0)
@@ -129,7 +136,7 @@ class ControllerSpec extends WordSpec with Matchers {
         val handCards: List[CardTrait] = controller.gameState.players._1(0).cardList
         controller.gameState.players._1(0).cardList should not be empty
 
-        controller.getSelectedCard(0, 0) should be(handCards.head)
+        controller.getSelectedCard(0, cardNum = (0, 0)) should be(handCards.head)
 
         controller.gameState.players._1(0).cardList should be(empty)
       }

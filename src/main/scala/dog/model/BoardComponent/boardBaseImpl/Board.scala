@@ -25,7 +25,7 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     box
   }
 
-  override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): Board = {
+  override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait = {
     val oldPos: Integer = player.getPosition(pieceNum)
 
     //set old Cell unoccupied
@@ -35,31 +35,19 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     copy(boardMap = nBoard)
   }
 
-  override def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): Board = {
-
+  override def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): BoardTrait = {
     val p: Player = player(playerNums.head)
     val swapPlayer: Player = player(playerNums(1))
-
-    //set cell to swapPlayer
-    var nBoard: Map[Int, CellTrait] = boardMap.updated(p.getPosition(pieceNums.head), boardMap(p.getPosition(pieceNums.head)).addPlayerToCell(swapPlayer))
-
-    //set cell to player
-    nBoard = nBoard.updated(swapPlayer.getPosition(pieceNums(1)), boardMap(swapPlayer.getPosition(pieceNums(1))).addPlayerToCell(p))
-    copy(boardMap = nBoard)
+    var nBoard: BoardTrait = fill(cell(p.getPosition(pieceNums.head)).addPlayerToCell(p), p.getPosition(pieceNums.head))
+    nBoard = nBoard.fill(nBoard.cell(swapPlayer.getPosition(pieceNums(1))).addPlayerToCell(swapPlayer), swapPlayer.getPosition(pieceNums(1)))
+    nBoard
   }
 
-  override def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = {
-    boardMap(newPos).isFilled
-  }
+  override def fill(cell: CellTrait, pos: Int): BoardTrait = copy(boardMap = boardMap.updated(pos, cell))
 
   override def createNewBoard: BoardTrait = (new BoardCreateStrategyNormal).createNewBoard(boardMap.size)
 
-  override def fill(cell: CellTrait, pos: Int): BoardTrait = {
-    copy(boardMap = boardMap.updated(pos, cell))
-  }
+  override def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = boardMap(newPos).isFilled
 
-  override def fill(boardMap: Map[Int, CellTrait]): BoardTrait = {
-    copy(boardMap)
-  }
+  override def fill(boardMap: Map[Int, CellTrait]): BoardTrait = copy(boardMap)
 }
-

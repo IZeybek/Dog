@@ -24,18 +24,49 @@ class Controller extends ControllerTrait {
    *
    * @return the board and houses in a String
    */
-  override def toStringBoard: String = "This is a Board"
+  override def toStringBoard: String = ""
 
   /**
    * prints the houses of each player
    *
    * @return the houses in a String
    */
-  override def toStringHouse: String = "This is a House"
+  override def toStringHouse: String = ""
 
   override def getBoard: BoardTrait = new Board(20)
 
   override def createPlayers(playerNames: List[String]): GameState = gameState
+
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector(Card("5", "move", "blau")), 0)
+
+  override def toStringCardDeck: String = ""
+
+  override def drawCardFromDeck: CardTrait = Card("5", "move", "blau")
+
+  override def drawFewCards(amount: Int): List[CardTrait] = Card("5", "move", "blau") :: Nil
+
+  override def toStringPlayerHands: String = ""
+
+  override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = gameState.players._1(0)
+
+  override def createNewBoard(size: Int): BoardTrait = new Board(size)
+
+  override def createNewBoard: BoardTrait = new Board(20)
+
+  override def toStringActivePlayerHand: String = ""
+
+  /**
+   * uses the card and extracts its logic
+   *
+   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
+   *                           managed by manageRound but can also be set manually for testing purposes
+   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   * @param selectedCard       is the index of the card in a CardList of the player that is played
+   * @return
+   */
+  override def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], selectedCard: CardTrait): Int = 0
+
+  override def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait = Card.RandomCardsBuilder().buildRandomCardList.head
 
   /**
    * Manages the round
@@ -45,34 +76,5 @@ class Controller extends ControllerTrait {
    * @param cardNum     is the index of the card in a CardList of the player that is played
    * @return a String that is returned to the TUI for more information
    */
-  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: Int): String = "This is a new Round"
-
-  /**
-   * uses the card and extracts its logic
-   *
-   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
-   *                           managed by manageRound but can also be set manually for testing purposes
-   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param cardNum            is the index of the card in a CardList of the player that is played
-   * @return
-   */
-  override def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], cardNum: Int): Int = 0
-
-  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector(Card("5", "move", "blau")), 0)
-
-  override def toStringCardDeck: String = "Das ist das Kartendeck"
-
-  override def getSelectedCard(playerNum: Int, cardNum: Integer): CardTrait = Card("5", "move", "blau")
-
-  override def drawCardFromDeck: CardTrait = Card("5", "move", "blau")
-
-  override def drawFewCards(amount: Int): List[CardTrait] = Card("5", "move", "blau") :: Nil
-
-  override def toStringPlayerHands: String = "Das sind die Handkarten"
-
-  override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = gameState.players._1(0)
-
-  override def createNewBoard(size: Int): BoardTrait = new Board(size)
-
-  override def createNewBoard: BoardTrait = new Board(20)
+  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int)): String = ""
 }

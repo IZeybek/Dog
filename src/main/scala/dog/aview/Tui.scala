@@ -12,7 +12,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
   reactions += {
     case event: BoardChanged =>
       println(controller.toStringBoard)
-      println(controller.toStringPlayerHands)
+      println(controller.toStringActivePlayerHand)
   }
 
   def showMenu(): Unit = {
@@ -58,11 +58,19 @@ class Tui(controller: ControllerTrait) extends Reactor {
         result = "printed game"
       case _ =>
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
+          //for having full control
+          case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
+            result = controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), (cardNum, cardOption))
+          //for swapping
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-            controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), cardNum)
-          case cardNum :: pieceNums =>
-            result = controller.manageRound(-1, pieceNums, cardNum)
-          case _ => println("try again!")
+            result = controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), (cardNum, 0))
+          //for cards having multiple options
+          case cardNum :: cardOption :: pieceNum :: Nil =>
+            result = controller.manageRound(-1, pieceNum = List(pieceNum, -1), (cardNum, cardOption))
+          //for easy moving
+          case cardNum :: pieceNum :: Nil =>
+            result = controller.manageRound(-1, pieceNum = List(pieceNum, -1), (cardNum, 0))
+          case _ => result = ""
         }
 
     }

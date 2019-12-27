@@ -15,14 +15,14 @@ case class Cell(p: Option[Player]) extends CellTrait {
   override def removePlayerFromCell(): Cell = {
     this.p match {
       case Some(_) => copy(p = None)
-      case None => this
+      case None => copy(p = None)
     }
   }
 
-  override def addPlayerToCell(p: Player): Cell = {
+  override def addPlayerToCell(newPlayer: Player): Cell = {
     this.p match {
-      case Some(_) => copy(p = Some(p))
-      case None => copy(p = Some(p))
+      case Some(_) => copy(p = Some(newPlayer))
+      case None => copy(p = Some(newPlayer))
     }
   }
 

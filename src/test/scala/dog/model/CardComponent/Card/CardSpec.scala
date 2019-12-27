@@ -2,11 +2,9 @@ package dog.model.CardComponent.Card
 
 import dog.controller.Component.controllerBaseImpl.Controller
 import dog.controller.ControllerTrait
-import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl._
-import dog.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {
@@ -32,9 +30,7 @@ class CardSpec extends WordSpec with Matchers {
 class CardLogicSpec extends WordSpec with Matchers {
   "A CardLogic" when {
     "created" should {
-      val board: BoardTrait = new Board(20)
-      val controller: ControllerTrait = new Controller(board)
-      val player: Vector[Player] = controller.gameState.players._1
+      val controller: ControllerTrait = new Controller(new Board(20))
       val cardLogic = CardLogic
       val mode = cardLogic.getLogic("move")
       "have a mode" in {
@@ -44,7 +40,7 @@ class CardLogicSpec extends WordSpec with Matchers {
         cardLogic.getLogic("move") should be(cardLogic.move)
       }
       "have a Strategy" in {
-        cardLogic.setStrategy(mode, player, board, List(2), List(2), 2) should not be null
+        cardLogic.setStrategy(mode, controller.gameState, List(2), List(2), "5" :: "move" :: Nil) should not be null
       }
       "have a move" in {
         cardLogic.move should not be null
@@ -81,7 +77,7 @@ class SpecialCardsDeckSpec extends WordSpec with Matchers {
     "generated" should {
       val specialCard = SpecialCardsDeck()
       "have a SpecialCardsDeck " in {
-        specialCard.getCardDeck should be(List(Card("1 11 play", "move move play", "red"),
+        specialCard.cardDeck should be(List(Card("1 11 play", "move move play", "red"),
           Card("4", "backward forward", "red"),
           Card("7", "burn", "red"),
           Card("swapCard", "swap", "red"),
@@ -97,7 +93,7 @@ class NormalCardsDeckSpec extends WordSpec with Matchers {
     "generated" should {
       val normalCard = NormalCardsDeck()
       "have a SpecialCardsDeck " in {
-        normalCard.getCardDeck should be(List(Card("2", "move", "blue"),
+        normalCard.cardDeck should be(List(Card("2", "move", "blue"),
           Card("3", "move", "blue"),
           Card("5", "move", "blue"),
           Card("6", "move", "blue"),
