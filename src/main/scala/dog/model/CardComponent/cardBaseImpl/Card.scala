@@ -100,14 +100,17 @@ object CardLogic {
   }
 
 
-  def setStrategy(callback: (GameState, List[Int], List[Int], List[String]) => (BoardTrait, Vector[Player], Int), gameState: GameState, playerNum: List[Int], pieceNums: List[Int], card: List[String]): (BoardTrait, Vector[Player], Int) = {
-    callback(gameState, playerNum, pieceNums, card)
-  }
+
+    def setStrategy(callback: (GameState, List[Int], List[Int], List[String]) => (BoardTrait, Vector[Player], Int), gameState: GameState, playerNum: List[Int], pieceNums: List[Int], card: List[String]): (BoardTrait, Vector[Player], Int) = {
+      callback(gameState, playerNum, pieceNums, card)
+    }
 
   def getLogic(mode: String): (GameState, List[Int], List[Int], List[String]) => (BoardTrait, Vector[Player], Int) = {
     mode match {
       case "move" => move
       case "swap" => swap
+      case "backward" => four
+      case "forward" => four
       //      case "start" => Nil
       //      case "forwardBackward" => Nil
       case _ => move
