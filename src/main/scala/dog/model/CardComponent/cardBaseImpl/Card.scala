@@ -91,11 +91,12 @@ object CardLogic {
   }
 
   val four: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
+
     val cardOption = inputCard.selectedCard.task.split("\\s+")
-    println(inputCard.cardNum._2)
+
     cardOption(inputCard.cardNum._2) match {
-      case "forward" => println("FOOOOOOOOOOOOOORWARDED"); move(gameState, InputCardObject.UpdateCardInput().withMoveBy(4).buildCardInput())
-      case "backward" => println("BACKKKKKKKKKKKKKKKWARRDED"); move(gameState, InputCardObject.UpdateCardInput().withMoveBy(-4).buildCardInput())
+      case "forward" => move(gameState, InputCardObject.UpdateCardInput().withMoveBy(4).buildCardInput())
+      case "backward" => move(gameState, InputCardObject.UpdateCardInput().withMoveBy(-4).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
     }
   }
