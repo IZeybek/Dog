@@ -1,7 +1,7 @@
 package dog.model.CardComponent.Card
 
 import dog.controller.Component.controllerBaseImpl.Controller
-import dog.controller.ControllerTrait
+import dog.controller.{ControllerTrait, InputCardMaster}
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl._
@@ -40,7 +40,15 @@ class CardLogicSpec extends WordSpec with Matchers {
         cardLogic.getLogic("move") should be(cardLogic.move)
       }
       "have a Strategy" in {
-//        cardLogic.setStrategy(mode, controller.gameState, List(2), List(2), "5" :: "move" :: Nil) should not be null
+        val inputCard = InputCardMaster.UpdateCardInput()
+          .withOtherPlayer(0)
+          .withPieceNum(List(2))
+          .withCardNum((0, 0))
+          .withSelectedPlayerList(List(2))
+          .withSelectedCard(Card("5", "move", "blue"))
+          .buildCardInput()
+
+        cardLogic.setStrategy(mode, controller.gameState, inputCard) should not be null
       }
       "have a move" in {
         cardLogic.move should not be null

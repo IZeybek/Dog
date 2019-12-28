@@ -1,6 +1,6 @@
 package dog.aview
 
-import dog.controller.{BoardChanged, ControllerTrait, InputCardObject}
+import dog.controller.{BoardChanged, ControllerTrait, InputCardMaster}
 
 import scala.swing.Reactor
 
@@ -62,7 +62,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
           case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
             val selectedPlayerList: List[Int] = controller.gameState.players._2 :: otherPlayer :: Nil
 
-            result = controller.manageRound(InputCardObject.UpdateCardInput()
+            result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withOtherPlayer(otherPlayer)
               .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, cardOption))
@@ -75,7 +75,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
             val selectedPlayerList: List[Int] = controller.gameState.players._2 :: otherPlayer :: Nil
 
-            result = controller.manageRound(InputCardObject.UpdateCardInput()
+            result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withOtherPlayer(otherPlayer)
               .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, 0))
@@ -88,7 +88,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
           case cardNum :: cardOption :: pieceNum :: Nil =>
             val selectedPlayerList: List[Int] = controller.gameState.players._2 :: -1 :: Nil
 
-            result = controller.manageRound(InputCardObject.UpdateCardInput()
+            result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withOtherPlayer(-1)
               .withPieceNum(List(pieceNum, -1))
               .withCardNum((cardNum, cardOption))
@@ -101,7 +101,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
           case cardNum :: pieceNum :: Nil =>
             val selectedPlayerList: List[Int] = controller.gameState.players._2 :: -1 :: Nil
 
-            result = controller.manageRound(InputCardObject.UpdateCardInput()
+            result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withOtherPlayer(-1)
               .withPieceNum(List(pieceNum, -1))
               .withCardNum((cardNum, 0))

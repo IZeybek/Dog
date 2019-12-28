@@ -7,7 +7,7 @@ case class InputCard(otherPlayer: Int, selPieceList: List[Int], cardNum: (Int, I
 
 //--------------------------------------------------------------------------------------
 
-object InputCardObject {
+object InputCardMaster {
 
   var otherPlayer: Int = -1
   var selPieceList: List[Int] = List(0)
@@ -40,7 +40,7 @@ object InputCardObject {
 
     def withSelectedCard(selectedC: CardTrait): UpdateCardInput = {
       selCard = selectedC
-      moveBy = if (selCard.symbol.length <= 2) selCard.symbol.toInt else 0
+      moveBy = if (selCard.task.equals("move")) selCard.symbol.toInt else 0
       this
     }
 

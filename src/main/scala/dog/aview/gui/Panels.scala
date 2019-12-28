@@ -1,7 +1,7 @@
 package dog.aview.gui
 
 import dog.aview.gui.CardPanel.stdPath
-import dog.controller.{ControllerTrait, InputCardObject}
+import dog.controller.{ControllerTrait, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
@@ -41,7 +41,7 @@ object CardPanel extends PanelMaster {
       //PlayButton ActionListener
       onAction = _ => {
         println("-----------------------------------------    ID : " + getId.toInt)
-        controller.manageRound(InputCardObject.UpdateCardInput()
+        controller.manageRound(InputCardMaster.UpdateCardInput()
           .withOtherPlayer(-1)
           .withPieceNum(List(0, -1))
           .withCardNum((cardAndOption._1, getId.toInt))

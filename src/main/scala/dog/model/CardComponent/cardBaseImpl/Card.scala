@@ -1,6 +1,6 @@
 package dog.model.CardComponent.cardBaseImpl
 
-import dog.controller.{GameState, InputCard, InputCardObject}
+import dog.controller.{GameState, InputCard, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.{CardDeckTrait, CardTrait}
 import dog.model.Player
@@ -95,8 +95,8 @@ object CardLogic {
     val cardOption = inputCard.selectedCard.task.split("\\s+")
 
     cardOption(inputCard.cardNum._2) match {
-      case "forward" => move(gameState, InputCardObject.UpdateCardInput().withMoveBy(4).buildCardInput())
-      case "backward" => move(gameState, InputCardObject.UpdateCardInput().withMoveBy(-4).buildCardInput())
+      case "forward" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(4).buildCardInput())
+      case "backward" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(-4).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
     }
   }
