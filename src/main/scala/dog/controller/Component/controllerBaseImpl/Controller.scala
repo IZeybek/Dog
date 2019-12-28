@@ -73,7 +73,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def useCardLogic(inputCard: InputCard): Int = {
 
     if (inputCard.selPlayerList != Nil && gameState.players._1(inputCard.selPlayerList.head).cardList.nonEmpty) {
-
+      println("--------------------------> " + inputCard.selectedCard.task)
       val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard)
       if (updateGame._3 == 0) {
         doStep()
@@ -102,7 +102,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     doStep()
     gameState = gameStateMaster.UpdateGame().withLastPlayed(oldCard).buildGame
     gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-    oldCard.parse(cardAndOption._2)
+    oldCard
   }
 
   //Board

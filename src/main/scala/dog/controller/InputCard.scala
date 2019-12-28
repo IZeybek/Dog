@@ -3,18 +3,18 @@ package dog.controller
 import dog.model.CardComponent.CardTrait
 
 
-case class InputCard(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int), selPlayerList: List[Int], selectedCard: CardTrait)
+case class InputCard(otherPlayer: Int, selPieceList: List[Int], cardNum: (Int, Int), selPlayerList: List[Int], selectedCard: CardTrait, moveBy: Int)
 
 //--------------------------------------------------------------------------------------
 
 object InputCardObject {
 
   var otherPlayer: Int = -1
-  var pieceNum: List[Int] = List(0)
+  var selPieceList: List[Int] = List(0)
   var cardNum: (Int, Int) = (0, 0)
-  var selectedPlayerList: List[Int] = List(0)
-  var selectedCard: CardTrait = _
-  var cardAttributes: List[String] = List("")
+  var selPlayerList: List[Int] = List(0)
+  var moveBy: Int = 0
+  var selCard: CardTrait = _
 
   case class UpdateCardInput() {
 
@@ -24,35 +24,33 @@ object InputCardObject {
     }
 
     def withPieceNum(pieceN: List[Int]): UpdateCardInput = {
-      pieceNum = pieceN
+      selPieceList = pieceN
       this
     }
 
     def withCardNum(cardN: (Int, Int)): UpdateCardInput = {
-      cardNum = cardNum
+      cardNum = cardN
       this
     }
 
     def withSelectedPlayerList(selectedPList: List[Int]): UpdateCardInput = {
-      selectedPlayerList = selectedPList
+      selPlayerList = selectedPList
       this
     }
 
     def withSelectedCard(selectedC: CardTrait): UpdateCardInput = {
-      selectedCard = selectedC
+      selCard = selectedC
+      moveBy = if (selCard.symbol.length <= 2) selCard.symbol.toInt else 0
       this
     }
 
-    def withCardAttributes(cAttributes: List[String]): UpdateCardInput = {
-      cardAttributes = cAttributes
+    def withMoveBy(move: Int): UpdateCardInput = {
+      moveBy = move
       this
     }
 
     def buildCardInput(): InputCard = {
-      InputCard(otherPlayer, pieceNum, cardNum, selectedPlayerList, selectedCard)
+      InputCard(otherPlayer, selPieceList, cardNum, selPlayerList, selCard, moveBy)
     }
   }
-
 }
-
-

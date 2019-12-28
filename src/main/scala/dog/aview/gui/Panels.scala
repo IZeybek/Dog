@@ -16,17 +16,17 @@ import scalafx.scene.paint.Color._
 object CardPanel extends PanelMaster {
 
   //generates new Cards and puts it into Seq
-  def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardAndOption: (Int, Int)): Seq[Button] = {
+  def newIcons(controller: ControllerTrait, iconAmount: Int, card: CardTrait, cardAndOption: (Int, Int)): Seq[Button] = {
     var idx = 0
     val task = card.task.split("\\s+") //GenImages.genIcon()
     val symbol: Array[String] = card.symbol.split("\\s+")
     val sbsize = symbol.length
-    Seq.fill(amount)(new Button(
+    Seq.fill(iconAmount)(new Button(
       if (symbol(0).equals("4")) (if (idx == 0) "-" else "+") + symbol(0)
       else if (sbsize > 1 && idx != sbsize - 1) "+" + symbol(idx)
       else "",
       GenImages.genIconImage(task(idx))) {
-
+      id = idx.toString
       //style for circle Button
       print(task(idx) + ", ")
       idx = idx + 1
@@ -40,7 +40,14 @@ object CardPanel extends PanelMaster {
 
       //PlayButton ActionListener
       onAction = _ => {
-        controller.manageRound(InputCardObject.UpdateCardInput().withPieceNum(List(0, -1)).withCardNum((cardAndOption._1, cardAndOption._2)).buildCardInput())
+        println("-----------------------------------------    ID : " + getId.toInt)
+        controller.manageRound(InputCardObject.UpdateCardInput()
+          .withOtherPlayer(-1)
+          .withPieceNum(List(0, -1))
+          .withCardNum((cardAndOption._1, getId.toInt))
+          .withSelectedPlayerList(List(controller.gameState.players._2))
+          .withSelectedCard(controller.getSelectedCard(controller.gameState.players._2, (cardAndOption._1, getId.toInt)))
+          .buildCardInput())
       }
 
     })

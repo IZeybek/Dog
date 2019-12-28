@@ -68,6 +68,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
               .withCardNum((cardNum, cardOption))
               .withSelectedPlayerList(selectedPlayerList)
               .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, cardOption)))
+              .withMoveBy(0)
               .buildCardInput())
 
           //for swapping
@@ -80,6 +81,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
               .withCardNum((cardNum, 0))
               .withSelectedPlayerList(selectedPlayerList)
               .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, 0)))
+              .withMoveBy(0)
               .buildCardInput())
 
           //for cards having multiple options
@@ -92,6 +94,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
               .withCardNum((cardNum, cardOption))
               .withSelectedPlayerList(selectedPlayerList)
               .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, cardOption)))
+              .withMoveBy(0)
               .buildCardInput())
 
           //for easy moving

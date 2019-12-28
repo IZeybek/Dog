@@ -35,8 +35,8 @@ trait PanelMaster {
 
         if (iconAmount == 2) setPadding(Insets(0, 5, 5, 24))
         else if (iconAmount == 3) setPadding(Insets(0, 5, 5, 43))
-
-        val icon: Seq[Button] = newIcons(controller, iconAmount, card, (idx, 0))
+        val cardOptionAmount: Int = card.task.split("\\s+").length
+        val icon: Seq[Button] = newIcons(controller, iconAmount, card, (idx, cardOptionAmount))
         if (iconAmount == 3) icon.indices.foreach(i => add(icon(i), 0, i))
         else icon.indices.foreach(i => add(icon(i), i, 0))
         idx = idx + 1

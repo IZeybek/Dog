@@ -48,10 +48,10 @@ object CardLogic {
     var finalPlayer: Vector[Player] = Vector.empty[Player]
     val p: Player = players(inputC.selPlayerList.head)
     val board: BoardTrait = gameState.board
-    val newPos: Int = Math.floorMod(inputC.selectedCard.parseToList.head.toInt + p.getPosition(inputC.pieceNum.head), board.size)
+    val newPos: Int = Math.floorMod(inputC.moveBy + p.getPosition(inputC.selPieceList.head), board.size)
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, inputC.pieceNum.head, newPos)) {
+    if (board.checkOverrideOtherPlayer(p, inputC.selPieceList.head, newPos)) {
       //get indexes and pieces
       val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
@@ -61,14 +61,14 @@ object CardLogic {
 
       //update Vector when overridden
       val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      finalPlayer = overriddenPlayers.updated(inputC.selPlayerList.head, players(inputC.selPlayerList.head).setPosition(inputC.pieceNum.head, newPos))
-    } else {
+      finalPlayer = overriddenPlayers.updated(inputC.selPlayerList.head, players(inputC.selPlayerList.head).setPosition(inputC.selPieceList.head, newPos))
 
+    } else {
       //update Vector when not overridden
-      finalPlayer = players.updated(inputC.selPlayerList.head, players(inputC.selPlayerList.head).setPosition(inputC.pieceNum.head, newPos))
+      finalPlayer = players.updated(inputC.selPlayerList.head, players(inputC.selPlayerList.head).setPosition(inputC.selPieceList.head, newPos))
     }
 
-    (board.updateMovePlayer(p, inputC.pieceNum.head, newPos), finalPlayer, isValid)
+    (board.updateMovePlayer(p, inputC.selPieceList.head, newPos), finalPlayer, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
@@ -77,25 +77,25 @@ object CardLogic {
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = gameState.players._1(inputCard.selPlayerList.head)
     val swapPlayer: Player = gameState.players._1(inputCard.selPlayerList(1))
-    val swapPos: (Int, Int) = (p.getPosition(inputCard.pieceNum.head), swapPlayer.getPosition(inputCard.pieceNum(1)))
+    val swapPos: (Int, Int) = (p.getPosition(inputCard.selPieceList.head), swapPlayer.getPosition(inputCard.selPieceList(1)))
 
     if (swapPos._2 == 0) isValid = -1 //Second Player is not on the field
 
-    var players: Vector[Player] = gameState.players._1.updated(inputCard.selPlayerList.head, p.swapPiece(inputCard.pieceNum.head, swapPos._2)) //swap with second player
+    var players: Vector[Player] = gameState.players._1.updated(inputCard.selPlayerList.head, p.swapPiece(inputCard.selPieceList.head, swapPos._2)) //swap with second player
 
-    players = players.updated(inputCard.selPlayerList(1), swapPlayer.swapPiece(inputCard.pieceNum(1), swapPos._1)) //swap with first player
+    players = players.updated(inputCard.selPlayerList(1), swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
 
-    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players, inputCard.selPlayerList, inputCard.pieceNum)
+    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players, inputCard.selPlayerList, inputCard.selPieceList)
 
     (nBoard, players, isValid)
   }
 
   val four: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
-    val cardAttribute = inputCard.selectedCard.parseToList.head
     val cardOption = inputCard.selectedCard.task.split("\\s+")
+    println(inputCard.cardNum._2)
     cardOption(inputCard.cardNum._2) match {
-      case "forward" => move(gameState, InputCardObject.UpdateCardInput().withCardAttributes("move" :: cardAttribute.toString :: Nil).buildCardInput())
-      case "backward" => move(gameState, InputCardObject.UpdateCardInput().withCardAttributes("move" :: "-" + cardAttribute :: Nil).buildCardInput())
+      case "forward" => println("FOOOOOOOOOOOOOORWARDED"); move(gameState, InputCardObject.UpdateCardInput().withMoveBy(4).buildCardInput())
+      case "backward" => println("BACKKKKKKKKKKKKKKKWARRDED"); move(gameState, InputCardObject.UpdateCardInput().withMoveBy(-4).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
     }
   }
@@ -108,9 +108,8 @@ object CardLogic {
     mode match {
       case "move" => move
       case "swap" => swap
-      //      case "backward" => four
-      //      case "forward" => four
-      //      case "start" => Nil
+      case "backward forward" => four
+      //            case "start" => Nil
       case _ => move
     }
   }
