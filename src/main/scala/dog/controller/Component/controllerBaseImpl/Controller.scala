@@ -72,8 +72,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def useCardLogic(inputCard: InputCard): Int = {
 
-    if (inputCard.selectedPlayerList != Nil && gameState.players._1(inputCard.selectedPlayerList.head).cardList.nonEmpty) {
-      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard.selectedPlayerList, inputCard.pieceNum, inputCard.selectedCard.parseToList)
+    if (inputCard.selPlayerList != Nil && gameState.players._1(inputCard.selPlayerList.head).cardList.nonEmpty) {
+
+      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard)
       if (updateGame._3 == 0) {
         doStep()
         this.board = updateGame._1
