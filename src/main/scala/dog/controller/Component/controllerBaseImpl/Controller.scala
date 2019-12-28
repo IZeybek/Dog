@@ -45,10 +45,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
 
-    val selectedPlayerList: List[Int] = gameState.players._2 :: inputCard.otherPlayer :: Nil
+
     var returnString: String = ""
 
-    if (useCardLogic(selectedPlayerList, inputCard.pieceNum, getSelectedCard(selectedPlayerList.head, inputCard.cardNum)) == 0) {
+    if (useCardLogic(inputCard) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
       returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
       publish(new BoardChanged)
@@ -63,15 +63,17 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   /**
    * uses the card and extracts its logic
    *
-   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
-   *                           managed by manageRound but can also be set manually for testing purposes
-   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param selectedCard       is the index of the card in a CardList of the player that is played
+   * @param inputCard is a build with all the information needed for its cardLogic
+   *                  @ param selectedPlayerList is the list of Players -> first one is the actual player =>
+   *                  managed by manageRound but can also be set manually for testing purposes
+   *                  @ param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
    * @return
    */
-  override def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], selectedCard: CardTrait): Int = {
-    if (selectedPlayerList != Nil && gameState.players._1(selectedPlayerList.head).cardList.nonEmpty) {
-      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(selectedCard.task), gameState, selectedPlayerList, pieceNum, selectedCard.parseToList)
+  override def useCardLogic(inputCard: InputCard): Int = {
+
+    if (inputCard.selectedPlayerList != Nil && gameState.players._1(inputCard.selectedPlayerList.head).cardList.nonEmpty) {
+      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard.selectedPlayerList, inputCard.pieceNum, inputCard.selectedCard.parseToList)
       if (updateGame._3 == 0) {
         doStep()
         this.board = updateGame._1

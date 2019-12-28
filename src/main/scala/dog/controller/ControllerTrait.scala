@@ -61,13 +61,14 @@ trait ControllerTrait extends Publisher {
   /**
    * uses the card and extracts its logic
    *
-   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
-   *                           managed by manageRound but can also be set manually for testing purposes
-   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param selectedCard       is the index of the card in a CardList of the player that is played
+   * @param inputCard is a build with all the information needed for its cardLogic
+   *                  @ param selectedPlayerList is the list of Players -> first one is the actual player =>
+   *                  managed by manageRound but can also be set manually for testing purposes
+   *                  @ param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
    * @return
    */
-  def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], selectedCard: CardTrait): Int
+  def useCardLogic(inputCard: InputCard): Int
 
   def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait
 
@@ -84,4 +85,6 @@ trait ControllerTrait extends Publisher {
    * @return a String that is returned to the TUI for more information
    */
   def manageRound(inputCard: InputCard): String
+
+
 }

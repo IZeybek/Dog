@@ -1,7 +1,9 @@
 package dog.controller
 
+import dog.model.CardComponent.CardTrait
 
-case class InputCard(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int))
+
+case class InputCard(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int), selectedPlayerList: List[Int], selectedCard: CardTrait)
 
 //--------------------------------------------------------------------------------------
 
@@ -10,7 +12,8 @@ object InputCardObject {
   var otherPlayer: Int = -1
   var pieceNum: List[Int] = List(0)
   var cardNum: (Int, Int) = (0, 0)
-
+  var selectedPlayerList: List[Int] = List(0)
+  var selectedCard: CardTrait = _
 
   case class UpdateCardInput() {
 
@@ -29,8 +32,18 @@ object InputCardObject {
       this
     }
 
+    def withSelectedPlayerList(selectedPList: List[Int]): UpdateCardInput = {
+      selectedPlayerList = selectedPList
+      this
+    }
+
+    def withSelectedCard(selectedC: CardTrait): UpdateCardInput = {
+      selectedCard = selectedC
+      this
+    }
+
     def buildCardInput(): InputCard = {
-      InputCard(otherPlayer, pieceNum, cardNum)
+      InputCard(otherPlayer, pieceNum, cardNum, selectedPlayerList, selectedCard)
     }
   }
 
