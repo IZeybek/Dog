@@ -1,7 +1,7 @@
 package dog.aview.gui
 
 import dog.aview.gui.CardPanel.stdPath
-import dog.controller.ControllerTrait
+import dog.controller.{ControllerTrait, InputCardObject}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
@@ -16,7 +16,7 @@ import scalafx.scene.paint.Color._
 object CardPanel extends PanelMaster {
 
   //generates new Cards and puts it into Seq
-  def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardNum: (Int, Int)): Seq[Button] = {
+  def newIcons(controller: ControllerTrait, amount: Int, card: CardTrait, cardAndOption: (Int, Int)): Seq[Button] = {
     var idx = 0
     val task = card.task.split("\\s+") //GenImages.genIcon()
     val symbol: Array[String] = card.symbol.split("\\s+")
@@ -36,11 +36,11 @@ object CardPanel extends PanelMaster {
         "-fx-max-width: 100px; " +
         "-fx-max-height: 50px;" +
         "-fx-padding:5;"
-      style <== when(armed) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
+      style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
 
       //PlayButton ActionListener
       onAction = _ => {
-        controller.manageRound(0, List(0, 0), cardNum)
+        controller.manageRound(InputCardObject.UpdateCardInput().withPieceNum(List(0, -1)).withCardNum((cardAndOption._1, cardAndOption._2)).buildCardInput())
       }
 
     })

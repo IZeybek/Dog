@@ -19,9 +19,87 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
+  override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
+
+  override def undoCommand(): Unit = {
+    undoManager.undoStep()
+    publish(new BoardChanged)
+  }
+
   override def redoCommand(): Unit = {
     undoManager.redoStep()
     publish(new BoardChanged)
+  }
+
+  /**
+   * Manages the round
+   *
+   * @param inputCard     is a CardInput builder in order to parse information out of it
+   *                      @ otherPlayer   is not -1 when e.g. swapping -> user has to know when to insert more or less commands
+   *                      @ pieceNum      is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   *                      @ cardNum       is a tuple
+   *                    1. is the card number
+   *                    2. is which options of the card have to be selected
+   *                      e.g. "4" "forward backward" => using parse
+   * @return a String that is returned to the TUI for more information
+   */
+  override def manageRound(inputCard: InputCard): String = {
+
+    val selectedPlayerList: List[Int] = gameState.players._2 :: inputCard.otherPlayer :: Nil
+    var returnString: String = ""
+
+    if (useCardLogic(selectedPlayerList, inputCard.pieceNum, getSelectedCard(selectedPlayerList.head, inputCard.cardNum)) == 0) {
+      gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+      publish(new BoardChanged)
+    } else {
+      undoCommand()
+      undoCommand()
+      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+    }
+    returnString
+  }
+
+  /**
+   * uses the card and extracts its logic
+   *
+   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
+   *                           managed by manageRound but can also be set manually for testing purposes
+   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   * @param selectedCard       is the index of the card in a CardList of the player that is played
+   * @return
+   */
+  override def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], selectedCard: CardTrait): Int = {
+    if (selectedPlayerList != Nil && gameState.players._1(selectedPlayerList.head).cardList.nonEmpty) {
+      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(selectedCard.task), gameState, selectedPlayerList, pieceNum, selectedCard.parseToList)
+      if (updateGame._3 == 0) {
+        doStep()
+        this.board = updateGame._1
+        gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(board).buildGame
+      }
+      return updateGame._3
+    }
+    -1
+  }
+
+  /**
+   * gets the selected card from the player
+   *
+   * @param playerNum     is the player
+   * @param cardAndOption is a tuple
+   *                1. is the card number
+   *                2. is which options of the card have to be selected
+   *                  e.g. "4" "forward backward" => using parse
+   * @return the new card
+   */
+  override def getSelectedCard(playerNum: Int, cardAndOption: (Int, Int)): CardTrait = {
+    val player: Vector[Player] = gameState.players._1
+    val oldCard = player(playerNum).getCard(cardAndOption._1)
+    val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(oldCard))
+    doStep()
+    gameState = gameStateMaster.UpdateGame().withLastPlayed(oldCard).buildGame
+    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
+    oldCard.parse(cardAndOption._2)
   }
 
   //Board
@@ -54,6 +132,52 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     board
   }
 
+  //Player
+  //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
+  override def createPlayers(playerNames: List[String]): GameState = {
+    val colors = gameStateMaster.colors
+    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
+    gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
+    gameState
+  }
+
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder().withAmount(List(2, 2)).withShuffle.buildCardVectorWithLength
+
+  override def getBoard: BoardTrait = gameState.board
+
+  //Cards
+  override def drawFewCards(amount: Int): List[CardTrait] = Card.RandomCardsBuilder().withAmount(amount).buildRandomCardList
+
+  override def drawCardFromDeck: CardTrait = {
+    var cardDeck: (Vector[CardTrait], Int) = gameState.cardDeck
+    if (cardDeck._2 != 0)
+      cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
+    doStep()
+    gameState = gameStateMaster.UpdateGame().withCardDeck(cardDeck._1).withCardPointer(cardDeck._2).buildGame
+    cardDeck._1(cardDeck._2)
+  }
+
+  //AREA 51-------------------------------------------------------------------------------------------------------
+
+  override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = {
+    val player: Vector[Player] = gameState.players._1
+    val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).setHandCards(cards))
+    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
+    newPlayer(playerNum)
+  }
+
+  override def toStringActivePlayerHand: String = {
+    val player: Player = gameState.players._1(gameState.players._2)
+    s"${player.consoleColor}${player.name}${Console.RESET}'s hand cards: " + player.cardList + "\n"
+  }
+
+  override def toStringPlayerHands: String = {
+    val player: Vector[Player] = gameState.players._1
+    var playerHands: String = ""
+    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
+    playerHands
+  }
+
   /**
    * prints the board and houses
    *
@@ -76,128 +200,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
-  override def getBoard: BoardTrait = gameState.board
-
-  //Player
-  //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
-  override def createPlayers(playerNames: List[String]): GameState = {
-    val colors = gameStateMaster.colors
-    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
-    gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
-    gameState
-  }
-
-  /**
-   * Manages the round
-   *
-   * @param otherPlayer   is not -1 when e.g. swapping -> user has to know when to insert more or less commands
-   * @param pieceNum      is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param cardNum       is a tuple
-   *                    1. is the card number
-   *                    2. is which options of the card have to be selected
-   *                      e.g. "4" "forward backward" => using parse
-   * @return a String that is returned to the TUI for more information
-   */
-  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int)): String = {
-    val selectedPlayerList: List[Int] = gameState.players._2 :: otherPlayer :: Nil
-    var returnString: String = ""
-    if (useCardLogic(selectedPlayerList, pieceNum, getSelectedCard(selectedPlayerList.head, cardNum)) == 0) {
-      gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
-      publish(new BoardChanged)
-    } else {
-      undoCommand()
-      undoCommand()
-      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
-    }
-    returnString
-  }
-
-  override def undoCommand(): Unit = {
-    undoManager.undoStep()
-    publish(new BoardChanged)
-  }
-
-  /**
-   * uses the card and extracts its logic
-   *
-   * @param selectedPlayerList is the list of Players -> first one is the actual player =>
-   *                           managed by manageRound but can also be set manually for testing purposes
-   * @param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param selectedCard       is the index of the card in a CardList of the player that is played
-   * @return
-   */
-  override def useCardLogic(selectedPlayerList: List[Int], pieceNum: List[Int], selectedCard: CardTrait): Int = {
-    if (selectedPlayerList != Nil && gameState.players._1(selectedPlayerList.head).cardList.nonEmpty) {
-      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(selectedCard.task), gameState, selectedPlayerList, pieceNum, selectedCard.parseToList)
-      if (updateGame._3 == 0) {
-        doStep()
-        this.board = updateGame._1
-        gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(board).buildGame
-      }
-      return updateGame._3
-    }
-    -1
-  }
-
-  override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
-
-  //Cards
-
-  /**
-   * gets the selected card from the player
-   *
-   * @param playerNum is the player
-   * @param cardNum   is a tuple
-   *                1. is the card number
-   *                2. is which options of the card have to be selected
-   *                  e.g. "4" "forward backward" => using parse
-   * @return the new card
-   */
-  override def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait = {
-    val player: Vector[Player] = gameState.players._1
-    val oldCard = player(playerNum).getCard(cardNum._1)
-    val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(oldCard))
-    doStep()
-    gameState = gameStateMaster.UpdateGame().withLastPlayed(oldCard).buildGame
-    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-    oldCard.parse(cardNum._2)
-  }
-
-  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder().withAmount(List(2, 2)).withShuffle.buildCardVectorWithLength
-
   override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
 
-  override def drawFewCards(amount: Int): List[CardTrait] = Card.RandomCardsBuilder().withAmount(amount).buildRandomCardList
 
-  override def drawCardFromDeck: CardTrait = {
-    var cardDeck: (Vector[CardTrait], Int) = gameState.cardDeck
-    if (cardDeck._2 != 0)
-      cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
-    doStep()
-    gameState = gameStateMaster.UpdateGame().withCardDeck(cardDeck._1).withCardPointer(cardDeck._2).buildGame
-    cardDeck._1(cardDeck._2)
-  }
-
-  override def toStringActivePlayerHand: String = {
-    val player: Player = gameState.players._1(gameState.players._2)
-    s"${player.consoleColor}${player.name}${Console.RESET}'s hand cards: " + player.cardList + "\n"
-  }
-
-  override def toStringPlayerHands: String = {
-    val player: Vector[Player] = gameState.players._1
-    var playerHands: String = ""
-    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
-    playerHands
-  }
-
-
-  //AREA 51-------------------------------------------------------------------------------------------------------
-
-  override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = {
-    val player: Vector[Player] = gameState.players._1
-    val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).setHandCards(cards))
-    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
-    newPlayer(playerNum)
-  }
 }

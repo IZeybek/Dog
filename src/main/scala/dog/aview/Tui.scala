@@ -1,6 +1,6 @@
 package dog.aview
 
-import dog.controller.{BoardChanged, ControllerTrait}
+import dog.controller.{BoardChanged, ControllerTrait, InputCardObject}
 
 import scala.swing.Reactor
 
@@ -60,23 +60,38 @@ class Tui(controller: ControllerTrait) extends Reactor {
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           //for having full control
           case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-            result = controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), (cardNum, cardOption))
+            result = controller.manageRound(InputCardObject.UpdateCardInput()
+              .withOtherPlayer(otherPlayer)
+              .withPieceNum(List(pieceNum1, pieceNum2))
+              .withCardNum((cardNum, cardOption))
+              .buildCardInput())
+
           //for swapping
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-            result = controller.manageRound(otherPlayer, pieceNum = List(pieceNum1, pieceNum2), (cardNum, 0))
+            result = controller.manageRound(InputCardObject.UpdateCardInput()
+              .withOtherPlayer(otherPlayer)
+              .withPieceNum(List(pieceNum1, pieceNum2))
+              .withCardNum((cardNum, 0)).buildCardInput())
+
           //for cards having multiple options
           case cardNum :: cardOption :: pieceNum :: Nil =>
-            result = controller.manageRound(-1, pieceNum = List(pieceNum, -1), (cardNum, cardOption))
+            result = controller.manageRound(InputCardObject.UpdateCardInput()
+              .withOtherPlayer(-1)
+              .withPieceNum(List(pieceNum, -1))
+              .withCardNum((cardNum, cardOption)).buildCardInput())
+
           //for easy moving
           case cardNum :: pieceNum :: Nil =>
-            result = controller.manageRound(-1, pieceNum = List(pieceNum, -1), (cardNum, 0))
+            result = controller.manageRound(InputCardObject.UpdateCardInput()
+              .withOtherPlayer(-1)
+              .withPieceNum(List(pieceNum, -1))
+              .withCardNum((cardNum, 0)).buildCardInput())
+
           case _ => result = ""
         }
 
     }
     result
   }
-
-
 }
 

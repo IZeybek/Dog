@@ -1,6 +1,6 @@
 package dog.controller.Component.controllerMockImpl
 
-import dog.controller.{ControllerTrait, GameState, GameStateMaster, GameStateMasterTrait}
+import dog.controller._
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
@@ -68,13 +68,18 @@ class Controller extends ControllerTrait {
 
   override def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait = Card.RandomCardsBuilder().buildRandomCardList.head
 
+
   /**
    * Manages the round
    *
-   * @param otherPlayer is not -1 when e.g. swapping -> user has to know when to insert more or less commands
-   * @param pieceNum    is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   * @param cardNum     is the index of the card in a CardList of the player that is played
+   * @param inputCard     is a CardInput builder in order to parse information out of it
+   *                      @ otherPlayer   is not -1 when e.g. swapping -> user has to know when to insert more or less commands
+   *                      @ pieceNum      is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
+   *                      @ cardNum       is a tuple
+   *                    1. is the card number
+   *                    2. is which options of the card have to be selected
+   *                      e.g. "4" "forward backward" => using parse
    * @return a String that is returned to the TUI for more information
    */
-  override def manageRound(otherPlayer: Int, pieceNum: List[Int], cardNum: (Int, Int)): String = ""
+  override def manageRound(inputCard: InputCard): String = ""
 }

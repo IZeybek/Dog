@@ -23,6 +23,7 @@ libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.6"
 libraryDependencies += "org.scalafx" %% "scalafx" % "12.0.2-R18"
 
 //// Add dependency on JavaFX library
+
 libraryDependencies += "org.openjfx" % "javafx" % "12.0.2" pomOnly()
 
 //add a OS-specific dependency for the JavaFX binaries
