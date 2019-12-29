@@ -28,7 +28,7 @@ class FileIO extends FileIOTrait {
   }
 
   def playerToXml(player: Player) = {
-    <player name={player.name} color={player.color} piece={pieceToXml(player.piece)}>
+    <player name={player.name._1} color={player.color} piece={pieceToXml(player.piece)}>
     </player>
   }
 

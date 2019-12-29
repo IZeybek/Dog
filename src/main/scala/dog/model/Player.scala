@@ -6,7 +6,7 @@ import dog.model.CardComponent.cardBaseImpl.Card
 import scala.util.{Failure, Success, Try}
 
 
-case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
+case class Player(name: (String, Int), color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
 
   val consoleColor: String = {
 
@@ -55,7 +55,7 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     copy(cardList = myCards)
   }
 
-  def this(name: String, c: String, pieces: Map[Int, Piece], cards: List[CardTrait]) = {
+  def this(name: (String, Int), c: String, pieces: Map[Int, Piece], cards: List[CardTrait]) = {
     this(name, color = c, piece = pieces, inHouse = pieces.size, 0, cards)
   }
 
@@ -89,7 +89,7 @@ case class Player(name: String, color: String, piece: Map[Int, Piece], inHouse: 
     }
   }
 
-  override def toString: String = name
+  override def toString: String = name._1
 }
 
 
@@ -102,14 +102,14 @@ case class Piece(var position: Int) {
 object Player {
   var pieceNumber: Int = 4
   var color: String = "blau"
-  var name: String = "Bob"
+  var name: (String, Int) = ("Bob", 0)
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
   var pieces: Map[Int, Piece] = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
 
   def reset(): Unit = {
     pieceNumber = 4
     color = "blau"
-    name = "Bob"
+    name = ("Bob", 0)
     cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
     pieces = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
   }
@@ -133,7 +133,7 @@ object Player {
       this
     }
 
-    def withName(n: String): PlayerBuilder = {
+    def withName(n: (String, Int)): PlayerBuilder = {
       name = n
       this
     }

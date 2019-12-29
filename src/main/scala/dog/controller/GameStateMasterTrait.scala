@@ -83,7 +83,7 @@ trait GameStateMasterTrait {
     }
 
     def buildGame: GameState = {
-      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board)
+      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board, actualPlayer)
     }
   }
 }

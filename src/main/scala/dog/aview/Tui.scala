@@ -57,56 +57,49 @@ class Tui(controller: ControllerTrait) extends Reactor {
         print(controller.toStringPlayerHands)
         result = "printed game"
       case _ =>
+        val actualPlayer = controller.gameState.actualPlayer
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           //for having full control
           case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-            val selectedPlayerList: List[Int] = controller.gameState.players._2 :: otherPlayer :: Nil
 
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
+              .withActualPlayer(actualPlayer)
               .withOtherPlayer(otherPlayer)
               .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, cardOption))
-              .withSelectedPlayerList(selectedPlayerList)
-              .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, cardOption)))
-              .withMoveBy(0)
+              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, cardOption)))
               .buildCardInput())
 
           //for swapping
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-            val selectedPlayerList: List[Int] = controller.gameState.players._2 :: otherPlayer :: Nil
+
 
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
+              .withActualPlayer(actualPlayer)
               .withOtherPlayer(otherPlayer)
               .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, 0))
-              .withSelectedPlayerList(selectedPlayerList)
-              .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, 0)))
-              .withMoveBy(0)
+              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, 0)))
               .buildCardInput())
 
           //for cards having multiple options
           case cardNum :: cardOption :: pieceNum :: Nil =>
-            val selectedPlayerList: List[Int] = controller.gameState.players._2 :: -1 :: Nil
 
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withOtherPlayer(-1)
-              .withPieceNum(List(pieceNum, -1))
+              .withActualPlayer(actualPlayer)
+              .withPieceNum(List(pieceNum))
               .withCardNum((cardNum, cardOption))
-              .withSelectedPlayerList(selectedPlayerList)
-              .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, cardOption)))
-              .withMoveBy(0)
+              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, cardOption)))
               .buildCardInput())
 
           //for easy moving
           case cardNum :: pieceNum :: Nil =>
-            val selectedPlayerList: List[Int] = controller.gameState.players._2 :: -1 :: Nil
 
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withOtherPlayer(-1)
+              .withActualPlayer(actualPlayer)
               .withPieceNum(List(pieceNum, -1))
               .withCardNum((cardNum, 0))
-              .withSelectedPlayerList(selectedPlayerList)
-              .withSelectedCard(controller.getSelectedCard(selectedPlayerList.head, (cardNum, 0)))
+              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, 0)))
               .buildCardInput())
 
           case _ => result = ""

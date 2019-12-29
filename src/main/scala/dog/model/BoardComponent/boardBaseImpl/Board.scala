@@ -1,5 +1,6 @@
 package dog.model.BoardComponent.boardBaseImpl
 
+import dog.controller.InputCard
 import dog.model.BoardComponent.boardAdvancedImpl.BoardCreateStrategyNormal
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.Player
@@ -35,11 +36,11 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     copy(boardMap = nBoard)
   }
 
-  override def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): BoardTrait = {
-    val p: Player = player(playerNums.head)
-    val swapPlayer: Player = player(playerNums(1))
-    var nBoard: BoardTrait = fill(cell(p.getPosition(pieceNums.head)).addPlayerToCell(p), p.getPosition(pieceNums.head))
-    nBoard = nBoard.fill(nBoard.cell(swapPlayer.getPosition(pieceNums(1))).addPlayerToCell(swapPlayer), swapPlayer.getPosition(pieceNums(1)))
+  override def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait = {
+    val p: Player = player(inputCard.actualPlayer)
+    val swapPlayer: Player = player(inputCard.otherPlayer)
+    var nBoard: BoardTrait = fill(cell(p.getPosition(inputCard.selPieceList.head)).addPlayerToCell(p), p.getPosition(inputCard.selPieceList.head))
+    nBoard = nBoard.fill(nBoard.cell(swapPlayer.getPosition(inputCard.selPieceList(1))).addPlayerToCell(swapPlayer), swapPlayer.getPosition(inputCard.selPieceList(1)))
     nBoard
   }
 

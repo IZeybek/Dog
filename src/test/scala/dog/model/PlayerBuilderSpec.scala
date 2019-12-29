@@ -23,7 +23,7 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
         Player.color should be("lila")
       }
       "change name" in {
-        playerBuilder.withName("Bob Ross")
+        playerBuilder.withName("Bob Ross", 0)
         Player.name should be("Bob Ross")
       }
       "change cards" in {

@@ -72,9 +72,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def useCardLogic(inputCard: InputCard): Int = {
 
-    if (inputCard.selPlayerList != Nil && gameState.players._1(inputCard.selPlayerList.head).cardList.nonEmpty) {
+    if (gameState.players._1(gameState.actualPlayer).cardList.nonEmpty) {
       println("--------------------------> " + inputCard.selectedCard.task)
-      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard)
+      val strategy = CardLogic.getLogic(inputCard.selectedCard.task)
+      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(strategy, gameState, inputCard)
       if (updateGame._3 == 0) {
         doStep()
         this.board = updateGame._1
@@ -139,7 +140,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   override def createPlayers(playerNames: List[String]): GameState = {
     val colors = gameStateMaster.colors
-    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName(playerNames(i)).build()).toVector
+    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).build()).toVector
     gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
     gameState
   }

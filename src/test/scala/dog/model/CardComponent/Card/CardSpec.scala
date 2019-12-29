@@ -41,13 +41,12 @@ class CardLogicSpec extends WordSpec with Matchers {
       }
       "have a Strategy" in {
         val inputCard = InputCardMaster.UpdateCardInput()
+          .withActualPlayer(2)
           .withOtherPlayer(0)
           .withPieceNum(List(2))
           .withCardNum((0, 0))
-          .withSelectedPlayerList(List(2))
           .withSelectedCard(Card("5", "move", "blue"))
           .buildCardInput()
-
         cardLogic.setStrategy(mode, controller.gameState, inputCard) should not be null
       }
       "have a move" in {

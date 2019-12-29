@@ -1,5 +1,6 @@
 package dog.model.BoardComponent
 
+import dog.controller.InputCard
 import dog.model.Player
 
 trait BoardTrait {
@@ -10,8 +11,6 @@ trait BoardTrait {
 
   def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait
 
-  def updateSwapPlayers(player: Vector[Player], playerNums: List[Int], pieceNums: List[Int]): BoardTrait
-
   def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean
 
   def cell(idx: Int): CellTrait
@@ -21,6 +20,8 @@ trait BoardTrait {
   def fill(cell: CellTrait, pos: Int): BoardTrait
 
   def fill(boardMap: Map[Int, CellTrait]): BoardTrait
+
+  def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait
 }
 
 trait CellTrait {

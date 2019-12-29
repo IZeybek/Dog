@@ -46,12 +46,12 @@ object CardLogic {
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     val players: Vector[Player] = gameState.players._1
     var finalPlayer: Vector[Player] = Vector.empty[Player]
-    val p: Player = players(inputC.selPlayerList.head)
+    val p: Player = players(gameState.actualPlayer)
     val board: BoardTrait = gameState.board
     val newPos: Int = Math.floorMod(inputC.moveBy + p.getPosition(inputC.selPieceList.head), board.size)
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, inputC.selPieceList.head, newPos)) {
+    if (board.checkOverrideOtherPlayer(p, gameState.actualPlayer, newPos)) {
       //get indexes and pieces
       val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
@@ -61,11 +61,11 @@ object CardLogic {
 
       //update Vector when overridden
       val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      finalPlayer = overriddenPlayers.updated(inputC.selPlayerList.head, players(inputC.selPlayerList.head).setPosition(inputC.selPieceList.head, newPos))
+      finalPlayer = overriddenPlayers.updated(gameState.actualPlayer, players(gameState.actualPlayer).setPosition(inputC.selPieceList.head, newPos))
 
     } else {
       //update Vector when not overridden
-      finalPlayer = players.updated(inputC.selPlayerList.head, players(inputC.selPlayerList.head).setPosition(inputC.selPieceList.head, newPos))
+      finalPlayer = players.updated(gameState.actualPlayer, players(gameState.actualPlayer).setPosition(inputC.selPieceList.head, newPos))
     }
 
     (board.updateMovePlayer(p, inputC.selPieceList.head, newPos), finalPlayer, isValid)
@@ -75,17 +75,17 @@ object CardLogic {
 
     var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
-    val p: Player = gameState.players._1(inputCard.selPlayerList.head)
-    val swapPlayer: Player = gameState.players._1(inputCard.selPlayerList(1))
+    val p: Player = gameState.players._1(gameState.actualPlayer)
+    val swapPlayer: Player = gameState.players._1(inputCard.otherPlayer)
     val swapPos: (Int, Int) = (p.getPosition(inputCard.selPieceList.head), swapPlayer.getPosition(inputCard.selPieceList(1)))
 
     if (swapPos._2 == 0) isValid = -1 //Second Player is not on the field
 
-    var players: Vector[Player] = gameState.players._1.updated(inputCard.selPlayerList.head, p.swapPiece(inputCard.selPieceList.head, swapPos._2)) //swap with second player
+    var players: Vector[Player] = gameState.players._1.updated(gameState.actualPlayer, p.swapPiece(inputCard.selPieceList.head, swapPos._2)) //swap with second player
 
-    players = players.updated(inputCard.selPlayerList(1), swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
+    players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
 
-    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players, inputCard.selPlayerList, inputCard.selPieceList)
+    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players, inputCard)
 
     (nBoard, players, isValid)
   }
@@ -116,8 +116,8 @@ object CardLogic {
   }
 }
 
-
 object Card {
+
   var amount = 6
 
   case class RandomCardsBuilder() {
@@ -132,7 +132,6 @@ object Card {
       shuffledCardList.take(amount)
     }
   }
-
 }
 
 object GenCardDeck {
@@ -187,11 +186,8 @@ object CardDeck {
     def buildCardListWithLength: (List[CardTrait], Int) = (cardDeck.toList, lengthOfCardDeck)
 
     def buildCardList: List[CardTrait] = cardDeck.toList
-
   }
-
 }
-
 
 case class SpecialCardsDeck() extends CardDeckTrait {
 
@@ -206,7 +202,6 @@ case class SpecialCardsDeck() extends CardDeckTrait {
       Card("13 play", "move play", "red"))
   }
 }
-
 
 case class NormalCardsDeck() extends CardDeckTrait {
 

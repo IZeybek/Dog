@@ -5,9 +5,9 @@ import org.scalatest.{Matchers, WordSpec}
 class PlayerSpec extends WordSpec with Matchers {
   "A player" when {
     "created" should {
-      val player = Player("PlayerSpec", "gelb", Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(6), 3 -> Piece(0)), 4, 0, null)
+      val player = Player(("PlayerSpec", 0), "gelb", Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(6), 3 -> Piece(0)), 4, 0, null)
       "have a name" in {
-        player.name should not be empty
+        player.name._1 should not be empty
       }
       "be printed" in {
         player.toString should be(player.name)

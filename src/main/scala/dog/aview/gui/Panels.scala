@@ -16,10 +16,10 @@ import scalafx.scene.paint.Color._
 object CardPanel extends PanelMaster {
 
   //generates new Cards and puts it into Seq
-  def newIcons(controller: ControllerTrait, iconAmount: Int, card: CardTrait, cardAndOption: (Int, Int)): Seq[Button] = {
+  def newIcons(controller: ControllerTrait, iconAmount: Int, currentCard: CardTrait, cardIdx: Int): Seq[Button] = {
     var idx = 0
-    val task = card.task.split("\\s+") //GenImages.genIcon()
-    val symbol: Array[String] = card.symbol.split("\\s+")
+    val task = currentCard.task.split("\\s+") //GenImages.genIcon()
+    val symbol: Array[String] = currentCard.symbol.split("\\s+")
     val sbsize = symbol.length
     Seq.fill(iconAmount)(new Button(
       if (symbol(0).equals("4")) (if (idx == 0) "-" else "+") + symbol(0)
@@ -28,7 +28,6 @@ object CardPanel extends PanelMaster {
       GenImages.genIconImage(task(idx))) {
       id = idx.toString
       //style for circle Button
-      print(task(idx) + ", ")
       idx = idx + 1
       val styleFirst: String = "-fx-background-radius: 5em; " +
         "-fx-min-width: 30px; " +
@@ -40,13 +39,12 @@ object CardPanel extends PanelMaster {
 
       //PlayButton ActionListener
       onAction = _ => {
-        println("-----------------------------------------    ID : " + getId.toInt)
+        println("----------------------------------------- Clicked IconID : " + getId.toInt)
         controller.manageRound(InputCardMaster.UpdateCardInput()
-          .withOtherPlayer(-1)
-          .withPieceNum(List(0, -1))
-          .withCardNum((cardAndOption._1, getId.toInt))
-          .withSelectedPlayerList(List(controller.gameState.players._2))
-          .withSelectedCard(controller.getSelectedCard(controller.gameState.players._2, (cardAndOption._1, getId.toInt)))
+          .withActualPlayer(controller.gameState.actualPlayer)
+          .withPieceNum(List(0, 0))
+          .withCardNum((cardIdx, getId.toInt))
+          .withSelectedCard(controller.getSelectedCard(controller.gameState.players._2, (cardIdx, getId.toInt)))
           .buildCardInput())
       }
 
@@ -201,10 +199,16 @@ object BoardPanel {
 
         //Padding of FieldButtons
         val styleFirst: String = bgColor + "-fx-padding:0;"
-        style <== when(hover) choose styleFirst + "-fx-background-color:#d3d3d3;" otherwise styleFirst
+        var pressedButton: Boolean = false
+        style <== when(pressed) choose styleFirst + "-fx-background-color:#000000;" otherwise (when(hover) choose styleFirst + "-fx-background-color:#ffffff;" otherwise styleFirst)
+
         //field OnClickListener
         onAction = _ => {
           println("pressed field = " + this.getId)
+          val clickedCell = controller.gameState.board.cell(this.getId.toInt)
+          InputCardMaster.UpdateCardInput()
+            .withOtherPlayer(if (clickedCell.isFilled) clickedCell.p.head.name._2 else -1)
+            .buildCardInput()
         }
       })
       //
