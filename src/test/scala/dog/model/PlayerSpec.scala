@@ -10,7 +10,7 @@ class PlayerSpec extends WordSpec with Matchers {
         player.nameAndIdx._1 should not be empty
       }
       "be printed" in {
-        player.toString should be(player.nameAndIdx)
+        player.toString should be(player.nameAndIdx._1)
       }
       "have a color" in {
         player.consoleColor should be(player.consoleColor)

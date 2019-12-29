@@ -24,7 +24,7 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
       }
       "change name" in {
         playerBuilder.withName("Bob Ross", 0)
-        Player.name should be("Bob Ross")
+        Player.name._1 should be("Bob Ross")
       }
       "change cards" in {
         val cardList: List[Card] = Card("0", "0", "0") :: Nil
@@ -33,7 +33,7 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
       }
       "set default attributes" in {
         Player.reset()
-        Player.name should be("Bob")
+        Player.name._1 should be("Bob")
         Player.color should be("blue")
         Player.pieceAmount should be(4)
         Player.cardsDeck.isInstanceOf[List[CardTrait]] should be(true)
