@@ -5,6 +5,7 @@ import dog.controller.ControllerTrait
 import dog.model.CardComponent.CardTrait
 import javafx.scene.layout.GridPane
 import scalafx.geometry.Insets
+import scalafx.geometry.Pos.Center
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.layout.StackPane
 
@@ -52,6 +53,7 @@ trait PanelMaster {
         var offset = 0
         if (amount < 9) offset = 250
         setPadding(Insets(0, 0, 0, offset))
+        setAlignment(Center)
         cards = newCards(iconGrids, amount, cardList)
 
       }
@@ -65,6 +67,7 @@ trait PanelMaster {
       stackPane.indices.foreach(i => stackPane(i).getChildren.addAll(cards(i), iconGrids(i)))
       stackPane.indices.foreach(i => cardGrids.add(stackPane(i), i, 0))
       new ScrollPane() {
+
         prefHeight = 229
         fitToWidth = true
         fitToHeight = true

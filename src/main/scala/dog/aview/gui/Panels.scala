@@ -8,6 +8,7 @@ import dog.model.Player
 import javafx.scene.layout.GridPane
 import scalafx.Includes.when
 import scalafx.geometry.Insets
+import scalafx.geometry.Pos.Center
 import scalafx.scene.control.{Button, Label, ScrollPane}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, StackPane, VBox}
@@ -254,8 +255,8 @@ object BoardPanel {
   def newBoardGrid(amount: Int, fieldIconSeq: Seq[Button]): GridPane = {
 
     new GridPane {
-
-      setPadding(Insets(50, 30, 30, 100))
+      setAlignment(Center)
+      setPadding(Insets(10, 10, 10, 10))
       setStyle(bgColor)
 
       //computes and displays Board on view, as an horizontal rectangle

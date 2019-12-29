@@ -17,7 +17,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
-  override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
+  override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
   override def clickedField(clickedFieldIdx: Int): Int = {
     gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame

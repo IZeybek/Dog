@@ -34,7 +34,7 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
       "set default attributes" in {
         Player.reset()
         Player.name should be("Bob")
-        Player.color should be("blau")
+        Player.color should be("blue")
         Player.pieceNumber should be(4)
         Player.cardsDeck.isInstanceOf[List[CardTrait]] should be(true)
       }
