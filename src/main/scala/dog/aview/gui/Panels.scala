@@ -207,6 +207,7 @@ object BoardPanel {
           "-fx-border-radius:10 ;" +
           "-fx-border-width:2;"
 
+
         val blackStyle: String = stdStyle + "-fx-background-color:#000000;"
         val whiteStyle: String = stdStyle + "-fx-background-color:#ffffff;"
 
