@@ -29,7 +29,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
 
       case "n" :: "player" :: player =>
         if (player.nonEmpty) {
-          controller.createPlayers(player)
+          controller.createPlayers(player, 4)
           result = if (player.size > 1)
             s"created ${player.size} players"
           else

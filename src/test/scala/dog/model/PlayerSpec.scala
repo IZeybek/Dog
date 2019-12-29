@@ -16,7 +16,7 @@ class PlayerSpec extends WordSpec with Matchers {
         player.consoleColor should be(player.consoleColor)
       }
       "have a map of pieces on the field" in {
-        player.getPosition(2) should be(6)
+        player.piece(2).pos should be(6)
       }
       "get the piece when giving a position" in {
         player.getPieceNum(0) should be(0)

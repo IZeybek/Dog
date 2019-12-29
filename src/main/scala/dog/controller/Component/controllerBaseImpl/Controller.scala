@@ -17,7 +17,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
-  override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
+  override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
 
   override def clickedField(clickedFieldIdx: Int): Int = {
     gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame
@@ -79,7 +79,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def useCardLogic(inputCard: InputCard): Int = {
 
     if (gameState.players._1(gameState.actualPlayer).cardList.nonEmpty) {
-      println("--------------------------> " + inputCard.selectedCard.task)
       val strategy = CardLogic.getLogic(inputCard.selectedCard.task)
       val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(strategy, gameState, inputCard)
       if (updateGame._3 == 0) {
@@ -144,10 +143,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   //Player
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
-  override def createPlayers(playerNames: List[String]): GameState = {
+  override def createPlayers(playerNames: List[String], pieceAmount: Int): GameState = {
     val colors = gameStateMaster.colors
 
-    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).build()).toVector
+    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i).build()).toVector
     gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
     gameState
   }

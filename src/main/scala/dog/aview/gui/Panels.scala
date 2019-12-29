@@ -260,21 +260,21 @@ object BoardPanel {
       setStyle(bgColor)
 
       //computes and displays Board on view, as an horizontal rectangle
-      val leftRightEdge: Int = (amount / 4) / 2
-      val topBottomEdge: Int = (amount / 4) + leftRightEdge
+      val leftAndRightEdge: Int = amount / 8
+      val topAndBottomEdge: Int = (amount / 4) + leftAndRightEdge
 
       var fieldIdx = 0
 
-      for (i <- 0 until topBottomEdge) {
+      for (i <- 0 until topAndBottomEdge) {
         add(fieldIconSeq(fieldIdx), i + 1, 0); fieldIdx = fieldIdx + 1
       }
-      for (i <- 0 until leftRightEdge) {
-        add(fieldIconSeq(fieldIdx), topBottomEdge + 1, i + 1); fieldIdx = fieldIdx + 1
+      for (i <- 0 until leftAndRightEdge) {
+        add(fieldIconSeq(fieldIdx), topAndBottomEdge + 1, i + 1); fieldIdx = fieldIdx + 1
       }
-      for (i <- topBottomEdge until 0 by -1) {
-        add(fieldIconSeq(fieldIdx), i, leftRightEdge + 1); fieldIdx = fieldIdx + 1
+      for (i <- topAndBottomEdge until 0 by -1) {
+        add(fieldIconSeq(fieldIdx), i, leftAndRightEdge + 1); fieldIdx = fieldIdx + 1
       }
-      for (i <- leftRightEdge until 0 by -1) {
+      for (i <- leftAndRightEdge until 0 by -1) {
         add(fieldIconSeq(fieldIdx), 0, i); fieldIdx = fieldIdx + 1
       }
     }

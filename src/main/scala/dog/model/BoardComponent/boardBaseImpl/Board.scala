@@ -14,6 +14,8 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   override def cell(idx: Int): CellTrait = boardMap(idx)
 
+  override def getBoardMap: Map[Int, CellTrait] = boardMap
+
   override def toString: String = {
     var box = ""
     val line_down = "_" * boardMap.size * 3 + "\n"
@@ -27,7 +29,7 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
   }
 
   override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait = {
-    val oldPos: Integer = player.getPosition(pieceNum)
+    val oldPos: Integer = player.piece(pieceNum).pos
 
     //set old Cell unoccupied
     var nBoard: Map[Int, CellTrait] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell())
@@ -37,10 +39,11 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
   }
 
   override def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait = {
-    val p: Player = player(inputCard.actualPlayer)
+    val actPlayer: Player = player(inputCard.actualPlayer)
     val swapPlayer: Player = player(inputCard.otherPlayer)
-    var nBoard: BoardTrait = fill(cell(p.getPosition(inputCard.selPieceList.head)).addPlayerToCell(p), p.getPosition(inputCard.selPieceList.head))
-    nBoard = nBoard.fill(nBoard.cell(swapPlayer.getPosition(inputCard.selPieceList(1))).addPlayerToCell(swapPlayer), swapPlayer.getPosition(inputCard.selPieceList(1)))
+    val selPiece = inputCard.selPieceList.head
+    var nBoard: BoardTrait = fill(cell(actPlayer.piece(selPiece).pos).addPlayerToCell(actPlayer), actPlayer.piece(selPiece).pos)
+    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piece(inputCard.selPieceList(1)).pos).addPlayerToCell(swapPlayer), swapPlayer.piece(inputCard.selPieceList(1)).pos)
     nBoard
   }
 

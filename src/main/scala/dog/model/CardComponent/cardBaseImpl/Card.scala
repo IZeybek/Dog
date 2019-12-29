@@ -43,15 +43,18 @@ object CardLogic {
   val move: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputC: InputCard) => {
 
     var isValid: Int = 0
+    val actPlayer = inputC.actualPlayer
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     val players: Vector[Player] = gameState.players._1
     var finalPlayer: Vector[Player] = Vector.empty[Player]
-    val p: Player = players(gameState.actualPlayer)
+    val p: Player = players(actPlayer)
     val board: BoardTrait = gameState.board
-    val newPos: Int = Math.floorMod(inputC.moveBy + p.getPosition(inputC.selPieceList.head), board.size)
+    val selPiece = inputC.selPieceList.head
+    val newPos: Int = Math.floorMod(inputC.moveBy + p.piece(selPiece).pos, board.size)
+
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, gameState.actualPlayer, newPos)) {
+    if (board.checkOverrideOtherPlayer(p, actPlayer, newPos)) {
       //get indexes and pieces
       val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
@@ -61,14 +64,14 @@ object CardLogic {
 
       //update Vector when overridden
       val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      finalPlayer = overriddenPlayers.updated(gameState.actualPlayer, players(gameState.actualPlayer).setPosition(inputC.selPieceList.head, newPos))
+      finalPlayer = overriddenPlayers.updated(actPlayer, players(actPlayer).setPosition(selPiece, newPos))
 
     } else {
       //update Vector when not overridden
-      finalPlayer = players.updated(gameState.actualPlayer, players(gameState.actualPlayer).setPosition(inputC.selPieceList.head, newPos))
+      finalPlayer = players.updated(actPlayer, players(actPlayer).setPosition(selPiece, newPos))
     }
 
-    (board.updateMovePlayer(p, inputC.selPieceList.head, newPos), finalPlayer, isValid)
+    (board.updateMovePlayer(p, selPiece, newPos), finalPlayer, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
@@ -77,11 +80,14 @@ object CardLogic {
     //swap a piece of the player that uses the card with the furthest piece of another player
     val p: Player = gameState.players._1(gameState.actualPlayer)
     val swapPlayer: Player = gameState.players._1(inputCard.otherPlayer)
-    val swapPos: (Int, Int) = (p.getPosition(inputCard.selPieceList.head), swapPlayer.getPosition(inputCard.selPieceList(1)))
+    val selPiece = inputCard.selPieceList.head
+    val actPlayer = inputCard.actualPlayer
 
-    if (swapPos._2 == 0) isValid = -1 //Second Player is not on the field
+    val swapPos: (Int, Int) = (p.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
 
-    var players: Vector[Player] = gameState.players._1.updated(gameState.actualPlayer, p.swapPiece(inputCard.selPieceList.head, swapPos._2)) //swap with second player
+    if (swapPos._2 == swapPlayer.homePosition) isValid = -1 //Second Player is not on the field
+
+    var players: Vector[Player] = gameState.players._1.updated(actPlayer, p.swapPiece(selPiece, swapPos._2)) //swap with second player
 
     players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
 
@@ -137,6 +143,7 @@ object Card {
       shuffledCardList.take(amount)
     }
   }
+
 }
 
 object GenCardDeck {
@@ -192,6 +199,7 @@ object CardDeck {
 
     def buildCardList: List[CardTrait] = cardDeck.toList
   }
+
 }
 
 case class SpecialCardsDeck() extends CardDeckTrait {

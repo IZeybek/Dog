@@ -9,6 +9,8 @@ class Board(var size: Int) extends BoardTrait {
 
   override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait = this
 
+  override def getBoardMap: Map[Int, CellTrait] = ???
+
   override def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait = this
 
   override def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean = true

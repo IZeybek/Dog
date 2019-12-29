@@ -34,7 +34,7 @@ class FileIO extends FileIOTrait {
 
   def pieceToXml(piece: Map[Int, Piece]) = {
     <piece>
-      {piece.foreach(x => x._2.position)}
+      {piece.foreach(x => x._2.pos)}
     </piece>
   }
 

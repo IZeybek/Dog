@@ -5,6 +5,8 @@ import dog.model.Player
 
 trait BoardTrait {
 
+  def getBoardMap: Map[Int, CellTrait]
+
   def createNewBoard: BoardTrait
 
   def toString: String

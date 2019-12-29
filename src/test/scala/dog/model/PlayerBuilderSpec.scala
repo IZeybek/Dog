@@ -12,11 +12,11 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
         playerBuilder.build() should not be null
       }
       "change piece number" in {
-        playerBuilder.withPieceNumber(3, 0)
-        Player.pieceNumber should be(3)
+        playerBuilder.withPiece(3, 0)
+        Player.pieceAmount should be(3)
 
-        playerBuilder.withPieceNumber(-1, 0)
-        Player.pieceNumber should be(-1)
+        playerBuilder.withPiece(-1, 0)
+        Player.pieceAmount should be(-1)
       }
       "change color" in {
         playerBuilder.withColor("lila")
@@ -35,7 +35,7 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
         Player.reset()
         Player.name should be("Bob")
         Player.color should be("blue")
-        Player.pieceNumber should be(4)
+        Player.pieceAmount should be(4)
         Player.cardsDeck.isInstanceOf[List[CardTrait]] should be(true)
       }
     }

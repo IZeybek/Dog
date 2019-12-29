@@ -35,7 +35,7 @@ class Controller extends ControllerTrait {
 
   override def getBoard: BoardTrait = new Board(20)
 
-  override def createPlayers(playerNames: List[String]): GameState = gameState
+  override def createPlayers(playerNames: List[String], pieceAmount: Int): GameState = gameState
 
   override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector(Card("5", "move", "blau")), 0)
 

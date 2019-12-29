@@ -24,32 +24,32 @@ case class Player(nameAndIdx: (String, Int),
   }
 
   def getPieceNum(position: Int): Int = {
-    piece.foreach(x => if (x._2.position == position) {
+    piece.foreach(x => if (x._2.pos == position) {
       return x._1
     })
     -1
   }
 
   def overridePlayer(pieceNum: Int): Player = {
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(0)), inHouse = inHouse + 1)
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(this.homePosition)), inHouse = inHouse + 1)
   }
 
   def setPosition(pieceNum: Int, newPos: Int): Player = {
-    val oldPos = getPosition(pieceNum)
+    val oldPos = piece(pieceNum).pos
     copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(newPos)), inHouse = {
       if (oldPos == start && newPos - oldPos > 0) inHouse - 1
       else inHouse
     })
   }
 
-  def getPosition(pieceNum: Int): Int = {
-    piece(pieceNum).position
-  }
+  //  def getPosition(pieceNum: Int): Int = {
+  //    piece(pieceNum).position
+  //  }
 
   def swapPiece(pieceNum: Int, newPos: Int): Player = {
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(position = newPos)), inHouse = {
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(pos = newPos)), inHouse = {
       if (newPos == 0) inHouse + 1
-      else if (getPosition(pieceNum) == 0 && getPosition(pieceNum) < newPos) inHouse - 1
+      else if (piece(pieceNum).pos == 0 && piece(pieceNum).pos < newPos) inHouse - 1
       else inHouse
     })
   }
@@ -96,43 +96,44 @@ case class Player(nameAndIdx: (String, Int),
 }
 
 
-case class Piece(var position: Int) {
+case class Piece(var pos: Int) {
 
-  def setPosition(newPosition: Int): Piece = copy(position = newPosition)
+  def setPosition(newPosition: Int): Piece = copy(pos = newPosition)
 
-  def movePiece(moveBy: Int): Piece = copy(position = position + moveBy)
+  def movePiece(moveBy: Int): Piece = copy(pos = pos + moveBy)
 }
 
 object Player {
-  var pieceNumber: Int = 4
+  var pieceAmount: Int = 4
   var color: String = "blue"
   var name: (String, Int) = ("Bob", 0)
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
-  var pieces: Map[Int, Piece] = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
+  var pieces: Map[Int, Piece] = (0 until pieceAmount).map(i => (i, Piece(0))).toMap
   var homePosition = 0
 
   def reset(): Unit = {
-    pieceNumber = 4
+    pieceAmount = 4
     color = "blue"
     name = ("Bob", 0)
     cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
-    pieces = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
+    pieces = (0 until pieceAmount).map(i => (i, Piece(0))).toMap
   }
 
   case class PlayerBuilder() {
 
-    def withPieceNumber(pieceNum: Int, startPos: Int): PlayerBuilder = {
-      pieceNumber = pieceNum
-      homePosition = startPos
-      pieces = (0 until pieceNumber).map(i => (i, Piece(startPos))).toMap
+    def withPiece(piecesAmount: Int, homePos: Int): PlayerBuilder = {
+      pieceAmount = piecesAmount
+      homePosition = homePos
+      pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
       this
     }
 
-    def withPieces(setPieces: Map[Int, Piece]): PlayerBuilder = {
-      pieces = setPieces
-      pieceNumber = pieces.size
-      this
-    }
+    //
+    //    def withPieces(setPieces: Map[Int, Piece]): PlayerBuilder = {
+    //      pieces = setPieces
+    //      pieceNumber = pieces.size
+    //      this
+    //    }
 
     def withColor(c: String): PlayerBuilder = {
       color = c
