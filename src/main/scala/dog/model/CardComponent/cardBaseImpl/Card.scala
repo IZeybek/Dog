@@ -111,6 +111,29 @@ object CardLogic {
 
     move(gameState, InputCardMaster.UpdateCardInput().buildCardInput())
   }
+  val threePlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
+    println("------------------------------------------ssssssssss-------------------------- ")
+
+    val cardOption = inputCard.selectedCard.symbol.split("\\s+")
+    cardOption(inputCard.cardNum._2) match {
+      case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
+      case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
+      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(0).buildCardInput())
+      case _ => (gameState.board, gameState.players._1, -1)
+    }
+  }
+
+
+  val twoPlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
+
+    val cardOption = inputCard.selectedCard.symbol.split("\\s+")
+
+    cardOption(inputCard.cardNum._2) match {
+      case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
+      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(0).buildCardInput())
+      case _ => (gameState.board, gameState.players._1, -1)
+    }
+  }
 
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
     callback(gameState, inputCard)
@@ -121,6 +144,8 @@ object CardLogic {
       case "move" => move
       case "swap" => swap
       case "backward forward" => four
+      case "move move play" => threePlay
+      case "move play" => twoPlay
       //            case "start" => Nil
       case _ => nothing
     }
