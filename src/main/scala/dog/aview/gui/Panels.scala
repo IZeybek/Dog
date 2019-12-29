@@ -135,10 +135,10 @@ object PlayerStatusPanel {
     val playerStateLabel = new Label(player.toString) {
       style = "-fxf-font-size: 20pt"
       textFill = player.color match {
-        case "grün" => Green;
+        case "green" => Green;
         case "white" => White;
-        case "gelb" => Yellow;
-        case "rot" => Red;
+        case "yellow" => Yellow;
+        case "red" => Red;
         case _ => Black
       }
     }
@@ -147,10 +147,10 @@ object PlayerStatusPanel {
       val color: String = if (player.inHouse <= idx) "" else player.color
       idx = idx + 1
       val colorHouses: String = color match {
-        case "grün" => "-fx-background-color:#008000;";
+        case "green" => "-fx-background-color:#008000;";
         case "white" => "-fx-background-color:#FFFFFF;"
-        case "gelb" => "-fx-background-color:#FFFF00;"
-        case "rot" => "-fx-background-color:#FF0000;"
+        case "yellow" => "-fx-background-color:#FFFF00;"
+        case "red" => "-fx-background-color:#FF0000;"
         case _ => "-fx-background-color:#979797;"
       }
       style = "-fx-padding:10;-fx-background-radius: 5em; " +
@@ -198,11 +198,35 @@ object BoardPanel {
 
 
         //Padding of FieldButtons
-        val styleFirst: String = bgColor + "-fx-padding:0;"
-        val blackStyle: String = styleFirst + "-fx-background-color:#000000;"
-        val whiteStyle: String = styleFirst + "-fx-background-color:#ffffff;"
-        var pressedButton: Boolean = false
-        style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (if (controller.gameState.clickedFieldIdx == idx) whiteStyle else styleFirst))
+        val stdStyle: String = bgColor +
+          "-fx-min-width: 30px; " +
+          "-fx-min-height: 30px; " +
+          "-fx-max-width: 50px; " +
+          "-fx-max-height: 40px;" +
+          "-fx-padding:4;" +
+          "-fx-border-radius:10 ;" +
+          "-fx-border-width:2;"
+
+        val blackStyle: String = stdStyle + "-fx-background-color:#000000;"
+        val whiteStyle: String = stdStyle + "-fx-background-color:#ffffff;"
+
+        val red: String = "-fx-border-color:#ff0000;"
+        val white: String = "-fx-border-color:#ffffff;"
+        val yellow: String = "-fx-border-color:#ffff00;"
+        val green: String = "-fx-border-color:#00FF00;"
+        var borderColor = ""
+        var homeColor = "test"
+
+        controller.gameState.players._1.foreach(i => if (i.homePosition == idx && homeColor.equals("test")) homeColor = i.color)
+
+        borderColor = homeColor match {
+          case "green" => green
+          case "white" => white
+          case "yellow" => yellow
+          case "red" => red
+          case _ => "-fx-border-color:transparent;"
+        }
+        this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (if (controller.gameState.clickedFieldIdx == idx) whiteStyle else stdStyle + borderColor))
         idx = idx + 1
         //field OnClickListener
         onAction = _ => {
@@ -230,7 +254,7 @@ object BoardPanel {
 
     new GridPane {
 
-      setPadding(Insets(50, 30, 30, 20))
+      setPadding(Insets(50, 30, 30, 100))
       setStyle(bgColor)
 
       //computes and displays Board on view, as an horizontal rectangle

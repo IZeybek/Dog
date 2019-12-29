@@ -6,15 +6,19 @@ import dog.model.CardComponent.cardBaseImpl.Card
 import scala.util.{Failure, Success, Try}
 
 
-case class Player(nameAndIdx: (String, Int), color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
+case class Player(nameAndIdx: (String, Int),
+                  color: String, piece: Map[Int, Piece],
+                  inHouse: Int, start: Int,
+                  cardList: List[CardTrait],
+                  homePosition: Int) {
 
   val consoleColor: String = {
 
     color match {
-      case "grün" => Console.GREEN
-      case "blau" => Console.BLUE
-      case "rot" => Console.RED
-      case "gelb" => Console.YELLOW
+      case "green" => Console.GREEN
+      case "white" => Console.WHITE
+      case "red" => Console.RED
+      case "yellow" => Console.YELLOW
       case _ => ""
     }
   }
@@ -54,8 +58,8 @@ case class Player(nameAndIdx: (String, Int), color: String, piece: Map[Int, Piec
     copy(cardList = myCards)
   }
 
-  def this(name: (String, Int), c: String, pieces: Map[Int, Piece], cards: List[CardTrait]) = {
-    this(name, color = c, piece = pieces, inHouse = pieces.size, 0, cards)
+  def this(name: (String, Int), c: String, pieces: Map[Int, Piece], cards: List[CardTrait], homePosition: Int) = {
+    this(name, color = c, piece = pieces, inHouse = pieces.size, 0, cards, homePosition)
   }
 
   def removeCard(card: CardTrait): Player = {
@@ -93,6 +97,7 @@ case class Player(nameAndIdx: (String, Int), color: String, piece: Map[Int, Piec
 
 
 case class Piece(var position: Int) {
+
   def setPosition(newPosition: Int): Piece = copy(position = newPosition)
 
   def movePiece(moveBy: Int): Piece = copy(position = position + moveBy)
@@ -100,14 +105,15 @@ case class Piece(var position: Int) {
 
 object Player {
   var pieceNumber: Int = 4
-  var color: String = "blau"
+  var color: String = "blue"
   var name: (String, Int) = ("Bob", 0)
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
   var pieces: Map[Int, Piece] = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
+  var homePosition = 0
 
   def reset(): Unit = {
     pieceNumber = 4
-    color = "blau"
+    color = "blue"
     name = ("Bob", 0)
     cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
     pieces = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
@@ -115,9 +121,10 @@ object Player {
 
   case class PlayerBuilder() {
 
-    def withPieceNumber(pieceNum: Int, startPosition: Int): PlayerBuilder = {
+    def withPieceNumber(pieceNum: Int, startPos: Int): PlayerBuilder = {
       pieceNumber = pieceNum
-      pieces = (0 until pieceNumber).map(i => (i, Piece(startPosition))).toMap
+      homePosition = startPos
+      pieces = (0 until pieceNumber).map(i => (i, Piece(startPos))).toMap
       this
     }
 
@@ -148,7 +155,7 @@ object Player {
     }
 
     def build(): Player = {
-      val player: Player = new Player(name, color, pieces, cardsDeck)
+      val player: Player = new Player(name, color, pieces, cardsDeck, homePosition)
       reset()
       player
     }

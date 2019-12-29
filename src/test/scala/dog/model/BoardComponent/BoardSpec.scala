@@ -21,7 +21,7 @@ class BoardSpec extends WordSpec with Matchers {
         (0 until board.size).foreach(i => board.cell(i) should not be null)
       }
       "check if player has to be overridden" in {
-        val player = Player(("P1", 0), "grün", Map(0 -> Piece(6)), 3, 0, Nil)
+        val player = Player(("P1", 0), "grün", Map(0 -> Piece(6)), 3, 0, Nil, 0)
         board = board.fill(Cell(Some(player)), 6)
         board.checkOverrideOtherPlayer(player, 0, 6) should be(true)
         board.checkOverrideOtherPlayer(player, 0, 3) should be(false)

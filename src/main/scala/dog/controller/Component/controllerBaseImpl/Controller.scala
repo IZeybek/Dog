@@ -17,7 +17,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
-  override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
+  override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
 
   override def clickedField(clickedFieldIdx: Int): Int = {
     gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame
@@ -53,7 +53,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-
+    println("homepos: " + gameState.players._1(gameState.actualPlayer).homePosition)
     if (useCardLogic(inputCard) == 0) {
       gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
       returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"

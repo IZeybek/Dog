@@ -101,6 +101,11 @@ object CardLogic {
     }
   }
 
+  val nothing: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
+
+    move(gameState, InputCardMaster.UpdateCardInput().buildCardInput())
+  }
+
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
     callback(gameState, inputCard)
   }
@@ -111,7 +116,7 @@ object CardLogic {
       case "swap" => swap
       case "backward forward" => four
       //            case "start" => Nil
-      case _ => move
+      case _ => nothing
     }
   }
 }
