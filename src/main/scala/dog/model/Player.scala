@@ -19,7 +19,6 @@ case class Player(nameAndIdx: (String, Int), color: String, piece: Map[Int, Piec
     }
   }
 
-
   def getPieceNum(position: Int): Int = {
     piece.foreach(x => if (x._2.position == position) {
       return x._1
@@ -116,9 +115,9 @@ object Player {
 
   case class PlayerBuilder() {
 
-    def withPieceNumber(pieceNum: Int): PlayerBuilder = {
+    def withPieceNumber(pieceNum: Int, startPosition: Int): PlayerBuilder = {
       pieceNumber = pieceNum
-      pieces = (0 until pieceNumber).map(i => (i, Piece(0))).toMap
+      pieces = (0 until pieceNumber).map(i => (i, Piece(startPosition))).toMap
       this
     }
 

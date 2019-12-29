@@ -84,5 +84,5 @@ class Controller extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = ""
 
-  override def clickedButton(clickedFieldIdx: Int): Int = -1
+  override def clickedField(clickedFieldIdx: Int): Int = -1
 }

@@ -12,7 +12,7 @@ trait GameStateMasterTrait {
   var playerNames: Array[String]
   var players: Vector[Player]
   var actualPlayer: Int
-  var amountCards: Int
+  var amountCardsInHand: Int
   var roundAndCardsToDistribute: (Int, Int)
   var cardDeck: Vector[CardTrait]
   var cardPointer: Int
@@ -30,12 +30,12 @@ trait GameStateMasterTrait {
   case class UpdateGame() {
 
     def withAmountDistributedCard(setAmount: Int): UpdateGame = {
-      amountCards = setAmount
+      amountCardsInHand = setAmount
       this
     }
 
     def withDistributedCard(): UpdateGame = {
-      players.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(amountCards).buildRandomCardList))
+      players.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(amountCardsInHand).buildRandomCardList))
       this
     }
 

@@ -12,10 +12,10 @@ class PlayerBuilderSpec extends WordSpec with Matchers {
         playerBuilder.build() should not be null
       }
       "change piece number" in {
-        playerBuilder.withPieceNumber(3)
+        playerBuilder.withPieceNumber(3, 0)
         Player.pieceNumber should be(3)
 
-        playerBuilder.withPieceNumber(-1)
+        playerBuilder.withPieceNumber(-1, 0)
         Player.pieceNumber should be(-1)
       }
       "change color" in {

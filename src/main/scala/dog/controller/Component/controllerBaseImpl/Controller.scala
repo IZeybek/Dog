@@ -19,17 +19,18 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
+  override def clickedField(clickedFieldIdx: Int): Int = {
+    gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame
+    publish(new BoardChanged)
+    clickedFieldIdx
+  }
+
+
   override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
 
   override def undoCommand(): Unit = {
     undoManager.undoStep()
     publish(new BoardChanged)
-  }
-
-  override def clickedButton(clickedFieldIdx: Int): Int = {
-    gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame
-    publish(new BoardChanged)
-    clickedFieldIdx
   }
 
   override def redoCommand(): Unit = {
@@ -145,6 +146,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   override def createPlayers(playerNames: List[String]): GameState = {
     val colors = gameStateMaster.colors
+
     val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).build()).toVector
     gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
     gameState

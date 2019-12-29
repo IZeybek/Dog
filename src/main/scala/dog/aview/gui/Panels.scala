@@ -211,7 +211,7 @@ object BoardPanel {
           InputCardMaster.UpdateCardInput()
             .withOtherPlayer(if (clickedCell.isFilled) clickedCell.p.head.nameAndIdx._2 else -1)
             .buildCardInput()
-          controller.clickedButton(this.getId.toInt)
+          controller.clickedField(this.getId.toInt)
         }
       })
       //
