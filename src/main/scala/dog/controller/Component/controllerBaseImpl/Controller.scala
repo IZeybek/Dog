@@ -26,6 +26,12 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     publish(new BoardChanged)
   }
 
+  override def clickedButton(clickedFieldIdx: Int): Int = {
+    gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame
+    publish(new BoardChanged)
+    clickedFieldIdx
+  }
+
   override def redoCommand(): Unit = {
     undoManager.redoStep()
     publish(new BoardChanged)
@@ -48,7 +54,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     var returnString: String = ""
 
     if (useCardLogic(inputCard) == 0) {
-      gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+      gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
       returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
       publish(new BoardChanged)
     } else {

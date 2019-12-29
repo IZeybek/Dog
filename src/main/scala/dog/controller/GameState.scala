@@ -9,7 +9,7 @@ import dog.model.Player
 case class GameState(players: (Vector[Player], Int),
                      cardDeck: (Vector[CardTrait], Int),
                      lastPlayedCard: Option[CardTrait],
-                     board: BoardTrait, actualPlayer: Int)
+                     board: BoardTrait, actualPlayer: Int, clickedFieldIdx: Int)
 
 class GameStateMaster extends GameStateMasterTrait {
 
@@ -20,7 +20,7 @@ class GameStateMaster extends GameStateMasterTrait {
   override var amountCards: Int = 6
   override var players: Vector[Player] = (0 until 4).map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).withGeneratedCards(amountCards).build()).toVector
   override var actualPlayer: Int = 0
-
+  override var clickedFieldIdx = -1
   //carddeck of game
   override var cardDeck: Vector[CardTrait] = CardDeck.CardDeckBuilder().withAmount(List(10, 10)).withShuffle.buildCardVector
   override var cardPointer: Int = cardDeck.length

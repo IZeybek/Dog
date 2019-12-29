@@ -18,6 +18,7 @@ trait GameStateMasterTrait {
   var cardPointer: Int
   var board: BoardTrait
   var lastPlayedCard: Option[CardTrait]
+  var clickedFieldIdx: Int
 
   def getLastPlayedCard: CardTrait = {
     lastPlayedCard match {
@@ -82,8 +83,14 @@ trait GameStateMasterTrait {
       this
     }
 
+    def withClickedField(clickedFlied: Int): UpdateGame = {
+      clickedFieldIdx = clickedFlied
+      this
+    }
+
     def buildGame: GameState = {
-      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board, actualPlayer)
+      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board, actualPlayer, clickedFieldIdx)
     }
   }
+
 }

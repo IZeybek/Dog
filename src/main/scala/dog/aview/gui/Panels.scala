@@ -195,13 +195,15 @@ object BoardPanel {
         fitHeight = 35
       }) {
         id = idx.toString
-        idx = idx + 1
+
 
         //Padding of FieldButtons
         val styleFirst: String = bgColor + "-fx-padding:0;"
+        val blackStyle: String = styleFirst + "-fx-background-color:#000000;"
+        val whiteStyle: String = styleFirst + "-fx-background-color:#ffffff;"
         var pressedButton: Boolean = false
-        style <== when(pressed) choose styleFirst + "-fx-background-color:#000000;" otherwise (when(hover) choose styleFirst + "-fx-background-color:#ffffff;" otherwise styleFirst)
-
+        style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (if (controller.gameState.clickedFieldIdx == idx) whiteStyle else styleFirst))
+        idx = idx + 1
         //field OnClickListener
         onAction = _ => {
           println("pressed field = " + this.getId)
@@ -209,6 +211,7 @@ object BoardPanel {
           InputCardMaster.UpdateCardInput()
             .withOtherPlayer(if (clickedCell.isFilled) clickedCell.p.head.nameAndIdx._2 else -1)
             .buildCardInput()
+          controller.clickedButton(this.getId.toInt)
         }
       })
       //

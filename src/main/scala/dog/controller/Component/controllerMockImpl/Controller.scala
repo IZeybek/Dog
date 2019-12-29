@@ -83,4 +83,6 @@ class Controller extends ControllerTrait {
    * @return a String that is returned to the TUI for more information
    */
   override def manageRound(inputCard: InputCard): String = ""
+
+  override def clickedButton(clickedFieldIdx: Int): Int = -1
 }
