@@ -207,7 +207,7 @@ object BoardPanel {
           println("pressed field = " + this.getId)
           val clickedCell = controller.gameState.board.cell(this.getId.toInt)
           InputCardMaster.UpdateCardInput()
-            .withOtherPlayer(if (clickedCell.isFilled) clickedCell.p.head.name._2 else -1)
+            .withOtherPlayer(if (clickedCell.isFilled) clickedCell.p.head.nameAndIdx._2 else -1)
             .buildCardInput()
         }
       })

@@ -54,7 +54,7 @@ class ControllerSpec extends WordSpec with Matchers {
           .withCardNum((0, 0))
           .withSelectedCard(controller.getSelectedCard(0, (0, 0)))
           .withMoveBy(0)
-          .buildCardInput()) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).name}${Console.RESET}'s turn\n")
+          .buildCardInput()) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n")
       }
       "move a player by 5" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))
@@ -176,11 +176,11 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.gameState.players._1(2).getPosition(2) should be(9)
 
         //check position on board
-        controller.gameState.board.cell(9).p.get.name should be("Player3")
-        controller.gameState.board.cell(0).p.get.name should be("Player4")
+        controller.gameState.board.cell(9).p.get.nameAndIdx should be("Player3")
+        controller.gameState.board.cell(0).p.get.nameAndIdx should be("Player4")
 
-        controller.board.cell(9).p.get.name should be("Player3")
-        controller.board.cell(0).p.get.name should be("Player4")
+        controller.board.cell(9).p.get.nameAndIdx should be("Player3")
+        controller.board.cell(0).p.get.nameAndIdx should be("Player4")
       }
       "swap two players when no player is on the field" in {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"))

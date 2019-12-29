@@ -6,7 +6,7 @@ import dog.model.CardComponent.cardBaseImpl.Card
 import scala.util.{Failure, Success, Try}
 
 
-case class Player(name: (String, Int), color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
+case class Player(nameAndIdx: (String, Int), color: String, piece: Map[Int, Piece], inHouse: Int, start: Int, cardList: List[CardTrait]) {
 
   val consoleColor: String = {
 
@@ -89,7 +89,7 @@ case class Player(name: (String, Int), color: String, piece: Map[Int, Piece], in
     }
   }
 
-  override def toString: String = name._1
+  override def toString: String = nameAndIdx._1
 }
 
 

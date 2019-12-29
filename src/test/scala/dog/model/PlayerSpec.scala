@@ -7,10 +7,10 @@ class PlayerSpec extends WordSpec with Matchers {
     "created" should {
       val player = Player(("PlayerSpec", 0), "gelb", Map(0 -> Piece(0), 1 -> Piece(0), 2 -> Piece(6), 3 -> Piece(0)), 4, 0, null)
       "have a name" in {
-        player.name._1 should not be empty
+        player.nameAndIdx._1 should not be empty
       }
       "be printed" in {
-        player.toString should be(player.name)
+        player.toString should be(player.nameAndIdx)
       }
       "have a color" in {
         player.consoleColor should be(player.consoleColor)

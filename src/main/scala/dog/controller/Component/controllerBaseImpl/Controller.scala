@@ -45,12 +45,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
 
-
     var returnString: String = ""
 
     if (useCardLogic(inputCard) == 0) {
       gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).name}${Console.RESET}'s turn\n"
+      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
       publish(new BoardChanged)
     } else {
       undoCommand()
@@ -172,13 +171,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override def toStringActivePlayerHand: String = {
     val player: Player = gameState.players._1(gameState.players._2)
-    s"${player.consoleColor}${player.name}${Console.RESET}'s hand cards: " + player.cardList + "\n"
+    s"${player.consoleColor}${player.nameAndIdx}${Console.RESET}'s hand cards: " + player.cardList + "\n"
   }
 
   override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
-    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.name} ${Console.RESET} --> myHand: " + x.cardList + "\n")
+    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.nameAndIdx} ${Console.RESET} --> myHand: " + x.cardList + "\n")
     playerHands
   }
 
