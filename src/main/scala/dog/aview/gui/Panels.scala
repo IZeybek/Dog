@@ -244,13 +244,13 @@ object BoardPanel {
           controller.clickedField(this.getId.toInt)
         }
       })
-      //
+
       center = new ScrollPane() {
         fitToWidth = true
         fitToHeight = true
-
         content() = newBoardGrid(amount, fieldIconSeq)
       }
+
       right = CardDeckPanel.newCardDeck(controller)
       left = PlayerStatusPanel.newStatusPane(controller)
     }
