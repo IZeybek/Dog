@@ -234,10 +234,12 @@ object BoardPanel {
           println("pressed field = " + this.getId)
           val clickedCell = controller.gameState.board.cell(this.getId.toInt)
           val actPlayer = controller.gameState.actualPlayer
+          val otherPlayer = if (clickedCell.isFilled) clickedCell.p.head.nameAndIdx._2 else -1
+          val pieceList = if (otherPlayer == -1) List(-1) else List(0, clickedCell.getPieceIdx)
           InputCardMaster.UpdateCardInput()
             .withActualPlayer(actPlayer)
-            .withOtherPlayer(if (clickedCell.isFilled) clickedCell.p.head.nameAndIdx._2 else -1)
-            .withPieceNum(if (clickedCell.p.get.nameAndIdx._2 == actPlayer) List(clickedCell.getPieceIdx) else List(0))
+            .withOtherPlayer(otherPlayer)
+            .withPieceNum(if (clickedCell.p.get.nameAndIdx._2 == actPlayer) List(clickedCell.getPieceIdx) else pieceList)
             .buildCardInput()
           controller.clickedField(this.getId.toInt)
         }
