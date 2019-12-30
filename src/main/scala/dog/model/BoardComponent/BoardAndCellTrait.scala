@@ -30,9 +30,11 @@ trait CellTrait {
 
   def p: Option[Player]
 
+  def getPieceIdx: Int
+
   def removePlayerFromCell(): CellTrait
 
-  def addPlayerToCell(p: Player): CellTrait
+  def addPlayerToCell(p: Player, newPieceIdx: Int): CellTrait
 
   def getColor: String
 

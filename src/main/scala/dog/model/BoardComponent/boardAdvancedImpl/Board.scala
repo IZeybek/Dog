@@ -11,6 +11,6 @@ class Board @Inject()(@Named("DefaultSize") size: Int) extends BaseBoard(size) {
 
 class BoardCreateStrategyNormal extends BoardCreateStrategyTemplate {
   override def fill(board: BoardTrait): BoardTrait = {
-    board.fill((0 until board.size).map(i => (i, Cell(None))).toMap)
+    board.fill((0 until board.size).map(i => (i, Cell(None, None))).toMap)
   }
 }

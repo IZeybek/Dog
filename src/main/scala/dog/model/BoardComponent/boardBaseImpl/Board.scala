@@ -8,7 +8,7 @@ import dog.model.Player
 case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   //can create a Board with a given size
-  def this(size: Int) = this((0 until size).map(i => (i, Cell(None))).toMap)
+  def this(size: Int) = this((0 until size).map(i => (i, Cell(None, None))).toMap)
 
   override def size: Int = boardMap.size
 
@@ -28,13 +28,13 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     box
   }
 
-  override def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait = {
-    val oldPos: Integer = player.piece(pieceNum).pos
+  override def updateMovePlayer(player: Player, pieceIdx: Integer, setPos: Integer): BoardTrait = {
+    val oldPos: Integer = player.piece(pieceIdx).pos
 
     //set old Cell unoccupied
     var nBoard: Map[Int, CellTrait] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell())
     //set new Pos as occupied
-    nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayerToCell(p = player))
+    nBoard = nBoard.updated(setPos, boardMap(setPos).addPlayerToCell(p = player, pieceIdx))
     copy(boardMap = nBoard)
   }
 
@@ -42,8 +42,8 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     val actPlayer: Player = player(inputCard.actualPlayer)
     val swapPlayer: Player = player(inputCard.otherPlayer)
     val selPiece = inputCard.selPieceList.head
-    var nBoard: BoardTrait = fill(cell(actPlayer.piece(selPiece).pos).addPlayerToCell(actPlayer), actPlayer.piece(selPiece).pos)
-    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piece(inputCard.selPieceList(1)).pos).addPlayerToCell(swapPlayer), swapPlayer.piece(inputCard.selPieceList(1)).pos)
+    var nBoard: BoardTrait = fill(cell(actPlayer.piece(selPiece).pos).addPlayerToCell(actPlayer, selPiece), actPlayer.piece(selPiece).pos)
+    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piece(inputCard.selPieceList(1)).pos).addPlayerToCell(swapPlayer, selPiece), swapPlayer.piece(inputCard.selPieceList(1)).pos)
     nBoard
   }
 

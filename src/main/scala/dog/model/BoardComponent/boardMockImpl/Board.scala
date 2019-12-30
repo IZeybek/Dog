@@ -17,7 +17,7 @@ class Board(var size: Int) extends BoardTrait {
 
   override def createNewBoard: BoardTrait = this
 
-  override def cell(idx: Int): CellTrait = Cell(None)
+  override def cell(idx: Int): CellTrait = Cell(None, None)
 
   override def fill(cell: CellTrait, pos: Int): BoardTrait = this
 

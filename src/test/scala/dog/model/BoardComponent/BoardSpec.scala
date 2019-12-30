@@ -22,22 +22,22 @@ class BoardSpec extends WordSpec with Matchers {
       }
       "check if player has to be overridden" in {
         val player = Player(("P1", 0), "green", Map(0 -> Piece(6)), List(0, 1, 2), 0, Nil, 0)
-        board = board.fill(Cell(Some(player)), 6)
+        board = board.fill(Cell(Some(player), Some(0)), 6)
         board.checkOverrideOtherPlayer(player, 0, 6) should be(true)
         board.checkOverrideOtherPlayer(player, 0, 3) should be(false)
       }
       "fill a board with a Map" in {
         val player = Player.PlayerBuilder().build()
-        board = board.fill(Map(8 -> Cell(Some(player)), 3 -> Cell(None)))
-        board.cell(8).isFilled should be(true)
-        board.cell(3).isFilled should be(false)
+        board = board.fill(Map(8 -> Cell(Some(player), Some(0)), 3 -> Cell(None, None)))
+        board.getBoardMap(8).isFilled should be(true)
+        board.getBoardMap(3).isFilled should be(false)
       }
       "swap two player" in {
         val player1: Player = Player.PlayerBuilder().withPiece(1, 0).withColor("violet").build()
         player1.piece(0).pos should be(0)
         val player2: Player = Player.PlayerBuilder().withPiece(1, 10).withColor("gray").build()
         player2.piece(0).pos should be(10)
-        board = board.fill(Map(0 -> Cell(Some(player1)), 10 -> Cell(Some(player2))))
+        board = board.fill(Map(0 -> Cell(Some(player1), Some(0)), 10 -> Cell(Some(player2), Some(0))))
         val inputCard = InputCardMaster.UpdateCardInput()
           .withActualPlayer(0)
           .withOtherPlayer(1)
