@@ -145,7 +145,7 @@ object PlayerStatusPanel {
     }
     var idx = 0
     val inHouse = Seq.fill(4)(new Button("") {
-      val color: String = if (player.inHouse <= idx) "" else player.color
+      val color: String = if (player.inHouse.size <= idx) "" else player.color
       idx = idx + 1
       val colorHouses: String = color match {
         case "green" => "-fx-background-color:#008000;";

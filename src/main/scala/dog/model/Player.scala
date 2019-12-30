@@ -8,9 +8,14 @@ import scala.util.{Failure, Success, Try}
 
 case class Player(nameAndIdx: (String, Int),
                   color: String, piece: Map[Int, Piece],
-                  inHouse: Int, start: Int,
+                  inHouse: List[Int],
+                  start: Int,
                   cardList: List[CardTrait],
                   homePosition: Int) {
+
+  def nextPiece(): Int = {
+    inHouse.head
+  }
 
   val consoleColor: String = {
 
@@ -31,35 +36,28 @@ case class Player(nameAndIdx: (String, Int),
   }
 
   def overridePlayer(pieceNum: Int): Player = {
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(this.homePosition)), inHouse = inHouse + 1)
+    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(homePosition)), inHouse = pieceNum :: inHouse)
   }
 
-  def setPosition(pieceNum: Int, newPos: Int): Player = {
-    val oldPos = piece(pieceNum).pos
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(newPos)), inHouse = {
-      if (oldPos == start && newPos - oldPos > 0) inHouse - 1
+  def setPosition(pieceIdx: Int, newPos: Int): Player = {
+    val oldPos = piece(pieceIdx).pos
+    copy(piece = piece.updated(pieceIdx, piece(pieceIdx).setPosition(newPos)), inHouse = {
+      if (oldPos == homePosition && newPos - oldPos >= 0) inHouse.filter(_ != pieceIdx)
       else inHouse
     })
   }
 
-  //  def getPosition(pieceNum: Int): Int = {
-  //    piece(pieceNum).position
-  //  }
 
-  def swapPiece(pieceNum: Int, newPos: Int): Player = {
-    copy(piece = piece.updated(pieceNum, piece(pieceNum).copy(pos = newPos)), inHouse = {
-      if (newPos == 0) inHouse + 1
-      else if (piece(pieceNum).pos == 0 && piece(pieceNum).pos < newPos) inHouse - 1
+  def swapPiece(pieceIdx: Int, newPos: Int): Player = {
+    copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)), inHouse = {
+      if (newPos == homePosition) pieceIdx :: inHouse
+      else if (piece(pieceIdx).pos == 0 && piece(pieceIdx).pos < newPos) inHouse.filter(_ != pieceIdx)
       else inHouse
     })
   }
 
   def setHandCards(myCards: List[CardTrait]): Player = {
     copy(cardList = myCards)
-  }
-
-  def this(name: (String, Int), c: String, pieces: Map[Int, Piece], cards: List[CardTrait], homePosition: Int) = {
-    this(name, color = c, piece = pieces, inHouse = pieces.size, 0, cards, homePosition)
   }
 
   def removeCard(card: CardTrait): Player = {
@@ -110,6 +108,7 @@ object Player {
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
   var pieces: Map[Int, Piece] = (0 until pieceAmount).map(i => (i, Piece(0))).toMap
   var homePosition = 0
+  var inhouse: List[Int] = List(0, 1, 2, 3)
 
   def reset(): Unit = {
     pieceAmount = 4
@@ -125,6 +124,7 @@ object Player {
       pieceAmount = piecesAmount
       homePosition = homePos
       pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
+      inhouse = (0 until piecesAmount).toList
       this
     }
 
@@ -156,10 +156,9 @@ object Player {
     }
 
     def build(): Player = {
-      val player: Player = new Player(name, color, pieces, cardsDeck, homePosition)
+      val player: Player = new Player(name, color, pieces, inhouse, 0, cardsDeck, homePosition)
       reset()
       player
     }
   }
-
 }

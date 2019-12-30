@@ -56,7 +56,7 @@ object CardLogic {
     //overriding player
     if (board.checkOverrideOtherPlayer(p, actPlayer, newPos)) {
       //get indexes and pieces
-      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
+      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.getBoardMap(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
 
       //check whether move valid or not
@@ -115,10 +115,11 @@ object CardLogic {
     println("------------------------------------------ssssssssss-------------------------- ")
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
+    val nextPiecePlay = gameState.players._1(inputCard.actualPlayer).nextPiece()
     cardOption(inputCard.cardNum._2) match {
       case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
       case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
-      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(0).buildCardInput())
+      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
     }
   }
@@ -127,10 +128,10 @@ object CardLogic {
   val twoPlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
-
+    val nextPiecePlay = gameState.players._1(inputCard.actualPlayer).nextPiece()
     cardOption(inputCard.cardNum._2) match {
       case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
-      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(0).buildCardInput())
+      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
     }
   }
@@ -146,7 +147,6 @@ object CardLogic {
       case "backward forward" => four
       case "move move play" => threePlay
       case "move play" => twoPlay
-      //            case "start" => Nil
       case _ => nothing
     }
   }

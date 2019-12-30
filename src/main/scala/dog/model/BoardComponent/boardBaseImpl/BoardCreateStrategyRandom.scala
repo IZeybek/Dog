@@ -20,7 +20,7 @@ class BoardCreateStrategyRandom extends BoardCreateStrategyTemplate {
   def update(player: Player): CellTrait = {
     Random.nextInt(1) match {
       case 0 =>
-        if (player.inHouse > 0)
+        if (player.inHouse.nonEmpty)
           Cell(Some(player))
         else
           Cell(None)
