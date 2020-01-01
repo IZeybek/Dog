@@ -9,9 +9,7 @@ trait BoardTrait {
 
   def toString: String
 
-  def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait
-
-  def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean
+  def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean
 
   def cell(idx: Int): CellTrait
 
@@ -22,17 +20,19 @@ trait BoardTrait {
   def fill(boardMap: Map[Int, CellTrait]): BoardTrait
 
   def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait
+
+  def getPieceIndex(idx: Int): Int
+
+  def updateMovePlayer(player: Player, oldPos: Int, newPos: Int): BoardTrait
 }
 
 trait CellTrait {
 
   def p: Option[Player]
 
-  def getPieceIdx: Int
-
   def removePlayerFromCell(): CellTrait
 
-  def addPlayerToCell(p: Player, newPieceIdx: Int): CellTrait
+  def addPlayerToCell(p: Player): CellTrait
 
   def getColor: String
 

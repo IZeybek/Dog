@@ -35,6 +35,8 @@ case class Player(nameAndIdx: (String, Int),
     -1
   }
 
+  def piecePosition(pieceNum: Int): Int = piece(pieceNum).pos
+
   def overridePlayer(pieceNum: Int): Player = {
     copy(piece = piece.updated(pieceNum, piece(pieceNum).setPosition(homePosition)), inHouse = pieceNum :: inHouse)
   }
@@ -161,4 +163,5 @@ object Player {
       player
     }
   }
+
 }

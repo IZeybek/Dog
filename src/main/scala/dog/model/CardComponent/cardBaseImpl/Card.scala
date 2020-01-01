@@ -43,18 +43,20 @@ object CardLogic {
   val move: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputC: InputCard) => {
 
     var isValid: Int = 0
-    val actPlayer = inputC.actualPlayer
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     val players: Vector[Player] = gameState.players._1
     var finalPlayer: Vector[Player] = Vector.empty[Player]
+    val actPlayer: Int = inputC.actualPlayer
     val p: Player = players(actPlayer)
     val board: BoardTrait = gameState.board
     val selPiece = inputC.selPieceList.head
-    val newPos: Int = Math.floorMod(inputC.moveBy + p.piece(selPiece).pos, board.size)
+
+    val oldPos: Int = p.piecePosition(selPiece)
+    val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, actPlayer, newPos)) {
+    if (board.checkOverrideOtherPlayer(p, newPos)) {
       //get indexes and pieces
       val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
@@ -64,14 +66,14 @@ object CardLogic {
 
       //update Vector when overridden
       val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      finalPlayer = overriddenPlayers.updated(actPlayer, players(actPlayer).setPosition(selPiece, newPos))
+      finalPlayer = overriddenPlayers.updated(actPlayer, p.setPosition(selPiece, newPos))
 
     } else {
       //update Vector when not overridden
-      finalPlayer = players.updated(actPlayer, players(actPlayer).setPosition(selPiece, newPos))
+      finalPlayer = players.updated(actPlayer, p.setPosition(selPiece, newPos))
     }
 
-    (board.updateMovePlayer(p, selPiece, newPos), finalPlayer, isValid)
+    (board.updateMovePlayer(p, oldPos, newPos), finalPlayer, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {

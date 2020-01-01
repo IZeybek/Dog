@@ -206,7 +206,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val up: String = "‾" * players.length * 3
     val down: String = "_" * players.length * 3
     var house: String = ""
-    players.indices.foreach(i => house = house + s" ${players(i).consoleColor}${players(i).inHouse}${Console.RESET} ")
+    players.indices.foreach(i => house = house + s" ${players(i).consoleColor}${players(i).inHouse.size}${Console.RESET} ")
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 

@@ -3,7 +3,7 @@ package dog.model.BoardComponent.boardBaseImpl
 import dog.model.BoardComponent.CellTrait
 import dog.model.Player
 
-case class Cell(p: Option[Player], pieceIdx: Option[Int]) extends CellTrait {
+case class Cell(p: Option[Player]) extends CellTrait {
 
   override def isFilled: Boolean = {
     p match {
@@ -12,24 +12,17 @@ case class Cell(p: Option[Player], pieceIdx: Option[Int]) extends CellTrait {
     }
   }
 
-  override def getPieceIdx: Int = {
-    this.pieceIdx match {
-      case Some(pieceIdx) => pieceIdx
-      case None => 0
-    }
-  }
-
   override def removePlayerFromCell(): Cell = {
     this.p match {
-      case Some(_) => copy(p = None, pieceIdx = None)
-      case None => copy(p = None, pieceIdx = None)
+      case Some(_) => copy(p = None)
+      case None => copy(p = None)
     }
   }
 
-  override def addPlayerToCell(newPlayer: Player, newPieceIdx: Int): Cell = {
+  override def addPlayerToCell(newPlayer: Player): Cell = {
     this.p match {
-      case Some(_) => copy(p = Some(newPlayer), pieceIdx = Some(newPieceIdx))
-      case None => copy(p = Some(newPlayer), pieceIdx = Some(newPieceIdx))
+      case Some(_) => copy(p = Some(newPlayer))
+      case None => copy(p = Some(newPlayer))
     }
   }
 

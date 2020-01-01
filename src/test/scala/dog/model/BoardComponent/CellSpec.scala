@@ -8,8 +8,8 @@ class CellSpec extends WordSpec with Matchers {
   "A Cell" when {
     "created" should {
       val player: Player = Player.PlayerBuilder().build()
-      val cellSpecTrue: Cell = Cell(Some(player), Some(0))
-      val cellSpecFalse: Cell = Cell(None, None)
+      val cellSpecTrue: Cell = Cell(Some(player))
+      val cellSpecFalse: Cell = Cell(None)
       "be filled" in {
         cellSpecTrue.p should be(Some(player))
       }
@@ -17,12 +17,12 @@ class CellSpec extends WordSpec with Matchers {
         cellSpecFalse.p should be(None)
       }
       "add Player to Cell" in {
-        cellSpecFalse.addPlayerToCell(player, 0).p should be(Some(player))
+        cellSpecFalse.addPlayerToCell(player).p should be(Some(player))
         cellSpecFalse.removePlayerFromCell()
       }
       "remove Player from Cell" in {
         cellSpecTrue.removePlayerFromCell().p should be(None)
-        cellSpecFalse.addPlayerToCell(player, 0).p should be(Some(player))
+        cellSpecFalse.addPlayerToCell(player).p should be(Some(player))
       }
       "be printed out" in {
         cellSpecTrue.toString should be("[" + player.consoleColor + "x" + Console.RESET + "]")
