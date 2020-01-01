@@ -104,7 +104,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
         val cardList: List[CardTrait] = Card("1", "move", "blue") :: Card("8", "move", "blue") :: Nil
 
-        controller.testDistributeCardsToPlayer(playerNum = 3, cardList)
+        controller.testDistributeCardsToPlayer(playerNum = 3, cardList).cardList should be(cardList)
         val inputCard1 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(0)
           .withPieceNum(List(0))
@@ -127,8 +127,8 @@ class ControllerSpec extends WordSpec with Matchers {
 
       }
       "swap two players" in {
-        controller.createNewBoard(28)
-        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
+        controller.createNewBoard(28) should be(new Board(28))
+        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1.length should be(4)
         val cardListP2: List[CardTrait] = Card("swap", "swap", "red") :: Nil
         val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("9", "move", "blue") :: Nil
 
