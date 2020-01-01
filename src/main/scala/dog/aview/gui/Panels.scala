@@ -2,7 +2,7 @@ package dog.aview.gui
 
 import dog.aview.gui.CardPanel.stdPath
 import dog.controller.{ControllerTrait, InputCardMaster}
-import dog.model.BoardComponent.BoardTrait
+import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
 import javafx.scene.layout.GridPane
@@ -42,7 +42,7 @@ object CardPanel extends PanelMaster {
       onAction = _ => {
         println("----------------------------------------- Clicked IconID : " + getId.toInt)
         controller.manageRound(InputCardMaster.UpdateCardInput()
-          .withActualPlayer(controller.gameState.actualPlayer)
+          .withActualPlayer(controller.gameStateMaster.actualPlayer)
           .withCardNum((cardIdx, getId.toInt))
           .withSelectedCard(controller.getSelectedCard(controller.gameState.players._2, (cardIdx, getId.toInt)))
           .buildCardInput())
@@ -112,7 +112,7 @@ object PlayerStatusPanel {
   }
 
   def newLaidCard(c: ControllerTrait): Button = {
-    val lastCard = if (!c.gameStateMaster.getLastPlayedCard.symbol.equals("pseudo")) c.gameStateMaster.getLastPlayedCard.symbol else "laidcarddeck"
+    val lastCard = if (!c.gameState.lastPlayedCard.symbol.equals("pseudo")) c.gameState.lastPlayedCard.symbol else "laidcarddeck"
 
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = 200
@@ -189,7 +189,8 @@ object BoardPanel {
       var idx = 0
       val fieldIconSeq: Seq[Button] = Seq.fill(amount)(new Button("", new ImageView(
         stdPath +
-          (if (!board.cell(idx).getColor.equals(" ")) board.cell(idx).getColor
+          (if (board.cell(idx).isFilled)
+            board.cell(idx).getColor
           else "field") + ".png") {
         fitWidth = 35
         fitHeight = 35
@@ -227,21 +228,35 @@ object BoardPanel {
           case "red" => red
           case _ => "-fx-border-color:transparent;"
         }
-        this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (if (controller.gameState.clickedFieldIdx == idx) whiteStyle else stdStyle + borderColor))
+
+        this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (if (controller.gameStateMaster.clickedFieldIdx == idx)
+          whiteStyle
+        else
+          stdStyle + borderColor))
+
         idx = idx + 1
         //field OnClickListener
         onAction = _ => {
           println("pressed field = " + this.getId)
-          val clickedCell = controller.gameState.board.cell(this.getId.toInt)
-          val actPlayer = controller.gameState.actualPlayer
-          val otherPlayer = if (clickedCell.isFilled) clickedCell.p.head.nameAndIdx._2 else -1
-          val pieceList = if (otherPlayer == -1) List(-1) else List(0, board.getPieceIndex(this.getId.toInt))
+          val clickedCell: CellTrait = controller.gameState.board.cell(this.getId.toInt)
+          val actPlayer: Int = controller.gameStateMaster.actualPlayer
+          val otherPlayer: Int = if (clickedCell.isFilled)
+            clickedCell.p.head.nameAndIdx._2
+          else
+            -1
+
+          val pieceList: List[Int] = if (otherPlayer == -1)
+            List(-1)
+          else
+            List(0, board.getPieceIndex(this.getId.toInt))
           //          val pieceList = if (otherPlayer == -1) List(-1) else List(0, clickedCell.getPieceIdx)
           InputCardMaster.UpdateCardInput()
             .withActualPlayer(actPlayer)
             .withOtherPlayer(otherPlayer)
-            .withPieceNum(if (clickedCell.p.get.nameAndIdx._2 == actPlayer) List(board.getPieceIndex(this.getId.toInt)) else pieceList)
-            .buildCardInput()
+            .withPieceNum(if (clickedCell.p.get.nameAndIdx._2 == actPlayer)
+              List(board.getPieceIndex(this.getId.toInt))
+            else
+              pieceList)
           controller.clickedField(this.getId.toInt)
         }
       })

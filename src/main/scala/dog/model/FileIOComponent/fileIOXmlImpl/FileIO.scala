@@ -8,7 +8,7 @@ import dog.model.CardComponent.CardTrait
 import dog.model.FileIOComponent.FileIOTrait
 import dog.model.{Piece, Player}
 
-import scala.xml.PrettyPrinter
+import scala.xml.{Elem, PrettyPrinter}
 
 class FileIO extends FileIOTrait {
   override def load: GameState = ???
@@ -22,35 +22,35 @@ class FileIO extends FileIOTrait {
     pw.close()
   }
 
-  def gameStateToXml(gameState: GameState) = {
+  def gameStateToXml(gameState: GameState): Elem = {
     <gamestate actPlayer={gameState.players._2.toString} cardDeckPointer={gameState.cardDeck._2.toString}>
     </gamestate>
   }
 
-  def playerToXml(player: Player) = {
+  def playerToXml(player: Player): Elem = {
     <player name={player.nameAndIdx._1} color={player.color} piece={pieceToXml(player.piece)}>
     </player>
   }
 
-  def pieceToXml(piece: Map[Int, Piece]) = {
+  def pieceToXml(piece: Map[Int, Piece]): Elem = {
     <piece>
       {piece.foreach(x => x._2.pos)}
     </piece>
   }
 
-  def cardToXml(card: CardTrait) = {
+  def cardToXml(card: CardTrait): Elem = {
     <card>
       {card}
     </card>
   }
 
-  def boardToXml(board: BoardTrait) = {
+  def boardToXml(board: BoardTrait): Elem = {
     <board size={board.size.toString}>
       {(0 until board.size).foreach(x => cellToXml(board.cell(x)))}
     </board>
   }
 
-  def cellToXml(cell: CellTrait) = {
+  def cellToXml(cell: CellTrait): Elem = {
     <cell player={cell.p match {
       case Some(p) => playerToXml(p).toString()
     }}>

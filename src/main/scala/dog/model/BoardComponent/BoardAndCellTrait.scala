@@ -39,4 +39,6 @@ trait CellTrait {
   def toString: String
 
   def isFilled: Boolean
+
+  def checkIfPlayer(player: Player): Boolean
 }

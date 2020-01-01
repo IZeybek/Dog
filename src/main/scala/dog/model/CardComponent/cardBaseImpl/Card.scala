@@ -44,8 +44,7 @@ object CardLogic {
 
     var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val players: Vector[Player] = gameState.players._1
-    var finalPlayer: Vector[Player] = Vector.empty[Player]
+    var players: Vector[Player] = gameState.players._1
     val actPlayer: Int = inputC.actualPlayer
     val p: Player = players(actPlayer)
     val board: BoardTrait = gameState.board
@@ -65,31 +64,29 @@ object CardLogic {
       if (oPlayerPieceNum == -1) isValid = -1
 
       //update Vector when overridden
-      val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      finalPlayer = overriddenPlayers.updated(actPlayer, p.setPosition(selPiece, newPos))
+      players = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
+      players = players.updated(actPlayer, p.setPosition(selPiece, newPos))
 
     } else {
       //update Vector when not overridden
-      finalPlayer = players.updated(actPlayer, p.setPosition(selPiece, newPos))
+      players = players.updated(actPlayer, p.setPosition(selPiece, newPos))
     }
 
-    (board.updateMovePlayer(p, oldPos, newPos), finalPlayer, isValid)
+    (board.updateMovePlayer(p, oldPos, newPos), players, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
-    val p: Player = gameState.players._1(gameState.actualPlayer)
+    val p: Player = gameState.actualPlayer
     val swapPlayer: Player = gameState.players._1(inputCard.otherPlayer)
     val selPiece = inputCard.selPieceList.head
-    val actPlayer = inputCard.actualPlayer
-
     val swapPos: (Int, Int) = (p.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
 
     if (swapPos._2 == swapPlayer.homePosition) isValid = -1 //Second Player is not on the field
 
-    var players: Vector[Player] = gameState.players._1.updated(actPlayer, p.swapPiece(selPiece, swapPos._2)) //swap with second player
+    var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayer, p.swapPiece(selPiece, swapPos._2)) //swap with second player
 
     players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
 

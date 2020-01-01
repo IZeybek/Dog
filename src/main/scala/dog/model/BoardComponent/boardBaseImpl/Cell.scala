@@ -12,17 +12,14 @@ case class Cell(p: Option[Player]) extends CellTrait {
     }
   }
 
-  override def removePlayerFromCell(): Cell = {
-    this.p match {
-      case Some(_) => copy(p = None)
-      case None => copy(p = None)
-    }
-  }
+  override def removePlayerFromCell(): Cell = copy(None)
 
-  override def addPlayerToCell(newPlayer: Player): Cell = {
-    this.p match {
-      case Some(_) => copy(p = Some(newPlayer))
-      case None => copy(p = Some(newPlayer))
+  override def addPlayerToCell(newPlayer: Player): Cell = copy(p = Some(newPlayer))
+
+  override def checkIfPlayer(player: Player): Boolean = {
+    p match {
+      case Some(playerOnCell) => playerOnCell.color == player.color
+      case None => false
     }
   }
 

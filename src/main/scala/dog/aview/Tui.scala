@@ -50,7 +50,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
         print(controller.toStringPlayerHands)
         result = "printed game"
       case _ =>
-        val actualPlayer = controller.gameState.actualPlayer
+        val actualPlayer: Int = controller.gameStateMaster.actualPlayer
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           //for having full control
           case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
