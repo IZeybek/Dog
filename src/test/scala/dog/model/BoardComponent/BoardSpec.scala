@@ -29,8 +29,8 @@ class BoardSpec extends WordSpec with Matchers {
       "fill a board with a Map" in {
         val player = Player.PlayerBuilder().build()
         board = board.fill(Map(8 -> Cell(Some(player), Some(0)), 3 -> Cell(None, None)))
-        board.getBoardMap(8).isFilled should be(true)
-        board.getBoardMap(3).isFilled should be(false)
+        board.cell(8).isFilled should be(true)
+        board.cell(3).isFilled should be(false)
       }
       "swap two player" in {
         val player1: Player = Player.PlayerBuilder().withPiece(1, 0).withColor("violet").build()
@@ -45,8 +45,8 @@ class BoardSpec extends WordSpec with Matchers {
           .withCardNum((0, 0))
           .buildCardInput()
         board = board.updateSwapPlayers(Vector(player1, player2), inputCard)
-        board.getBoardMap(10).getColor should be("gray")
-        board.getBoardMap(0).getColor should be("violet")
+        board.cell(10).getColor should be("gray")
+        board.cell(0).getColor should be("violet")
       }
     }
   }

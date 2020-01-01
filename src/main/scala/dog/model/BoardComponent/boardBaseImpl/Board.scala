@@ -14,8 +14,6 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   override def cell(idx: Int): CellTrait = boardMap(idx)
 
-  override def getBoardMap: Map[Int, CellTrait] = boardMap
-
   override def toString: String = {
     var box = ""
     val line_down = "_" * boardMap.size * 3 + "\n"

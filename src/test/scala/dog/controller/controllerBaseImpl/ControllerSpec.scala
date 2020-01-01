@@ -175,11 +175,11 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.gameState.players._1(2).piece(2).pos should be(2)
 
         //check position on board
-        controller.gameState.board.getBoardMap(14).p.get.nameAndIdx._1 should be("Player4")
-        controller.gameState.board.getBoardMap(2).p.get.nameAndIdx._1 should be("Player3")
+        controller.gameState.board.cell(14).p.get.nameAndIdx._1 should be("Player4")
+        controller.gameState.board.cell(2).p.get.nameAndIdx._1 should be("Player3")
 
-        controller.board.getBoardMap(14).p.get.nameAndIdx._1 should be("Player4")
-        controller.board.getBoardMap(2).p.get.nameAndIdx._1 should be("Player3")
+        controller.board.cell(14).p.get.nameAndIdx._1 should be("Player4")
+        controller.board.cell(2).p.get.nameAndIdx._1 should be("Player3")
       }
       "swap two players when no player is on the field" in {
         controller.createNewBoard(28)

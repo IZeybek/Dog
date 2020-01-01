@@ -56,7 +56,7 @@ object CardLogic {
     //overriding player
     if (board.checkOverrideOtherPlayer(p, actPlayer, newPos)) {
       //get indexes and pieces
-      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.getBoardMap(newPos).getColor)
+      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
 
       //check whether move valid or not
