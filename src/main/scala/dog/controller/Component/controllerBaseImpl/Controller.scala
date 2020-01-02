@@ -68,7 +68,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   /**
    * uses the card and extracts its logic
    *
-   * @param inputCard is a build with all the information needed for its cardLogic
+   * @param inputCard is a build with all the information needed for cardLogic
    *                  @ param selectedPlayerList is the list of Players -> first one is the actual player =>
    *                  managed by manageRound but can also be set manually for testing purposes
    *                  @ param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
