@@ -45,17 +45,16 @@ object CardLogic {
     var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Vector[Player] = gameState.players._1
-    val actPlayer: Int = inputC.actualPlayer
-    val p: Player = players(actPlayer)
+    val actPlayerIndex: Int = inputC.actualPlayer
+    val actualPlayer: Player = players(actPlayerIndex)
     val board: BoardTrait = gameState.board
     val selPiece = inputC.selPieceList.head
 
-    val oldPos: Int = p.piecePosition(selPiece)
+    val oldPos: Int = actualPlayer.piecePosition(selPiece)
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
-
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, newPos)) {
+    if (board.checkOverrideOtherPlayer(actualPlayer, newPos)) {
       //get indexes and pieces
       val oPlayerIdx: Int = players.indexWhere(x => x.color == board.cell(newPos).getColor)
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
@@ -63,16 +62,12 @@ object CardLogic {
       //check whether move valid or not
       if (oPlayerPieceNum == -1) isValid = -1
 
-      //update Vector when overridden
+      //set other Player back to home position
       players = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      players = players.updated(actPlayer, p.setPosition(selPiece, newPos))
-
-    } else {
-      //update Vector when not overridden
-      players = players.updated(actPlayer, p.setPosition(selPiece, newPos))
     }
+    players = players.updated(actPlayerIndex, actualPlayer.setPosition(selPiece, newPos))
 
-    (board.updateMovePlayer(p, oldPos, newPos), players, isValid)
+    (board.updateMovePlayer(players(actPlayerIndex), oldPos, newPos), players, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {

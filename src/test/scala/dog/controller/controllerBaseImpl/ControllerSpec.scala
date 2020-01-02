@@ -1,7 +1,7 @@
 package dog.controller.controllerBaseImpl
 
 import dog.controller.Component.controllerBaseImpl.Controller
-import dog.controller.InputCardMaster
+import dog.controller.{InputCard, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
@@ -56,13 +56,14 @@ class ControllerSpec extends WordSpec with Matchers {
           .withMoveBy(0)
           .buildCardInput()) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n")
       }
-      "move a player by 5" in {
+      "move a player by 3 and 5" in {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
 
+
         val cardList: List[CardTrait] = Card("3", "move", "blue") :: Card("5", "move", "blue") :: Nil
         controller.givePlayerCards(playerNum = 3, cardList).cardList should be(cardList)
-        val inputCard1 = InputCardMaster.UpdateCardInput()
+        val inputCard1: InputCard = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withOtherPlayer(-1)
           .withPieceNum(List(0))
@@ -71,8 +72,15 @@ class ControllerSpec extends WordSpec with Matchers {
           .buildCardInput()
         controller.manageRound(inputCard1)
         controller.gameState.players._1(3).piece(0).pos should be(24)
+        controller.gameState.players._1(3).piecePosition(0) should be(24)
+        controller.gameState.players._1(3).getPieceNum(24) should be(0)
+        controller.gameState.players._1(3).getPieceNum(25) should be(-1)
+        controller.gameState.board.cell(24).isFilled should be(true)
+        controller.gameState.board.cell(24).getColor should be("red")
 
-        val inputCard2 = InputCardMaster.UpdateCardInput()
+        controller.gameState.board.getPieceIndex(24) should be(0)
+
+        val inputCard2: InputCard = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withOtherPlayer(0)
           .withPieceNum(List(1))
