@@ -9,7 +9,6 @@ import scala.util.{Failure, Success, Try}
 case class Player(nameAndIdx: (String, Int),
                   color: String, piece: Map[Int, Piece],
                   inHouse: List[Int],
-                  start: Int,
                   cardList: List[CardTrait],
                   homePosition: Int) {
 
@@ -158,7 +157,7 @@ object Player {
     }
 
     def build(): Player = {
-      val player: Player = new Player(name, color, pieces, inhouse, 0, cardsDeck, homePosition)
+      val player: Player = new Player(name, color, pieces, inhouse, cardsDeck, homePosition)
       reset()
       player
     }
