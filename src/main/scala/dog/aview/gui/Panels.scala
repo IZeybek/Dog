@@ -217,9 +217,9 @@ object BoardPanel {
         val yellow: String = "-fx-border-color:#ffff00;"
         val green: String = "-fx-border-color:#00FF00;"
         var borderColor = ""
-        var homeColor = "test"
+        var homeColor = ""
 
-        controller.gameState.players._1.foreach(i => if (i.homePosition == idx && homeColor.equals("test")) homeColor = i.color)
+        controller.gameState.players._1.foreach(i => if (i.homePosition == idx && homeColor.equals("")) homeColor = i.color)
 
         borderColor = homeColor match {
           case "green" => green
@@ -246,18 +246,19 @@ object BoardPanel {
             -1
 
           val pieceList: List[Int] = if (otherPlayer == -1)
-            List(-1)
+            List(0)
           else
             List(0, board.getPieceIndex(this.getId.toInt))
           //          val pieceList = if (otherPlayer == -1) List(-1) else List(0, clickedCell.getPieceIdx)
           InputCardMaster.UpdateCardInput()
             .withActualPlayer(actPlayer)
             .withOtherPlayer(otherPlayer)
-            .withPieceNum(if (clickedCell.p.get.nameAndIdx._2 == actPlayer)
+            .withPieceNum(if (clickedCell.isFilled && clickedCell.p.get.nameAndIdx._2 == actPlayer)
               List(board.getPieceIndex(this.getId.toInt))
             else
               pieceList)
           controller.clickedField(this.getId.toInt)
+          println(InputCardMaster.selPieceList)
         }
       })
 

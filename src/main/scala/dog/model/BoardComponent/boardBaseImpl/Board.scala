@@ -1,6 +1,5 @@
 package dog.model.BoardComponent.boardBaseImpl
 
-import dog.controller.InputCard
 import dog.model.BoardComponent.boardAdvancedImpl.BoardCreateStrategyNormal
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.Player
@@ -28,7 +27,7 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   override def getPieceIndex(idx: Int): Int = {
     boardMap(idx).p match {
-      case Some(player) => player.getPieceNum(idx)
+      case Some(player) => println("sssssssssssssssssssss"); player.getPieceNum(idx)
       case None => -1
     }
   }
@@ -41,12 +40,12 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     copy(boardMap = nBoard)
   }
 
-  override def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait = {
-    val actPlayer: Player = player(inputCard.actualPlayer)
-    val swapPlayer: Player = player(inputCard.otherPlayer)
-    val selPiece = inputCard.selPieceList.head
+  override def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait = {
+
+    val selPiece = selPieceList.head
+    val otherPlayerPiece = selPieceList(1)
     var nBoard: BoardTrait = fill(cell(actPlayer.piecePosition(selPiece)).addPlayerToCell(actPlayer), actPlayer.piecePosition(selPiece))
-    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piecePosition(inputCard.selPieceList(1))).addPlayerToCell(swapPlayer), swapPlayer.piecePosition(inputCard.selPieceList(1)))
+    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piecePosition(otherPlayerPiece)).addPlayerToCell(swapPlayer), swapPlayer.piecePosition(otherPlayerPiece))
     nBoard
   }
 

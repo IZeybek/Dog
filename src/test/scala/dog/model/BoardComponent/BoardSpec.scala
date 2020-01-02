@@ -46,7 +46,7 @@ class BoardSpec extends WordSpec with Matchers {
           .withPieceNum(List(0, 0))
           .withCardNum((0, 0))
           .buildCardInput()
-        board = board.updateSwapPlayers(Vector(player1, player2), inputCard)
+        board = board.updateSwapPlayers(player1, player2, inputCard.selPieceList)
         board.cell(10).getColor should be("gray")
         board.cell(0).getColor should be("violet")
       }

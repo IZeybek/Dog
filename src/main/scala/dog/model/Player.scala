@@ -29,6 +29,7 @@ case class Player(nameAndIdx: (String, Int),
 
   def getPieceNum(position: Int): Int = {
     piece.foreach(x => if (x._2.pos == position) {
+      println(x._2.pos)
       return x._1
     })
     -1
@@ -80,7 +81,7 @@ case class Player(nameAndIdx: (String, Int),
   def getCard(cardNum: Int): CardTrait = {
     tryGetCard(cardNum) match {
       case Some(value) => value
-      case None => throw new Exception("Es konnte keine Karte ausgewählt!\n")
+      case None => throw new Exception("Es konnte keine Karte ausgewählt werden!\n")
     }
   }
 
@@ -95,7 +96,7 @@ case class Player(nameAndIdx: (String, Int),
 }
 
 
-case class Piece(var pos: Int) {
+case class Piece(pos: Int) {
 
   def setPosition(newPosition: Int): Piece = copy(pos = newPosition)
 
@@ -109,7 +110,7 @@ object Player {
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
   var pieces: Map[Int, Piece] = (0 until pieceAmount).map(i => (i, Piece(0))).toMap
   var homePosition = 0
-  var inhouse: List[Int] = List(0, 1, 2, 3)
+  var inHouse: List[Int] = List(0, 1, 2, 3)
 
   def reset(): Unit = {
     pieceAmount = 4
@@ -125,7 +126,7 @@ object Player {
       pieceAmount = piecesAmount
       homePosition = homePos
       pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
-      inhouse = (0 until piecesAmount).toList
+      inHouse = (0 until piecesAmount).toList
       this
     }
 
@@ -157,7 +158,7 @@ object Player {
     }
 
     def build(): Player = {
-      val player: Player = new Player(name, color, pieces, inhouse, cardsDeck, homePosition)
+      val player: Player = new Player(name, color, pieces, inHouse, cardsDeck, homePosition)
       reset()
       player
     }

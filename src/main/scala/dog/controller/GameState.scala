@@ -26,7 +26,6 @@ class GameStateMaster extends GameStateMasterTrait {
   override var pieceAmount = 4
   override var boardSize: Int = 64 // hast to be dividable by 4
   //player with player pointer
-  override var tutorial: Boolean = true
   override var colors: Array[String] = Array("yellow", "white", "green", "red")
   override var playerNames: Array[String] = Array("Player 1", "Player 2", "Player 3", "Player 4")
   override var board: BoardTrait = new Board(boardSize)

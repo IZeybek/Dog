@@ -21,7 +21,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override def clickedField(clickedFieldIdx: Int): Int = {
     gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx)
-    publish(new BoardChanged)
+    publish(new GuiChanged)
     clickedFieldIdx
   }
 
@@ -53,7 +53,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-    println("homepos: " + gameState.actualPlayer.homePosition)
     if (useCardLogic(inputCard) == 0) {
       gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
       returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"

@@ -8,7 +8,6 @@ import dog.model.Player
 
 trait GameStateMasterTrait {
 
-  var tutorial: Boolean
   var colors: Array[String]
   var playerNames: Array[String]
   var players: Vector[Player]
@@ -76,19 +75,12 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withTutorial(setTutorial: Boolean): UpdateGame = {
-      tutorial = setTutorial
-      this
-    }
-
     def withClickedField(clickedField: Int): UpdateGame = {
       clickedFieldIdx = clickedField
       this
     }
 
     def resetGame: GameState = {
-      tutorial = true
-
       //Board
       boardSize = 64 // hast to be dividable by 4
       board = new Board(boardSize)

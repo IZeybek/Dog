@@ -1,6 +1,5 @@
 package dog.model.BoardComponent
 
-import dog.controller.InputCard
 import dog.model.Player
 
 trait BoardTrait {
@@ -19,11 +18,11 @@ trait BoardTrait {
 
   def fill(boardMap: Map[Int, CellTrait]): BoardTrait
 
-  def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait
-
   def getPieceIndex(idx: Int): Int
 
   def updateMovePlayer(player: Player, oldPos: Int, newPos: Int): BoardTrait
+
+  def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait
 }
 
 trait CellTrait {
