@@ -40,7 +40,9 @@ class GameStateMaster extends GameStateMasterTrait {
 
   override var clickedFieldIdx: Int = -1
   //cards of game
-  override var cardDeck: Vector[CardTrait] = CardDeck.CardDeckBuilder().withAmount(List(10, 10)).withShuffle.buildCardVector
+  override var cardDeck: Vector[CardTrait] = CardDeck.CardDeckBuilder().
+    withAmount(List(10, 10)).
+    withShuffle.buildCardVector
   override var cardPointer: Int = cardDeck.length
   override var lastPlayedCard: Option[CardTrait] = None
 }
