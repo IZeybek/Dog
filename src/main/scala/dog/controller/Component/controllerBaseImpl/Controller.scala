@@ -17,14 +17,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
-  override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
+  override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
   override def clickedField(clickedFieldIdx: Int): Int = {
     gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx)
-    publish(new GuiChanged)
+    publish(new BoardChanged)
     clickedFieldIdx
   }
-
 
   override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
 
@@ -53,14 +52,16 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-    if (useCardLogic(inputCard) == 0) {
-      gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
-      publish(new BoardChanged)
-    } else {
-      undoCommand()
-      undoCommand()
-      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+    println("homepos: " + gameState.actualPlayer.homePosition)
+    useCardLogic(inputCard) match {
+      case 0 =>
+        gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
+        returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
+        publish(new BoardChanged)
+      case _ =>
+        undoCommand()
+        undoCommand()
+        returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
     }
     returnString
   }
@@ -68,7 +69,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   /**
    * uses the card and extracts its logic
    *
-   * @param inputCard is a build with all the information needed for cardLogic
+   * @param inputCard is a build with all the information needed for its cardLogic
    *                  @ param selectedPlayerList is the list of Players -> first one is the actual player =>
    *                  managed by manageRound but can also be set manually for testing purposes
    *                  @ param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
@@ -76,7 +77,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return
    */
   override def useCardLogic(inputCard: InputCard): Int = {
-
     if (gameState.actualPlayer.cardList.nonEmpty) {
       val strategy = CardLogic.getLogic(inputCard.selectedCard.task)
       val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(strategy, gameState, inputCard)
