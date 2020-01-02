@@ -98,7 +98,11 @@ trait GameStateMasterTrait {
       playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")
       colors = Array("yellow", "white", "green", "red")
       pieceAmount = 4
-      players = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).withPiece(pieceAmount, (boardSize / playerNames.length) * i).withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
+      players = playerNames.indices.map(i => Player.PlayerBuilder().
+        withColor(colors(i)).
+        withName((playerNames(i), i)).
+        withPiece(pieceAmount, (boardSize / playerNames.length) * i).
+        withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
       actualPlayer = 0
 
       // Card
