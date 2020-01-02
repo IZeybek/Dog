@@ -127,7 +127,7 @@ object Player {
       pieceAmount = piecesAmount
       homePosition = homePos
       pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
-      inhouse = (0 until piecesAmount).toList
+      inHouse = (0 until piecesAmount).toList
       this
     }
 
