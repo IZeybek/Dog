@@ -155,6 +155,7 @@ object CardLogic {
 object Card {
 
   var amount = 6
+  var shuffledCards: List[CardTrait] = Random.shuffle(CardDeck.CardDeckBuilder().withAmount(List(amount * 2, amount * 2)).buildCardList)
 
   case class RandomCardsBuilder() {
 
@@ -164,9 +165,14 @@ object Card {
     }
 
     def buildRandomCardList: List[CardTrait] = {
-      val shuffledCardList: List[CardTrait] = Random.shuffle(CardDeck.CardDeckBuilder().withAmount(List(amount * 2, amount * 2)).buildCardList)
-      shuffledCardList.take(amount)
+      shuffledCards = Random.shuffle(CardDeck.CardDeckBuilder().withAmount(List(amount * 2, amount * 2)).buildCardList)
+      shuffledCards.take(amount)
     }
+
+    def buildRandomCardVector: Vector[CardTrait] = {
+      shuffledCards.toVector.take(amount)
+    }
+
   }
 
 }
