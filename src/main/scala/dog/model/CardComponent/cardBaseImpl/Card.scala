@@ -1,6 +1,6 @@
 package dog.model.CardComponent.cardBaseImpl
 
-import dog.controller.{GameState, InputCard, InputCardMaster, JokerState}
+import dog.controller.{GameState, InputCard, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.{CardDeckTrait, CardTrait}
 import dog.model.Player
@@ -135,37 +135,77 @@ object CardLogic {
     }
   }
 
+
   val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
     println("joker")
+    val playerVektor = gameState.players._1
+    val actPlayer = gameState.players._1(inputCard.actualPlayerIdx)
 
     if (JokerState.state.equals(JokerState.unpacked)) {
       println("unpacked -> ")
-      val updatedGameState = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
       JokerState.handle
-      (updatedGameState._1, updatedGameState._2, 1)
+      val updatedGameState = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
+      val players = playerVektor.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
+      InputCardMaster.UpdateCardInput().withCardNum(JokerState.cachedCardList._2, 0).buildCardInput()
+
+      (updatedGameState._1, players, 0)
     } else {
       JokerState.handle
-      (gameState.board, gameState.players._1, 1)
+      JokerState.cachedCardList = (gameState.players._1(inputCard.actualPlayerIdx).cardList, inputCard.cardIdxAndOption._1)
+      val players = playerVektor.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList))
+
+      (gameState.board, players, 1)
     }
 
 
+  }
 
+  def getLogic(mode: String): (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = {
+    if (JokerState.state.equals(JokerState.packed)) {
+      mode match {
+        case "move" => move
+        case "swap" => swap
+        case "backward forward" => four
+        case "move move play" => threePlay
+        case "move play" => twoPlay
+        case "joker" => joker
+        case _ => nothing
+      }
+    } else {
+      joker
+    }
+  }
+
+  trait State {
+    def changeState(): State
   }
 
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
     callback(gameState, inputCard)
   }
 
-  def getLogic(mode: String): (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = {
-    mode match {
-      case "move" => move
-      case "swap" => swap
-      case "backward forward" => four
-      case "move move play" => threePlay
-      case "move play" => twoPlay
-      case "joker" => joker
-      case _ => nothing
+  object JokerState {
+    var state: State = packed
+    var cachedCardList: (List[CardTrait], Int) = _
+
+    def handle: State = state.changeState()
+
+    object unpacked extends State {
+      override def changeState(): State = {
+        state = packed
+        println("packed Joker")
+        state
+      }
     }
+
+    object packed extends State {
+      override def changeState(): State = {
+        state = unpacked
+        println("unpacked Joker")
+        state
+      }
+    }
+
   }
 }
 

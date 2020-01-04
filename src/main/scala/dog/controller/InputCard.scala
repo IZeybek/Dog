@@ -4,32 +4,6 @@ import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
 
-trait State {
-  def changeState(): State
-}
-
-
-object JokerState {
-  var state: State = packed
-
-  def handle: State = state.changeState()
-
-  object unpacked extends State {
-    override def changeState(): State = {
-      state = packed
-      println("packed Joker")
-      state
-    }
-  }
-
-  object packed extends State {
-    override def changeState(): State = {
-      state = unpacked
-      println("unpacked Joker")
-      state
-    }
-  }
-}
 
 
 case class InputCard(actualPlayerIdx: Int, otherPlayer: Int, selPieceList: List[Int], cardIdxAndOption: (Int, Int), selectedCard: CardTrait, moveBy: Int)
@@ -42,6 +16,7 @@ object InputCardMaster {
   var selPieceList: List[Int] = List(0)
   var cardNum: (Int, Int) = (0, 0)
   var actualPlayerIdx = 0
+  var actualPlayer: Player = _
   var moveBy: Int = 0
   var selCard: CardTrait = _
   var strategyMode: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = _

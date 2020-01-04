@@ -1,7 +1,6 @@
 package dog.aview.gui
 
-import dog.controller.{BoardChanged, ControllerTrait, GuiChanged, JokerState}
-import dog.model.CardComponent.cardBaseImpl.CardDeck
+import dog.controller.{BoardChanged, ControllerTrait, GuiChanged}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -52,15 +51,8 @@ object GenGui {
         // has to be a number that can be devided by 4
         center = BoardPanel.newBoardPane(controller)
         //number of Cards can be set here
-        bottom = if (JokerState.state.equals(JokerState.unpacked))
-          CardMaster.CardPaneBuilder(controller)
-            .withCardList(CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList)
-            .withCards()
-            .withIcons()
-            .buildCardPane()
-        else
-          CardMaster.CardPaneBuilder(controller)
-            .withCardList(controller.gameState.actualPlayer.cardList)
+        bottom = CardMaster.CardPaneBuilder(controller)
+          .withCardList(controller.gameState.actualPlayer.cardList)
             .withCards()
             .withIcons()
             .buildCardPane()

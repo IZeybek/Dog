@@ -22,7 +22,7 @@ object CardMaster {
 
   case class CardPaneBuilder(controller: ControllerTrait) {
 
-    var cardList: List[CardTrait] = controller.gameState.actualPlayer.cardList
+    var cardList: List[CardTrait] = controller.gameStateMaster.cardDeckActualPlayer
     var amount: Int = cardList.size
 
     val actualPlayer: Int = controller.gameState.players._2

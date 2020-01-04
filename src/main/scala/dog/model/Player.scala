@@ -81,15 +81,15 @@ case class Player(nameAndIdx: (String, Int),
     }
   }
 
-  def getCard(cardNum: Int): CardTrait = {
-    tryGetCard(cardNum) match {
+  def getCard(cardIdx: Int): CardTrait = {
+    tryGetCard(cardIdx) match {
       case Some(value) => value
       case None => throw new Exception("Es konnte keine Karte ausgewählt werden!\n")
     }
   }
 
-  def tryGetCard(cardNum: Int): Option[CardTrait] = {
-    Try(cardList(cardNum)) match {
+  def tryGetCard(cardIdx: Int): Option[CardTrait] = {
+    Try(cardList(cardIdx)) match {
       case Success(value) => Some(value)
       case Failure(_) => None
     }
@@ -164,5 +164,4 @@ object Player {
       player
     }
   }
-
 }

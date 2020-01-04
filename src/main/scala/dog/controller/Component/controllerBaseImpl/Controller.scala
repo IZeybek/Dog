@@ -7,6 +7,7 @@ import dog.controller._
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import dog.model.CardComponent.CardTrait
+import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.Player
 import dog.util.{SolveCommand, UndoManager}
@@ -52,21 +53,30 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-
     val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
 
     newState._3 match {
       case 0 =>
         doStep()
         this.board = newState._1
-        gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).withNextPlayer().buildGame
+        gameState = gameStateMaster.UpdateGame()
+          .withBoard(newState._1)
+          .withPlayers(newState._2)
+          .withClickedField(-1)
+          .withNextPlayer()
+          .buildGame
 
-        removeSelectedCard(inputCard.actualPlayerIdx, inputCard.cardIdxAndOption._1)
+        removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
+
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
       case 1 =>
         println("joker packingState: " + JokerState.state)
-        gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).buildGame
+        gameState = gameStateMaster.UpdateGame()
+          .withBoard(newState._1)
+          .withPlayers(newState._2)
+          .withClickedField(-1)
+          .buildGame
 
         publish(new BoardChanged)
       case _ =>
@@ -85,7 +95,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
    * @return
    */
-  override def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(InputCardMaster.strategyMode, gameState, inputCard)
+  override def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard)
 
   /**
    * gets the selected card from the player

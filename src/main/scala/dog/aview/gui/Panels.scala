@@ -1,9 +1,8 @@
 package dog.aview.gui
 
-import dog.controller.{ControllerTrait, InputCardMaster, JokerState}
+import dog.controller.{ControllerTrait, InputCardMaster}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
-import dog.model.CardComponent.cardBaseImpl.{CardDeck, CardLogic}
 import dog.model.Player
 import javafx.scene.layout.GridPane
 import scalafx.Includes.when
@@ -45,19 +44,11 @@ object CardPanel {
       onAction = _ => {
         println("----------------------------------------- Clicked IconID : " + getId.toInt)
         val actPlayer = controller.gameState.actualPlayer
-        val inputCard = if (JokerState.state.equals(JokerState.packed))
-          InputCardMaster.UpdateCardInput()
-            .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
-            .withCardNum((cardIdx, getId.toInt))
-            .withStrategyMode(CardLogic.getLogic(actPlayer.getCard(cardIdx).task))
-            .withSelectedCard(actPlayer.getCard(cardIdx))
-            .buildCardInput()
-        else
-          InputCardMaster.UpdateCardInput()
-            .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
-            .withCardNum((cardIdx, getId.toInt))
-            .withSelectedCard(CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList(cardIdx))
-            .buildCardInput()
+        val inputCard = InputCardMaster.UpdateCardInput()
+          .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
+          .withCardNum((cardIdx, getId.toInt))
+          .withSelectedCard(actPlayer.getCard(cardIdx))
+          .buildCardInput()
         controller.manageRound(inputCard)
       }
 
