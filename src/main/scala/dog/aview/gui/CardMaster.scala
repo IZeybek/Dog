@@ -1,6 +1,6 @@
 package dog.aview.gui
 
-import dog.aview.gui.CardPanel.{newCards, newIcons}
+//import dog.aview.gui.CardPanel.{newCards, newIcons}
 import dog.controller.ControllerTrait
 import dog.model.CardComponent.CardTrait
 import javafx.scene.layout.GridPane
@@ -9,7 +9,7 @@ import scalafx.geometry.Pos.Center
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.layout.StackPane
 
-trait CardMaster {
+object CardMaster {
 
   val stdPath = "file:src/main/scala/resources/"
   val bgColor: String = "-fx-background-color:#383838;"
@@ -19,11 +19,20 @@ trait CardMaster {
   var iconGrids: Seq[GridPane] = Nil
   var cardGrids: GridPane = new GridPane
 
+
   case class CardPaneBuilder(controller: ControllerTrait) {
 
+    var cardList: List[CardTrait] = controller.gameState.actualPlayer.cardList
+    var amount: Int = cardList.size
+
     val actualPlayer: Int = controller.gameState.players._2
-    val cardList: List[CardTrait] = controller.gameState.actualPlayer.cardList
-    val amount: Int = cardList.size
+
+
+    def withCardList(setCardList: List[CardTrait]): CardPaneBuilder = {
+      cardList = setCardList
+      amount = setCardList.size
+      this
+    }
 
     def withIcons(): CardPaneBuilder = {
       var idx = 0
@@ -37,7 +46,7 @@ trait CardMaster {
         if (iconAmount == 2) setPadding(Insets(0, 5, 5, 24))
         else if (iconAmount == 3) setPadding(Insets(0, 5, 5, 43))
         val cardOptionAmount: Int = card.task.split("\\s+").length
-        val icon: Seq[Button] = newIcons(controller, iconAmount, card, idx)
+        val icon: Seq[Button] = CardPanel.newIcons(controller, iconAmount, card, idx)
         if (iconAmount == 3) icon.indices.foreach(i => add(icon(i), 0, i))
         else icon.indices.foreach(i => add(icon(i), i, 0))
         idx = idx + 1
@@ -55,7 +64,7 @@ trait CardMaster {
         if (amount < 9) offset = 250
         setPadding(Insets(0, 0, 0, offset))
         setAlignment(Center)
-        cards = newCards(iconGrids, amount, cardList)
+        cards = CardPanel.newCards(iconGrids, amount, cardList)
       }
       this
     }

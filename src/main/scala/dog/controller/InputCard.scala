@@ -1,6 +1,8 @@
 package dog.controller
 
+import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
+import dog.model.Player
 
 trait State {
   def changeState(): State
@@ -8,21 +10,21 @@ trait State {
 
 
 object JokerState {
-  var state: State = pack
+  var state: State = packed
 
   def handle: State = state.changeState()
 
-  object unpack extends State {
+  object unpacked extends State {
     override def changeState(): State = {
-      state = pack
+      state = packed
       println("packed Joker")
       state
     }
   }
 
-  object pack extends State {
+  object packed extends State {
     override def changeState(): State = {
-      state = unpack
+      state = unpacked
       println("unpacked Joker")
       state
     }
@@ -42,8 +44,7 @@ object InputCardMaster {
   var actualPlayerIdx = 0
   var moveBy: Int = 0
   var selCard: CardTrait = _
-
-  //  var modeOfCard :
+  var strategyMode: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = _
 
   case class UpdateCardInput() {
 
@@ -64,6 +65,11 @@ object InputCardMaster {
 
     def withCardNum(cardN: (Int, Int)): UpdateCardInput = {
       cardNum = cardN
+      this
+    }
+
+    def withStrategyMode(mode: (GameState, InputCard) => (BoardTrait, Vector[Player], Int)): UpdateCardInput = {
+      strategyMode = mode
       this
     }
 

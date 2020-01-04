@@ -1,8 +1,9 @@
 package dog.aview.gui
 
-import dog.controller.{ControllerTrait, InputCardMaster}
+import dog.controller.{ControllerTrait, InputCardMaster, JokerState}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
+import dog.model.CardComponent.cardBaseImpl.{CardDeck, CardLogic}
 import dog.model.Player
 import javafx.scene.layout.GridPane
 import scalafx.Includes.when
@@ -13,7 +14,10 @@ import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, StackPane, VBox}
 import scalafx.scene.paint.Color._
 
-object CardPanel extends CardMaster {
+object CardPanel {
+
+  val stdPath = "file:src/main/scala/resources/"
+  val bgColor: String = "-fx-background-color:#383838;"
 
   //generates new Cards and puts it into Seq
   def newIcons(controller: ControllerTrait, iconAmount: Int, currentCard: CardTrait, cardIdx: Int): Seq[Button] = {
@@ -41,11 +45,20 @@ object CardPanel extends CardMaster {
       onAction = _ => {
         println("----------------------------------------- Clicked IconID : " + getId.toInt)
         val actPlayer = controller.gameState.actualPlayer
-        controller.manageRound(InputCardMaster.UpdateCardInput()
-          .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
-          .withCardNum((cardIdx, getId.toInt))
-          .withSelectedCard(actPlayer.getCard(cardIdx))
-          .buildCardInput())
+        val inputCard = if (JokerState.state.equals(JokerState.packed))
+          InputCardMaster.UpdateCardInput()
+            .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
+            .withCardNum((cardIdx, getId.toInt))
+            .withStrategyMode(CardLogic.getLogic(actPlayer.getCard(cardIdx).task))
+            .withSelectedCard(actPlayer.getCard(cardIdx))
+            .buildCardInput()
+        else
+          InputCardMaster.UpdateCardInput()
+            .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
+            .withCardNum((cardIdx, getId.toInt))
+            .withSelectedCard(CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList(cardIdx))
+            .buildCardInput()
+        controller.manageRound(inputCard)
       }
 
     })

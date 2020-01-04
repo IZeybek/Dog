@@ -1,6 +1,6 @@
 package dog.model.CardComponent.cardBaseImpl
 
-import dog.controller.{GameState, InputCard, InputCardMaster}
+import dog.controller.{GameState, InputCard, InputCardMaster, JokerState}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.{CardDeckTrait, CardTrait}
 import dog.model.Player
@@ -138,7 +138,18 @@ object CardLogic {
   val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
     println("joker")
 
-    (gameState.board, gameState.players._1, -1)
+    if (JokerState.state.equals(JokerState.unpacked)) {
+      println("unpacked -> ")
+      val updatedGameState = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
+      JokerState.handle
+      (updatedGameState._1, updatedGameState._2, 1)
+    } else {
+      JokerState.handle
+      (gameState.board, gameState.players._1, 1)
+    }
+
+
+
   }
 
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {

@@ -64,6 +64,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         removeSelectedCard(inputCard.actualPlayerIdx, inputCard.cardIdxAndOption._1)
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
+      case 1 =>
+        println("joker packingState: " + JokerState.state)
+        gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).buildGame
+
+        publish(new BoardChanged)
       case _ =>
         returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
     }
@@ -80,7 +85,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
    * @return
    */
-  override def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard)
+  override def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(InputCardMaster.strategyMode, gameState, inputCard)
 
   /**
    * gets the selected card from the player
