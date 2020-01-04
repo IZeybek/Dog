@@ -52,7 +52,7 @@ class ControllerSpec extends WordSpec with Matchers {
           .withOtherPlayer(-1)
           .withPieceNum(List(0, 0))
           .withCardNum((0, 0))
-          .withSelectedCard(controller.getSelectedCard(0, (0, 0)))
+          .withSelectedCard(controller.removeSelectedCard(0, 0))
           .withMoveBy(0)
           .buildCardInput()) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n")
       }
@@ -216,7 +216,7 @@ class ControllerSpec extends WordSpec with Matchers {
         val handCards: List[CardTrait] = controller.gameState.players._1(0).cardList
         controller.gameState.players._1(0).cardList should not be empty
 
-        controller.getSelectedCard(0, cardAndOption = (0, 0)) should be(handCards.head)
+        controller.removeSelectedCard(0, 0) should be(handCards.head)
 
         controller.gameState.players._1(0).cardList should be(empty)
       }

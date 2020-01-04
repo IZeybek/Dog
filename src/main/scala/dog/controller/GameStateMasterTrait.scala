@@ -11,7 +11,7 @@ trait GameStateMasterTrait {
   var colors: Array[String]
   var playerNames: Array[String]
   var players: Vector[Player]
-  var actualPlayer: Int
+  var actualPlayerIdx: Int
   var roundAndCardsToDistribute: (Int, Int)
   var cardDeck: Vector[CardTrait]
   var cardPointer: Int
@@ -50,13 +50,13 @@ trait GameStateMasterTrait {
     }
 
     def withActualPlayer(setActualPlayer: Int): UpdateGame = {
-      actualPlayer = setActualPlayer
+      actualPlayerIdx = setActualPlayer
       this
     }
 
     def withNextPlayer(): UpdateGame = {
-      val newPlayer = actualPlayer + 1
-      actualPlayer = newPlayer % players.size
+      val newPlayer = actualPlayerIdx + 1
+      actualPlayerIdx = newPlayer % players.size
       this
     }
 
@@ -95,7 +95,7 @@ trait GameStateMasterTrait {
         withName((playerNames(i), i)).
         withPiece(pieceAmount, (boardSize / playerNames.length) * i).
         withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
-      actualPlayer = 0
+      actualPlayerIdx = 0
 
       // Card
       cardDeck = CardDeck.CardDeckBuilder().withAmount(List(10, 10)).withShuffle.buildCardVector
@@ -103,11 +103,11 @@ trait GameStateMasterTrait {
       roundAndCardsToDistribute = (0, 6)
       lastPlayedCard = None
 
-      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board)
+      GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
 
     def buildGame: GameState = {
-      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board)
+      GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
   }
 }

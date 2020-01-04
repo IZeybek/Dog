@@ -40,10 +40,11 @@ object CardPanel extends CardMaster {
       //PlayButton ActionListener
       onAction = _ => {
         println("----------------------------------------- Clicked IconID : " + getId.toInt)
+        val actPlayer = controller.gameState.actualPlayer
         controller.manageRound(InputCardMaster.UpdateCardInput()
-          .withActualPlayer(controller.gameStateMaster.actualPlayer)
+          .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
           .withCardNum((cardIdx, getId.toInt))
-          .withSelectedCard(controller.getSelectedCard(controller.gameState.players._2, (cardIdx, getId.toInt)))
+          .withSelectedCard(actPlayer.getCard(cardIdx))
           .buildCardInput())
       }
 
@@ -240,7 +241,7 @@ object BoardPanel {
         onAction = _ => {
           println("pressed field = " + this.getId)
           val clickedCell: CellTrait = controller.gameState.board.cell(this.getId.toInt)
-          val actPlayer: Int = controller.gameStateMaster.actualPlayer
+          val actPlayer: Int = controller.gameStateMaster.actualPlayerIdx
           val otherPlayer: Int = if (clickedCell.isFilled)
             clickedCell.p.head.nameAndIdx._2
           else

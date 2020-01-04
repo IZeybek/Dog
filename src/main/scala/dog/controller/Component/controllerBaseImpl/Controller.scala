@@ -60,10 +60,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         doStep()
         this.board = newState._1
         gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).withNextPlayer().buildGame
+
+        removeSelectedCard(inputCard.actualPlayerIdx, inputCard.cardIdxAndOption._1)
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
       case _ =>
-        undoCommand()
         returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
     }
     returnString
@@ -84,21 +85,19 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   /**
    * gets the selected card from the player
    *
-   * @param playerNum     is the player
-   * @param cardAndOption is a tuple
-   *                1. is the card number
-   *                2. is which options of the card have to be selected
-   *                  e.g. "4" "forward backward" => using parse
+   * @param playerIdx is the player
+   * @param cardIdx
    * @return the new card
    */
-  override def getSelectedCard(playerNum: Int, cardAndOption: (Int, Int)): CardTrait = {
+  override def removeSelectedCard(playerIdx: Int, cardIdx: Int): CardTrait = {
     val player: Vector[Player] = gameState.players._1
-    val oldCard = player(playerNum).getCard(cardAndOption._1)
-    val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(oldCard))
+    val oldCard = player(playerIdx).getCard(cardIdx)
+    val newPlayer: Vector[Player] = player.updated(playerIdx, player(playerIdx).removeCard(oldCard))
     doStep()
-    gameState = gameStateMaster.UpdateGame().
-      withLastPlayed(oldCard).
-      withPlayers(newPlayer).buildGame
+    gameState = gameStateMaster.UpdateGame()
+      .withLastPlayed(oldCard)
+      .withPlayers(newPlayer)
+      .buildGame
     oldCard
   }
 

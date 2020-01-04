@@ -58,7 +58,7 @@ trait ControllerTrait extends Publisher {
 
   def toStringActivePlayerHand: String
 
-  def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait
+  def removeSelectedCard(playerNum: Int, cardIdx: Int): CardTrait
 
   /**
    * Manages the round

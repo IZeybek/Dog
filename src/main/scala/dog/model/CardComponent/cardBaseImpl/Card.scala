@@ -45,7 +45,7 @@ object CardLogic {
     var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Vector[Player] = gameState.players._1
-    val actPlayerIdx: Int = inputC.actualPlayer
+    val actPlayerIdx: Int = inputC.actualPlayerIdx
     val actPlayer: Player = players(actPlayerIdx)
     val board: BoardTrait = gameState.board
     val selPiece = inputC.selPieceList.head
@@ -87,7 +87,7 @@ object CardLogic {
 
     if (swapPos._2 == swapPlayer.homePosition) isValid = -1 //Second Player is not on the field
 
-    var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayer, actPlayer.swapPiece(selPiece, swapPos._2)) //swap with second player
+    var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayerIdx, actPlayer.swapPiece(selPiece, swapPos._2)) //swap with second player
 
     players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
 
@@ -100,7 +100,7 @@ object CardLogic {
 
     val cardOption = inputCard.selectedCard.task.split("\\s+")
 
-    cardOption(inputCard.cardNum._2) match {
+    cardOption(inputCard.cardIdxAndOption._2) match {
       case "forward" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(4).buildCardInput())
       case "backward" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(-4).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
@@ -115,8 +115,8 @@ object CardLogic {
   val threePlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
-    val nextPiecePlay = gameState.players._1(inputCard.actualPlayer).nextPiece()
-    cardOption(inputCard.cardNum._2) match {
+    val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
+    cardOption(inputCard.cardIdxAndOption._2) match {
       case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
       case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
       case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
@@ -127,8 +127,8 @@ object CardLogic {
   val twoPlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
-    val nextPiecePlay = gameState.players._1(inputCard.actualPlayer).nextPiece()
-    cardOption(inputCard.cardNum._2) match {
+    val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
+    cardOption(inputCard.cardIdxAndOption._2) match {
       case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
       case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)

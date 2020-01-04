@@ -38,7 +38,7 @@ object Event {
     inputCard.selPieceList.nonEmpty
   }
   val checkPlayer: (GameState, InputCard) => Boolean = (gameState: GameState, inputCard: InputCard) => {
-    inputCard.actualPlayer == -1
+    inputCard.actualPlayerIdx == -1
   }
 
   def setStrategy(callback: (GameState, InputCard) => Boolean,
