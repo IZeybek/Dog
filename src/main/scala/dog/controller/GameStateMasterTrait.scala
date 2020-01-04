@@ -42,11 +42,6 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withoutLastPlayed(): UpdateGame = {
-      lastPlayedCard = None
-      this
-    }
-
     def withPlayers(setPlayers: Vector[Player]): UpdateGame = {
       players = setPlayers
       this
