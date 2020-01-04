@@ -2,6 +2,39 @@ package dog.controller
 
 import dog.model.CardComponent.CardTrait
 
+trait Event {
+  def changeState(): Event
+}
+
+
+object StateContext2 {
+
+  val stateOn = new onState
+  val stateOff = new offState
+  var state: Event = stateOn
+
+  def handle(): Event = {
+    state.changeState()
+    state
+  }
+
+  class onState() extends Event {
+    override def changeState(): Event = {
+      state = stateOff
+      println("I am on")
+      state
+    }
+  }
+
+  class offState() extends Event {
+    override def changeState(): Event = {
+      state = stateOn
+      println("I am off")
+      state
+    }
+  }
+
+}
 
 case class InputCard(actualPlayer: Int, otherPlayer: Int, selPieceList: List[Int], cardNum: (Int, Int), selectedCard: CardTrait, moveBy: Int)
 
@@ -15,6 +48,8 @@ object InputCardMaster {
   var actualPlayer = 0
   var moveBy: Int = 0
   var selCard: CardTrait = _
+
+  //  var modeOfCard :
 
   case class UpdateCardInput() {
 
@@ -53,4 +88,6 @@ object InputCardMaster {
       InputCard(actualPlayer, otherPlayer, selPieceList, cardNum, selCard, moveBy)
     }
   }
+
 }
+

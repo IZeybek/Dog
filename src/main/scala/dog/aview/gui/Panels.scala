@@ -1,6 +1,5 @@
 package dog.aview.gui
 
-import dog.aview.gui.CardPanel.stdPath
 import dog.controller.{ControllerTrait, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
@@ -14,7 +13,7 @@ import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, StackPane, VBox}
 import scalafx.scene.paint.Color._
 
-object CardPanel extends PanelMaster {
+object CardPanel extends CardMaster {
 
   //generates new Cards and puts it into Seq
   def newIcons(controller: ControllerTrait, iconAmount: Int, currentCard: CardTrait, cardIdx: Int): Seq[Button] = {
@@ -64,6 +63,8 @@ object CardPanel extends PanelMaster {
 }
 
 object GenImages {
+
+  val stdPath = "file:src/main/scala/resources/"
 
   def genCardImage(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
     fitHeight = 200

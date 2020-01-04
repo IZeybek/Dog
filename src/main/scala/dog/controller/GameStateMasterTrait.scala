@@ -92,5 +92,4 @@ trait GameStateMasterTrait {
       GameState((players, actualPlayer), (cardDeck, cardPointer), None, board, actualPlayer, clickedFieldIdx)
     }
   }
-
 }

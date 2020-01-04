@@ -111,8 +111,8 @@ object CardLogic {
 
     move(gameState, InputCardMaster.UpdateCardInput().buildCardInput())
   }
+
   val threePlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
-    println("------------------------------------------ssssssssss-------------------------- ")
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
     val nextPiecePlay = gameState.players._1(inputCard.actualPlayer).nextPiece()
@@ -124,7 +124,6 @@ object CardLogic {
     }
   }
 
-
   val twoPlay: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
@@ -134,6 +133,14 @@ object CardLogic {
       case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
       case _ => (gameState.board, gameState.players._1, -1)
     }
+  }
+
+  val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
+    println("joker")
+    //    setStrategy(getLogic(inputCard.))
+
+    //    StateContext2.handle(OffEvent())
+    (gameState.board, gameState.players._1, -1)
   }
 
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
@@ -147,6 +154,7 @@ object CardLogic {
       case "backward forward" => four
       case "move move play" => threePlay
       case "move play" => twoPlay
+      case "joker" => joker
       case _ => nothing
     }
   }
