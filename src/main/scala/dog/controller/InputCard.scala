@@ -10,7 +10,7 @@ case class InputCard(actualPlayer: Int, otherPlayer: Int, selPieceList: List[Int
 object InputCardMaster {
 
   var otherPlayer: Int = -1
-  var actualPlayer = 0
+  var actualPlayer: Int = 0
   var selPieceList: List[Int] = List(0)
 
   var selCard: CardTrait = _

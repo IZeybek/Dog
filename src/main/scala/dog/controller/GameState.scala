@@ -30,8 +30,8 @@ class GameStateMaster extends GameStateMasterTrait {
   override var playerNames: Array[String] = Array("Player 1", "Player 2", "Player 3", "Player 4")
   override var board: BoardTrait = new Board(boardSize)
   override var roundAndCardsToDistribute: (Int, Int) = (0, 6)
-  override var players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().
-    withColor(colors(i))
+  override var players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
+    .withColor(colors(i))
     .withName((playerNames(i), i))
     .withPiece(pieceAmount, (boardSize / playerNames.length) * i)
     .withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
