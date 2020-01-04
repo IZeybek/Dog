@@ -15,37 +15,22 @@ case class Event(level: Int,
                  inputCard: InputCard)
 
 //Customer service agent
-class LevelOne(val successor: Option[Handler]) extends Handler {
+class Level(val successor: Option[Handler], val level: Int) extends Handler {
   override def handleEvent(event: Event): Boolean = {
-    event match {
-      case event if event.level > 1 =>
-        println(event.level)
-        (event check(event.gameState, event.inputCard)) && (successor match {
-          case Some(h: Handler) => h.handleEvent(event)
-          case None => true
-        })
-      case event if event.level < 2 =>
-        println(event.level)
-        event.check(event.gameState, event.inputCard)
+    if (event.level > level) {
+      (event check(event.gameState, event.inputCard)) && (successor match {
+        case Some(h: Handler) => h.handleEvent(event)
+        case None => false
+      })
+    } else if (event.level < level) {
+      event.check(event.gameState, event.inputCard)
+    } else {
+      false
     }
   }
+
 }
 
-class LevelTwo(val successor: Option[Handler]) extends Handler {
-  override def handleEvent(event: Event): Boolean = {
-    event match {
-      case event if event.level > 2 =>
-        println(event.level)
-        (event check(event.gameState, event.inputCard)) && (successor match {
-          case Some(h: Handler) => h.handleEvent(event)
-          case None => true
-        })
-      case event if event.level < 3 =>
-        println(event.level)
-        event.check(event.gameState, event.inputCard)
-    }
-  }
-}
 
 object Event {
 
@@ -65,15 +50,15 @@ object Event {
 
 object Main {
   def main(args: Array[String]) {
-    val checkPlayer = new LevelTwo(None)
-    val checkClicked = new LevelOne(Some(checkPlayer))
+    val checkPlayer = new Level(None, 1)
+    val checkClicked = new Level(Some(checkPlayer), 0)
 
     val controller = new Controller(new Board(20))
     val gameState: GameState = controller.gameState
     val inputCard: InputCard = InputCardMaster.UpdateCardInput().withPieceNum(1 :: Nil).buildCardInput()
 
     val events: List[Event] = List(
-      Event(0, Event.checkClicked, gameState, inputCard),
+      Event(0, Event.checkPlayer, gameState, inputCard),
       Event(2, Event.checkClicked, gameState, inputCard),
       Event(1, Event.checkPlayer, gameState, inputCard)
     )
