@@ -8,19 +8,22 @@ import dog.model.Player
 
 trait GameStateMasterTrait {
 
+  //player
   var colors: Array[String]
   var playerNames: Array[String]
   var players: Vector[Player]
   var actualPlayerIdx: Int
+  var pieceAmount: Int
+  var cardDeckActualPlayer: List[CardTrait]
+
   var roundAndCardsToDistribute: (Int, Int)
   var cardDeck: Vector[CardTrait]
+  var lastPlayedCard: Option[CardTrait]
+
   var cardPointer: Int
   var board: BoardTrait
-  var lastPlayedCard: Option[CardTrait]
   var clickedFieldIdx: Int
-
   var boardSize: Int
-  var pieceAmount: Int
 
   case class UpdateGame() {
 
@@ -51,6 +54,17 @@ trait GameStateMasterTrait {
 
     def withActualPlayer(setActualPlayer: Int): UpdateGame = {
       actualPlayerIdx = setActualPlayer
+      this
+    }
+
+    def withSwappedActualPlayerCards(setHandCards: List[CardTrait]): UpdateGame = {
+      cardDeckActualPlayer = players(actualPlayerIdx).cardList
+      players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = setHandCards))
+      this
+    }
+
+    def withRestoredActualPlayerCards(): UpdateGame = {
+      players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = cardDeckActualPlayer))
       this
     }
 
@@ -110,4 +124,5 @@ trait GameStateMasterTrait {
       GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
   }
+
 }

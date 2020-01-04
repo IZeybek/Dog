@@ -52,8 +52,10 @@ class Level(val successor: Option[Handler], val level: Int) extends Handler {
 
 object Event {
 
+  //checkers
 
   val checkHandCards: (GameState, InputCard) => Boolean = (gameState: GameState, inputCard: InputCard) => gameState.actualPlayer.cardList.nonEmpty
+
   val checkPiecesOnBoard: (GameState, InputCard) => Boolean = (gameState: GameState, inputCard: InputCard) => {
     var isTrue: Boolean = false
     gameState.actualPlayer.piece.foreach(x => if (x._2.pos != gameState.actualPlayer.homePosition) {

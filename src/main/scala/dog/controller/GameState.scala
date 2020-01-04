@@ -23,12 +23,15 @@ case class GameState(players: (Vector[Player], Int),
 
 class GameStateMaster extends GameStateMasterTrait {
 
+  //board
   override var pieceAmount = 4
   override var boardSize: Int = 64 // hast to be dividable by 4
-  //player with player pointer
+  override var board: BoardTrait = new Board(boardSize)
+  override var clickedFieldIdx: Int = -1
+
+  //player
   override var colors: Array[String] = Array("yellow", "white", "green", "red")
   override var playerNames: Array[String] = Array("Player 1", "Player 2", "Player 3", "Player 4")
-  override var board: BoardTrait = new Board(boardSize)
   override var roundAndCardsToDistribute: (Int, Int) = (0, 6)
   override var players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
     .withColor(colors(i))
@@ -36,9 +39,9 @@ class GameStateMaster extends GameStateMasterTrait {
     .withPiece(pieceAmount, (boardSize / playerNames.length) * i)
     .withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
   override var actualPlayerIdx: Int = 0
+  override var cardDeckActualPlayer: List[CardTrait] = _
 
-  override var clickedFieldIdx: Int = -1
-  //cards of game
+  //cards
   override var cardDeck: Vector[CardTrait] = CardDeck.CardDeckBuilder().
     withAmount(List(10, 10)).
     withShuffle.buildCardVector
