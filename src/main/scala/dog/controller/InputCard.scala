@@ -2,21 +2,48 @@ package dog.controller
 
 import dog.model.CardComponent.CardTrait
 
+trait State {
+  def changeState(): State
+}
 
-case class InputCard(actualPlayer: Int, otherPlayer: Int, selPieceList: List[Int], cardNum: (Int, Int), selectedCard: CardTrait, moveBy: Int)
+
+object JokerState {
+  var state: State = pack
+
+  def handle: State = state.changeState()
+
+  object unpack extends State {
+    override def changeState(): State = {
+      state = pack
+      println("packed Joker")
+      state
+    }
+  }
+
+  object pack extends State {
+    override def changeState(): State = {
+      state = unpack
+      println("unpacked Joker")
+      state
+    }
+  }
+}
+
+
+case class InputCard(actualPlayerIdx: Int, otherPlayer: Int, selPieceList: List[Int], cardIdxAndOption: (Int, Int), selectedCard: CardTrait, moveBy: Int)
 
 //--------------------------------------------------------------------------------------
 
 object InputCardMaster {
 
   var otherPlayer: Int = -1
-  var actualPlayer: Int = 0
   var selPieceList: List[Int] = List(0)
-
-  var selCard: CardTrait = _
   var cardNum: (Int, Int) = (0, 0)
-
+  var actualPlayerIdx = 0
   var moveBy: Int = 0
+  var selCard: CardTrait = _
+
+  //  var modeOfCard :
 
   case class UpdateCardInput() {
 
@@ -26,7 +53,7 @@ object InputCardMaster {
     }
 
     def withActualPlayer(actPlayer: Int): UpdateCardInput = {
-      actualPlayer = actPlayer
+      actualPlayerIdx = actPlayer
       this
     }
 
@@ -52,7 +79,9 @@ object InputCardMaster {
     }
 
     def buildCardInput(): InputCard = {
-      InputCard(actualPlayer, otherPlayer, selPieceList, cardNum, selCard, moveBy)
+      InputCard(actualPlayerIdx, otherPlayer, selPieceList, cardNum, selCard, moveBy)
     }
   }
+
 }
+

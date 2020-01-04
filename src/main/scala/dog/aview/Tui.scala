@@ -50,44 +50,45 @@ class Tui(controller: ControllerTrait) extends Reactor {
         print(controller.toStringPlayerHands)
         result = "printed game"
       case _ =>
-        val actualPlayer: Int = controller.gameStateMaster.actualPlayer
+        val actualPlayerIdx: Int = controller.gameStateMaster.actualPlayerIdx
+        val actPlayer = controller.gameState.actualPlayer
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           //for having full control
           case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withActualPlayer(actualPlayer)
+              .withActualPlayer(actualPlayerIdx)
               .withOtherPlayer(otherPlayer)
               .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, cardOption))
-              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, cardOption)))
+              .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())
 
           //for swapping
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withActualPlayer(actualPlayer)
+              .withActualPlayer(actualPlayerIdx)
               .withOtherPlayer(otherPlayer)
               .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, 0))
-              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, 0)))
+              .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())
 
           //for cards having multiple options
           case cardNum :: cardOption :: pieceNum :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withActualPlayer(actualPlayer)
+              .withActualPlayer(actualPlayerIdx)
               .withPieceNum(List(pieceNum))
               .withCardNum((cardNum, cardOption))
-              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, cardOption)))
+              .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())
 
           //for easy moving
           case cardNum :: pieceNum :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withActualPlayer(actualPlayer)
+              .withActualPlayer(actualPlayerIdx)
               .withPieceNum(List(pieceNum, -1))
               .withCardNum((cardNum, 0))
-              .withSelectedCard(controller.getSelectedCard(actualPlayer, (cardNum, 0)))
+              .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())
 
           case _ => result = ""

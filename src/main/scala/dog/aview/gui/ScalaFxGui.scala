@@ -37,16 +37,18 @@ object GenGui {
           val redo: MenuItem = new MenuItem("Redo") {
             onAction = _ => controller.redoCommand()
           }
+          val save: MenuItem = new MenuItem("Save")
+
           items.add(undo)
           items.add(redo)
-          items.add(new MenuItem("Save"))
+          items.add(save)
         }
         menus.add(menuList)
       }
       root = new BorderPane() {
         style = "-fx-background-color:#3d3d3d"
         top = menuBar
-        val paneMaster: PanelMaster = new PanelMaster {}
+        val paneMaster: CardMaster = new CardMaster {}
         // has to be a number that can be devided by 4
         center = BoardPanel.newBoardPane(controller)
         //number of Cards can be set here

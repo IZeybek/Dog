@@ -1,6 +1,5 @@
 package dog.aview.gui
 
-import dog.aview.gui.CardPanel.stdPath
 import dog.controller.{ControllerTrait, InputCardMaster}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
@@ -14,17 +13,17 @@ import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, StackPane, VBox}
 import scalafx.scene.paint.Color._
 
-object CardPanel extends PanelMaster {
+object CardPanel extends CardMaster {
 
   //generates new Cards and puts it into Seq
   def newIcons(controller: ControllerTrait, iconAmount: Int, currentCard: CardTrait, cardIdx: Int): Seq[Button] = {
     var idx = 0
     val task = currentCard.task.split("\\s+") //GenImages.genIcon()
     val symbol: Array[String] = currentCard.symbol.split("\\s+")
-    val sbsize = symbol.length
+    val symbolLength: Int = symbol.length
     Seq.fill(iconAmount)(new Button(
       if (symbol(0).equals("4")) (if (idx == 0) "-" else "+") + symbol(0)
-      else if (sbsize > 1 && idx != sbsize - 1) "+" + symbol(idx)
+      else if (symbolLength > 1 && idx != symbolLength - 1) "+" + symbol(idx)
       else "",
       GenImages.genIconImage(task(idx))) {
       id = idx.toString
@@ -41,10 +40,11 @@ object CardPanel extends PanelMaster {
       //PlayButton ActionListener
       onAction = _ => {
         println("----------------------------------------- Clicked IconID : " + getId.toInt)
+        val actPlayer = controller.gameState.actualPlayer
         controller.manageRound(InputCardMaster.UpdateCardInput()
-          .withActualPlayer(controller.gameStateMaster.actualPlayer)
+          .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
           .withCardNum((cardIdx, getId.toInt))
-          .withSelectedCard(controller.getSelectedCard(controller.gameState.players._2, (cardIdx, getId.toInt)))
+          .withSelectedCard(actPlayer.getCard(cardIdx))
           .buildCardInput())
       }
 
@@ -64,6 +64,8 @@ object CardPanel extends PanelMaster {
 }
 
 object GenImages {
+
+  val stdPath = "file:src/main/scala/resources/"
 
   def genCardImage(typ: String): ImageView = new ImageView(stdPath + typ + ".png") {
     fitHeight = 200
@@ -239,7 +241,7 @@ object BoardPanel {
         onAction = _ => {
           println("pressed field = " + this.getId)
           val clickedCell: CellTrait = controller.gameState.board.cell(this.getId.toInt)
-          val actPlayer: Int = controller.gameStateMaster.actualPlayer
+          val actPlayer: Int = controller.gameStateMaster.actualPlayerIdx
           val otherPlayer: Int = if (clickedCell.isFilled)
             clickedCell.p.head.nameAndIdx._2
           else

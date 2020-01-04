@@ -63,9 +63,9 @@ class Controller extends ControllerTrait {
    *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
    * @return
    */
-  def useCardLogic(inputCard: InputCard): Int = 0
+  def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = (new Board(20), Vector.empty[Player], 0)
 
-  override def getSelectedCard(playerNum: Int, cardNum: (Int, Int)): CardTrait = Card.RandomCardsBuilder().buildRandomCardList.head
+  override def removeSelectedCard(playerNum: Int, cardIdx: Int): CardTrait = Card.RandomCardsBuilder().buildRandomCardList.head
 
 
   /**

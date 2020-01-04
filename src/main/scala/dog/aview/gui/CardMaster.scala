@@ -9,7 +9,7 @@ import scalafx.geometry.Pos.Center
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.layout.StackPane
 
-trait PanelMaster {
+trait CardMaster {
 
   val stdPath = "file:src/main/scala/resources/"
   val bgColor: String = "-fx-background-color:#383838;"
@@ -49,13 +49,13 @@ trait PanelMaster {
     def withCards(): CardPaneBuilder = {
 
       cardGrids = new GridPane {
+
         setStyle(bgColor + "-fx-padding:2")
         var offset = 0
         if (amount < 9) offset = 250
         setPadding(Insets(0, 0, 0, offset))
         setAlignment(Center)
         cards = newCards(iconGrids, amount, cardList)
-
       }
       this
     }
@@ -80,5 +80,3 @@ trait PanelMaster {
   }
 
 }
-
-
