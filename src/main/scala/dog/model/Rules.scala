@@ -80,7 +80,7 @@ object Event {
   var gameState: GameState = _
   var inputCard: InputCard = _
 
-  def setAtttributes(setGameState: GameState, setInputCard: InputCard): Unit = {
+  def setAttributes(setGameState: GameState, setInputCard: InputCard): Unit = {
     gameState = setGameState
     inputCard = setInputCard
   }
@@ -109,7 +109,7 @@ object Main {
     val advanced: Level = new Level(Some(pro), 1)
     val basic: Level = new Level(None, 0)
 
-    Event.setAtttributes(new Controller(new Board(20)).gameState, InputCardMaster.UpdateCardInput()
+    Event.setAttributes(new Controller(new Board(20)).gameState, InputCardMaster.UpdateCardInput()
       .withPieceNum(1 :: Nil)
       .buildCardInput())
 

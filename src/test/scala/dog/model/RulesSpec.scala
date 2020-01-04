@@ -23,7 +23,7 @@ class LevelSpec extends WordSpec with Matchers {
   }
   "Events" when {
     "created" should {
-      Event.setAtttributes(new Controller(new Board(20)).gameState, InputCardMaster.UpdateCardInput().buildCardInput())
+      Event.setAttributes(new Controller(new Board(20)).gameState, InputCardMaster.UpdateCardInput().buildCardInput())
       val event: Event = Event.setStrategy(0)
       "have a level" in {
         event.level should be(0)
@@ -123,6 +123,13 @@ class LevelSpec extends WordSpec with Matchers {
         .withPieceNum(List(0))
         .buildCardInput()
       Event.checkSelected(gameState, inputCard) should be(true)
+    }
+    "check if won" in {
+      controller.gameStateMaster.UpdateGame().resetGame
+
+      val gameState: GameState = controller.gameStateMaster.UpdateGame().buildGame
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
+      Event.checkWon(gameState, inputCard) should be(true)
     }
   }
 }
