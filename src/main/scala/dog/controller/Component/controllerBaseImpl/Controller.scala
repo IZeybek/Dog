@@ -179,7 +179,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override def toStringActivePlayerHand: String = {
     val player: Player = gameState.players._1(gameState.players._2)
-    s"${player.consoleColor}${player.nameAndIdx}${Console.RESET}'s hand cards: " + player.cardList + "\n"
+    s"${player.consoleColor}${player.nameAndIdx._1}${Console.RESET}'s hand cards: " + player.cardList + "\n"
   }
 
   override def toStringPlayerHands: String = {

@@ -35,13 +35,6 @@ class ControllerSpec extends WordSpec with Matchers {
         players(2).toString should be("Player3")
         players(3).toString should be("Player4")
       }
-      "set players" in {
-        val players: Vector[Player] = controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1
-        players(0).toString should be("Player1")
-        players(1).toString should be("Player2")
-        players(2).toString should be("Player3")
-        players(3).toString should be("Player4")
-      }
       "manage the round" in {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
