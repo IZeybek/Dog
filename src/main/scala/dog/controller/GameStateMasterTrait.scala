@@ -58,8 +58,11 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withRestoredActualPlayerCards(): UpdateGame = {
-      players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = cardDeckActualPlayer))
+    def withRestoredActualPlayerCards(state: State): UpdateGame = {
+      state match {
+        case JokerState.unpacked => players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = cardDeckActualPlayer))
+        case _ =>
+      }
       this
     }
 

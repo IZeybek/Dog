@@ -149,7 +149,6 @@ object CardLogic {
     }
 
 
-
   }
 
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {

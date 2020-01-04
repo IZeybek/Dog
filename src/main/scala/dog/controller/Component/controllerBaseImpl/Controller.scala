@@ -40,34 +40,38 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   /**
    * Manages the round
    *
-   * @param inputCard     is a CardInput builder in order to parse information out of it
-   *                      @ otherPlayer   is not -1 when e.g. swapping -> user has to know when to insert more or less commands
-   *                      @ pieceNum      is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   *                      @ cardNum       is a tuple
-   *                    1. is the card number
-   *                    2. is which options of the card have to be selected
-   *                      e.g. "4" "forward backward" => using parse
+   * @param inputCard is a CardInput builder in order to parse information out of it
    * @return a String that is returned to the TUI for more information
    */
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-
     val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
 
     newState._3 match {
       case 0 =>
         doStep()
         this.board = newState._1
-        gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).withNextPlayer().buildGame
+        gameState = gameStateMaster.UpdateGame()
+          .withBoard(newState._1)
+          .withPlayers(newState._2)
+          .withRestoredActualPlayerCards(JokerState.state)
+          .withClickedField(-1)
+          .withNextPlayer()
+          .buildGame
 
         removeSelectedCard(inputCard.actualPlayerIdx, inputCard.cardIdxAndOption._1)
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
       case 1 =>
         println("joker packingState: " + JokerState.state)
-        gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).buildGame
 
+        gameState = gameStateMaster.UpdateGame()
+          .withBoard(newState._1)
+          .withPlayers(newState._2)
+          .withClickedField(-1)
+          .withSwappedActualPlayerCards(CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList)
+          .buildGame
         publish(new BoardChanged)
       case _ =>
         returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
@@ -79,11 +83,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * uses the card and extracts its logic
    *
    * @param inputCard is a build with all the information needed for its cardLogic
-   *                  @ param selectedPlayerList is the list of Players -> first one is the actual player =>
-   *                  managed by manageRound but can also be set manually for testing purposes
-   *                  @ param pieceNum           is a List of indexes for the pieces of each player for e.g. swapping, only first is used when its about a move
-   *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
-   * @return
+   * @return a Tuple
+   *         1. BoardTrait
+   *         2. Vector[Player]
+   *         3. Int -> can have different values depending on the operations
    */
   override def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(InputCardMaster.strategyMode, gameState, inputCard)
 
@@ -136,27 +139,25 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     board
   }
 
-  //Player
-
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   override def createPlayers(playerNames: List[String], pieceAmount: Int): GameState = {
     val colors = gameStateMaster.colors
-
-    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().
-      withColor(colors(i)).
-      withName((playerNames(i), i)).
-      withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i).
-      build()).toVector
-    gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
+    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
+      .withColor(colors(i))
+      .withName((playerNames(i), i))
+      .withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i)
+      .build()).toVector
+    gameState = gameStateMaster.UpdateGame()
+      .withPlayers(players)
+      .buildGame
     gameState
   }
 
-  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder().
-    withAmount(List(2, 2)).
-    withShuffle.
-    buildCardVectorWithLength
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder()
+    .withAmount(List(2, 2))
+    .withShuffle
+    .buildCardVectorWithLength
 
-  //Cards
   override def drawCards(amount: Int): List[CardTrait] = Card.RandomCardsBuilder().withAmount(amount).buildRandomCardList
 
   override def drawCardFromDeck: CardTrait = {
@@ -164,16 +165,19 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     if (cardDeck._2 != 0)
       cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
     doStep()
-    gameState = gameStateMaster.UpdateGame().
-      withCardDeck(cardDeck._1).
-      withCardPointer(cardDeck._2).buildGame
+    gameState = gameStateMaster.UpdateGame()
+      .withCardDeck(cardDeck._1)
+      .withCardPointer(cardDeck._2)
+      .buildGame
     cardDeck._1(cardDeck._2)
   }
 
   override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = {
     val player: Vector[Player] = gameState.players._1
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).setHandCards(cards))
-    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
+    gameState = gameStateMaster.UpdateGame()
+      .withPlayers(newPlayer)
+      .buildGame
     newPlayer(playerNum)
   }
 
@@ -189,18 +193,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     playerHands
   }
 
-  /**
-   * prints the board and houses
-   *
-   * @return the board and houses in a String
-   */
   override def toStringBoard: String = toStringHouse + board.toString
 
-  /**
-   * prints the houses of each player
-   *
-   * @return the houses in a String
-   */
   override def toStringHouse: String = {
     val players: Vector[Player] = gameState.players._1
     val title: String = s"${Console.UNDERLINED}Houses${Console.RESET}"
