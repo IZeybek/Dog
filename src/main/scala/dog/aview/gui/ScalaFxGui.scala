@@ -1,6 +1,7 @@
 package dog.aview.gui
 
-import dog.controller.{BoardChanged, ControllerTrait, GuiChanged}
+import dog.controller.{BoardChanged, ControllerTrait, GuiChanged, JokerState}
+import dog.model.CardComponent.cardBaseImpl.CardDeck
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -48,11 +49,21 @@ object GenGui {
       root = new BorderPane() {
         style = "-fx-background-color:#3d3d3d"
         top = menuBar
-        val paneMaster: CardMaster = new CardMaster {}
         // has to be a number that can be devided by 4
         center = BoardPanel.newBoardPane(controller)
         //number of Cards can be set here
-        bottom = paneMaster.CardPaneBuilder(controller).withCards().withIcons().buildCardPane()
+        bottom = if (JokerState.state.equals(JokerState.unpacked))
+          CardMaster.CardPaneBuilder(controller)
+            .withCardList(CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList)
+            .withCards()
+            .withIcons()
+            .buildCardPane()
+        else
+          CardMaster.CardPaneBuilder(controller)
+            .withCardList(controller.gameState.actualPlayer.cardList)
+            .withCards()
+            .withIcons()
+            .buildCardPane()
       }
     }
     val stage = new PrimaryStage {
