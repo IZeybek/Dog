@@ -137,9 +137,7 @@ object CardLogic {
 
   val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
     println("joker")
-    //    setStrategy(getLogic(inputCard.))
 
-    //    StateContext2.handle(OffEvent())
     (gameState.board, gameState.players._1, -1)
   }
 

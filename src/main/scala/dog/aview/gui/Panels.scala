@@ -20,10 +20,10 @@ object CardPanel extends CardMaster {
     var idx = 0
     val task = currentCard.task.split("\\s+") //GenImages.genIcon()
     val symbol: Array[String] = currentCard.symbol.split("\\s+")
-    val sbsize = symbol.length
+    val symbolLength: Int = symbol.length
     Seq.fill(iconAmount)(new Button(
       if (symbol(0).equals("4")) (if (idx == 0) "-" else "+") + symbol(0)
-      else if (sbsize > 1 && idx != sbsize - 1) "+" + symbol(idx)
+      else if (symbolLength > 1 && idx != symbolLength - 1) "+" + symbol(idx)
       else "",
       GenImages.genIconImage(task(idx))) {
       id = idx.toString

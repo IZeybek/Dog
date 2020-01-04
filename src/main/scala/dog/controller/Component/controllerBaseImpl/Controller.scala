@@ -52,14 +52,17 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-    println("homepos: " + gameState.actualPlayer.homePosition)
-    useCardLogic(inputCard) match {
+
+    val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
+
+    newState._3 match {
       case 0 =>
-        gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
+        doStep()
+        this.board = newState._1
+        gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withClickedField(-1).withNextPlayer().buildGame
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
       case _ =>
-        undoCommand()
         undoCommand()
         returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
     }
@@ -76,21 +79,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    *                  @ param selectedCard       is the index of the card in a CardList of the player that is played
    * @return
    */
-  override def useCardLogic(inputCard: InputCard): Int = {
-    if (gameState.actualPlayer.cardList.nonEmpty) {
-      val strategy = CardLogic.getLogic(inputCard.selectedCard.task)
-      val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(strategy, gameState, inputCard)
-      if (updateGame._3 == 0) {
-        doStep()
-        this.board = updateGame._1
-        gameState = gameStateMaster.UpdateGame().
-          withPlayers(updateGame._2).
-          withBoard(board).buildGame
-      }
-      return updateGame._3
-    }
-    -1
-  }
+  override def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(CardLogic.getLogic(inputCard.selectedCard.task), gameState, inputCard)
 
   /**
    * gets the selected card from the player

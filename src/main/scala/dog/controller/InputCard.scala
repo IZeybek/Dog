@@ -2,39 +2,33 @@ package dog.controller
 
 import dog.model.CardComponent.CardTrait
 
-trait Event {
-  def changeState(): Event
+trait State {
+  def changeState(): State
 }
 
 
-object StateContext2 {
+object JokerState {
+  var state: State = pack
 
-  val stateOn = new onState
-  val stateOff = new offState
-  var state: Event = stateOn
+  def handle: State = state.changeState()
 
-  def handle(): Event = {
-    state.changeState()
-    state
-  }
-
-  class onState() extends Event {
-    override def changeState(): Event = {
-      state = stateOff
-      println("I am on")
+  object unpack extends State {
+    override def changeState(): State = {
+      state = pack
+      println("packed Joker")
       state
     }
   }
 
-  class offState() extends Event {
-    override def changeState(): Event = {
-      state = stateOn
-      println("I am off")
+  object pack extends State {
+    override def changeState(): State = {
+      state = unpack
+      println("unpacked Joker")
       state
     }
   }
-
 }
+
 
 case class InputCard(actualPlayer: Int, otherPlayer: Int, selPieceList: List[Int], cardNum: (Int, Int), selectedCard: CardTrait, moveBy: Int)
 
@@ -88,4 +82,6 @@ object InputCardMaster {
       InputCard(actualPlayer, otherPlayer, selPieceList, cardNum, selCard, moveBy)
     }
   }
+
 }
+
