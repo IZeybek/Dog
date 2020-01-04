@@ -35,8 +35,6 @@ trait ControllerTrait extends Publisher {
    */
   def toStringHouse: String
 
-  def getBoard: BoardTrait
-
   //Player
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   def createPlayers(playerNames: List[String], pieceAmount: Int): GameState
@@ -47,11 +45,11 @@ trait ControllerTrait extends Publisher {
 
   def drawCardFromDeck: CardTrait
 
-  def drawFewCards(amount: Int): List[CardTrait]
+  def drawCards(amount: Int): List[CardTrait]
 
   def toStringPlayerHands: String
 
-  def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player
+  def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player
 
   //Board
   def createNewBoard(size: Int): BoardTrait

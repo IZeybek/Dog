@@ -21,11 +21,11 @@ class BoardCreateStrategyRandom extends BoardCreateStrategyTemplate {
     Random.nextInt(1) match {
       case 0 =>
         if (player.inHouse.nonEmpty)
-          Cell(Some(player), None)
+          Cell(Some(player))
         else
-          Cell(None, None)
+          Cell(None)
       case 1 =>
-        Cell(None, None)
+        Cell(None)
     }
   }
 }

@@ -43,55 +43,55 @@ object CardLogic {
   val move: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputC: InputCard) => {
 
     var isValid: Int = 0
-    val actPlayer = inputC.actualPlayer
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
-    val players: Vector[Player] = gameState.players._1
-    var finalPlayer: Vector[Player] = Vector.empty[Player]
-    val p: Player = players(actPlayer)
+    var players: Vector[Player] = gameState.players._1
+    val actPlayerIdx: Int = inputC.actualPlayer
+    val actPlayer: Player = players(actPlayerIdx)
     val board: BoardTrait = gameState.board
     val selPiece = inputC.selPieceList.head
-    val newPos: Int = Math.floorMod(inputC.moveBy + p.piece(selPiece).pos, board.size)
+
+    val oldPos: Int = actPlayer.piecePosition(selPiece)
+    val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(p, actPlayer, newPos)) {
+    if (board.checkOverrideOtherPlayer(actPlayer, newPos)) {
       //get indexes and pieces
-      val oPlayerIdx: Int = players.indexWhere(x => x.color == board.getBoardMap(newPos).getColor)
+      val oPlayerIdx: Int = board.cell(newPos).p.get.nameAndIdx._2
+
       val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
 
       //check whether move valid or not
       if (oPlayerPieceNum == -1) isValid = -1
 
       //update Vector when overridden
-      val overriddenPlayers: Vector[Player] = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
-      finalPlayer = overriddenPlayers.updated(actPlayer, players(actPlayer).setPosition(selPiece, newPos))
+      players = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
+      players = players.updated(actPlayerIdx, actPlayer.setPosition(selPiece, newPos))
 
     } else {
       //update Vector when not overridden
-      finalPlayer = players.updated(actPlayer, players(actPlayer).setPosition(selPiece, newPos))
+      players = players.updated(actPlayerIdx, actPlayer.setPosition(selPiece, newPos))
     }
 
-    (board.updateMovePlayer(p, selPiece, newPos), finalPlayer, isValid)
+    (board.updateMovePlayer(players(actPlayerIdx), oldPos, newPos), players, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
-    val p: Player = gameState.players._1(gameState.actualPlayer)
+    val actPlayer: Player = gameState.actualPlayer
     val swapPlayer: Player = gameState.players._1(inputCard.otherPlayer)
     val selPiece = inputCard.selPieceList.head
-    val actPlayer = inputCard.actualPlayer
-
-    val swapPos: (Int, Int) = (p.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
+    val swapPos: (Int, Int) = (actPlayer.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
 
     if (swapPos._2 == swapPlayer.homePosition) isValid = -1 //Second Player is not on the field
 
-    var players: Vector[Player] = gameState.players._1.updated(actPlayer, p.swapPiece(selPiece, swapPos._2)) //swap with second player
+    var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayer, actPlayer.swapPiece(selPiece, swapPos._2)) //swap with second player
 
     players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
 
-    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players, inputCard)
+    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players(actPlayer.nameAndIdx._2), players(swapPlayer.nameAndIdx._2), inputCard.selPieceList)
 
     (nBoard, players, isValid)
   }

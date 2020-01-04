@@ -14,7 +14,6 @@ object Dog {
   controller.publish(new BoardChanged)
 
   def main(args: Array[String]): Unit = {
-    tui.showMenu()
     gui.main(Array(""))
 
     var input: String = ""

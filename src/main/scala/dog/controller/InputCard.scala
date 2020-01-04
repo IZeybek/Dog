@@ -88,6 +88,4 @@ object InputCardMaster {
       InputCard(actualPlayer, otherPlayer, selPieceList, cardNum, selCard, moveBy)
     }
   }
-
 }
-

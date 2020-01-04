@@ -22,7 +22,7 @@ trait CardMaster {
   case class CardPaneBuilder(controller: ControllerTrait) {
 
     val actualPlayer: Int = controller.gameState.players._2
-    val cardList: List[CardTrait] = controller.gameState.players._1(actualPlayer).cardList
+    val cardList: List[CardTrait] = controller.gameState.actualPlayer.cardList
     val amount: Int = cardList.size
 
     def withIcons(): CardPaneBuilder = {

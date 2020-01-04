@@ -1,18 +1,17 @@
 package dog.controller
 
 import dog.model.BoardComponent.BoardTrait
+import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
-import dog.model.CardComponent.cardBaseImpl.Card
+import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck}
 import dog.model.Player
 
 trait GameStateMasterTrait {
 
-  var tutorial: Boolean
   var colors: Array[String]
   var playerNames: Array[String]
   var players: Vector[Player]
   var actualPlayer: Int
-  var amountCardsInHand: Int
   var roundAndCardsToDistribute: (Int, Int)
   var cardDeck: Vector[CardTrait]
   var cardPointer: Int
@@ -20,30 +19,28 @@ trait GameStateMasterTrait {
   var lastPlayedCard: Option[CardTrait]
   var clickedFieldIdx: Int
 
-  def getLastPlayedCard: CardTrait = {
-    lastPlayedCard match {
-      case Some(_) => lastPlayedCard.get
-      case None => Card("pseudo", "pseudo", "pseudo")
-    }
-  }
+  var boardSize: Int
+  var pieceAmount: Int
 
   case class UpdateGame() {
 
     def withAmountDistributedCard(setAmount: Int): UpdateGame = {
-      amountCardsInHand = setAmount
+      roundAndCardsToDistribute = (roundAndCardsToDistribute._1, setAmount)
       this
     }
 
     def withDistributedCard(): UpdateGame = {
-      players.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(amountCardsInHand).buildRandomCardList))
+      players.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(roundAndCardsToDistribute._2).buildRandomCardList))
       this
     }
 
     def withLastPlayed(setCard: CardTrait): UpdateGame = {
-      lastPlayedCard match {
-        case Some(_) => lastPlayedCard = Some(setCard)
-        case None => lastPlayedCard = Some(setCard)
-      }
+      lastPlayedCard = Some(setCard)
+      this
+    }
+
+    def withoutLastPlayed(): UpdateGame = {
+      lastPlayedCard = None
       this
     }
 
@@ -78,18 +75,39 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withTutorial(setTutorial: Boolean): UpdateGame = {
-      tutorial = setTutorial
+    def withClickedField(clickedField: Int): UpdateGame = {
+      clickedFieldIdx = clickedField
       this
     }
 
-    def withClickedField(clickedFlied: Int): UpdateGame = {
-      clickedFieldIdx = clickedFlied
-      this
+    def resetGame: GameState = {
+      //Board
+      boardSize = 64 // hast to be dividable by 4
+      board = new Board(boardSize)
+      clickedFieldIdx = -1
+
+      // Player
+      playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")
+      colors = Array("yellow", "white", "green", "red")
+      pieceAmount = 4
+      players = playerNames.indices.map(i => Player.PlayerBuilder().
+        withColor(colors(i)).
+        withName((playerNames(i), i)).
+        withPiece(pieceAmount, (boardSize / playerNames.length) * i).
+        withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
+      actualPlayer = 0
+
+      // Card
+      cardDeck = CardDeck.CardDeckBuilder().withAmount(List(10, 10)).withShuffle.buildCardVector
+      cardPointer = cardDeck.length
+      roundAndCardsToDistribute = (0, 6)
+      lastPlayedCard = None
+
+      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board)
     }
 
     def buildGame: GameState = {
-      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board, actualPlayer, clickedFieldIdx)
+      GameState((players, actualPlayer), (cardDeck, cardPointer), None, board)
     }
   }
 }

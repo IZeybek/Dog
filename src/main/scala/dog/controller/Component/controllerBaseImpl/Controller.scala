@@ -17,14 +17,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
-  override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
+  override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
   override def clickedField(clickedFieldIdx: Int): Int = {
-    gameState = gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx).buildGame
+    gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx)
     publish(new BoardChanged)
     clickedFieldIdx
   }
-
 
   override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
 
@@ -53,15 +52,16 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def manageRound(inputCard: InputCard): String = {
 
     var returnString: String = ""
-    println("homepos: " + gameState.players._1(gameState.actualPlayer).homePosition)
-    if (useCardLogic(inputCard) == 0) {
-      gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
-      returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
-      publish(new BoardChanged)
-    } else {
-      undoCommand()
-      undoCommand()
-      returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+    println("homepos: " + gameState.actualPlayer.homePosition)
+    useCardLogic(inputCard) match {
+      case 0 =>
+        gameState = gameStateMaster.UpdateGame().withClickedField(-1).withNextPlayer().buildGame
+        returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
+        publish(new BoardChanged)
+      case _ =>
+        undoCommand()
+        undoCommand()
+        returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
     }
     returnString
   }
@@ -77,14 +77,15 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return
    */
   override def useCardLogic(inputCard: InputCard): Int = {
-
-    if (gameState.players._1(gameState.actualPlayer).cardList.nonEmpty) {
+    if (gameState.actualPlayer.cardList.nonEmpty) {
       val strategy = CardLogic.getLogic(inputCard.selectedCard.task)
       val updateGame: (BoardTrait, Vector[Player], Int) = CardLogic.setStrategy(strategy, gameState, inputCard)
       if (updateGame._3 == 0) {
         doStep()
         this.board = updateGame._1
-        gameState = gameStateMaster.UpdateGame().withPlayers(updateGame._2).withBoard(board).buildGame
+        gameState = gameStateMaster.UpdateGame().
+          withPlayers(updateGame._2).
+          withBoard(board).buildGame
       }
       return updateGame._3
     }
@@ -106,8 +107,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val oldCard = player(playerNum).getCard(cardAndOption._1)
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).removeCard(oldCard))
     doStep()
-    gameState = gameStateMaster.UpdateGame().withLastPlayed(oldCard).buildGame
-    gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
+    gameState = gameStateMaster.UpdateGame().
+      withLastPlayed(oldCard).
+      withPlayers(newPlayer).buildGame
     oldCard
   }
 
@@ -142,34 +144,40 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   //Player
+
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
   override def createPlayers(playerNames: List[String], pieceAmount: Int): GameState = {
     val colors = gameStateMaster.colors
 
-    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().withColor(colors(i)).withName((playerNames(i), i)).withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i).build()).toVector
+    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder().
+      withColor(colors(i)).
+      withName((playerNames(i), i)).
+      withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i).
+      build()).toVector
     gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
     gameState
   }
 
-  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder().withAmount(List(2, 2)).withShuffle.buildCardVectorWithLength
-
-  override def getBoard: BoardTrait = gameState.board
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder().
+    withAmount(List(2, 2)).
+    withShuffle.
+    buildCardVectorWithLength
 
   //Cards
-  override def drawFewCards(amount: Int): List[CardTrait] = Card.RandomCardsBuilder().withAmount(amount).buildRandomCardList
+  override def drawCards(amount: Int): List[CardTrait] = Card.RandomCardsBuilder().withAmount(amount).buildRandomCardList
 
   override def drawCardFromDeck: CardTrait = {
     var cardDeck: (Vector[CardTrait], Int) = gameState.cardDeck
     if (cardDeck._2 != 0)
       cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
     doStep()
-    gameState = gameStateMaster.UpdateGame().withCardDeck(cardDeck._1).withCardPointer(cardDeck._2).buildGame
+    gameState = gameStateMaster.UpdateGame().
+      withCardDeck(cardDeck._1).
+      withCardPointer(cardDeck._2).buildGame
     cardDeck._1(cardDeck._2)
   }
 
-  //AREA 51-------------------------------------------------------------------------------------------------------
-
-  override def testDistributeCardsToPlayer(playerNum: Int, cards: List[CardTrait]): Player = {
+  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = {
     val player: Vector[Player] = gameState.players._1
     val newPlayer: Vector[Player] = player.updated(playerNum, player(playerNum).setHandCards(cards))
     gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).buildGame
@@ -206,11 +214,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val up: String = "‾" * players.length * 3
     val down: String = "_" * players.length * 3
     var house: String = ""
-    players.indices.foreach(i => house = house + s" ${players(i).consoleColor}${players(i).inHouse}${Console.RESET} ")
+    players.indices.foreach(i => house = house + s" ${players(i).consoleColor}${players(i).inHouse.size}${Console.RESET} ")
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
   override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
-
-
 }

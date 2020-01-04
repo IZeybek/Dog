@@ -15,13 +15,6 @@ class Tui(controller: ControllerTrait) extends Reactor {
       println(controller.toStringActivePlayerHand)
   }
 
-  def showMenu(): Unit = {
-    print("Menu\n")
-    println("normal -> yourCard <-> myPiece <-> (OtherPiece) <-> myPlayerNum <-> (otherPlayerNum)")
-    println("swap   -> yourCard <-> myPiece <-> OtherPiece <-> myPlayerNum <-> (otherPlayerNum)")
-    controller.doStep()
-  }
-
   def processInput(input: String): String = {
     var result: String = ""
 
@@ -57,11 +50,10 @@ class Tui(controller: ControllerTrait) extends Reactor {
         print(controller.toStringPlayerHands)
         result = "printed game"
       case _ =>
-        val actualPlayer = controller.gameState.actualPlayer
+        val actualPlayer: Int = controller.gameStateMaster.actualPlayer
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           //for having full control
           case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayer)
               .withOtherPlayer(otherPlayer)
@@ -72,8 +64,6 @@ class Tui(controller: ControllerTrait) extends Reactor {
 
           //for swapping
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-
-
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayer)
               .withOtherPlayer(otherPlayer)
@@ -84,7 +74,6 @@ class Tui(controller: ControllerTrait) extends Reactor {
 
           //for cards having multiple options
           case cardNum :: cardOption :: pieceNum :: Nil =>
-
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayer)
               .withPieceNum(List(pieceNum))
@@ -94,7 +83,6 @@ class Tui(controller: ControllerTrait) extends Reactor {
 
           //for easy moving
           case cardNum :: pieceNum :: Nil =>
-
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayer)
               .withPieceNum(List(pieceNum, -1))

@@ -1,19 +1,14 @@
 package dog.model.BoardComponent
 
-import dog.controller.InputCard
 import dog.model.Player
 
 trait BoardTrait {
-
-  def getBoardMap: Map[Int, CellTrait]
 
   def createNewBoard: BoardTrait
 
   def toString: String
 
-  def updateMovePlayer(player: Player, pieceNum: Integer, setPos: Integer): BoardTrait
-
-  def checkOverrideOtherPlayer(player: Player, pieceNum: Integer, newPos: Integer): Boolean
+  def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean
 
   def cell(idx: Int): CellTrait
 
@@ -23,22 +18,26 @@ trait BoardTrait {
 
   def fill(boardMap: Map[Int, CellTrait]): BoardTrait
 
-  def updateSwapPlayers(player: Vector[Player], inputCard: InputCard): BoardTrait
+  def getPieceIndex(idx: Int): Int
+
+  def updateMovePlayer(player: Player, oldPos: Int, newPos: Int): BoardTrait
+
+  def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait
 }
 
 trait CellTrait {
 
   def p: Option[Player]
 
-  def getPieceIdx: Int
-
   def removePlayerFromCell(): CellTrait
 
-  def addPlayerToCell(p: Player, newPieceIdx: Int): CellTrait
+  def addPlayerToCell(p: Player): CellTrait
 
   def getColor: String
 
   def toString: String
 
   def isFilled: Boolean
+
+  def checkIfPlayer(player: Player): Boolean
 }

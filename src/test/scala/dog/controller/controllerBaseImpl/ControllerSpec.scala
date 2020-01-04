@@ -1,7 +1,7 @@
 package dog.controller.controllerBaseImpl
 
 import dog.controller.Component.controllerBaseImpl.Controller
-import dog.controller.InputCardMaster
+import dog.controller.{InputCard, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
@@ -16,8 +16,8 @@ class ControllerSpec extends WordSpec with Matchers {
       val board = new Board(30)
       val controller: Controller = new Controller(board)
       "create a board " in {
-        controller.createNewBoard(16) should be(controller.getBoard)
-        controller.gameState.board should be(controller.getBoard)
+        controller.createNewBoard(16) should be(controller.board)
+        controller.gameState.board should be(controller.board)
       }
       "create a random Board" in {
         controller.createRandomBoard(10)
@@ -46,7 +46,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
         val cardList: List[CardTrait] = Card("3", "move", "blue") :: Card("5", "move", "blue") :: Nil
-        controller.testDistributeCardsToPlayer(playerNum = 0, cardList).cardList should be(cardList)
+        controller.givePlayerCards(playerNum = 0, cardList).cardList should be(cardList)
         controller.manageRound(InputCardMaster.UpdateCardInput()
           .withActualPlayer(0)
           .withOtherPlayer(-1)
@@ -56,13 +56,14 @@ class ControllerSpec extends WordSpec with Matchers {
           .withMoveBy(0)
           .buildCardInput()) should be(s"Player ${controller.gameState.players._1(controller.gameState.players._2).consoleColor}${controller.gameState.players._1(controller.gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n")
       }
-      "move a player by 5" in {
+      "move a player by 3 and 5" in {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
 
+
         val cardList: List[CardTrait] = Card("3", "move", "blue") :: Card("5", "move", "blue") :: Nil
-        controller.testDistributeCardsToPlayer(playerNum = 3, cardList).cardList should be(cardList)
-        val inputCard1 = InputCardMaster.UpdateCardInput()
+        controller.givePlayerCards(playerNum = 3, cardList).cardList should be(cardList)
+        val inputCard1: InputCard = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withOtherPlayer(-1)
           .withPieceNum(List(0))
@@ -71,8 +72,15 @@ class ControllerSpec extends WordSpec with Matchers {
           .buildCardInput()
         controller.manageRound(inputCard1)
         controller.gameState.players._1(3).piece(0).pos should be(24)
+        controller.gameState.players._1(3).piecePosition(0) should be(24)
+        controller.gameState.players._1(3).getPieceNum(24) should be(0)
+        controller.gameState.players._1(3).getPieceNum(25) should be(-1)
+        controller.gameState.board.cell(24).isFilled should be(true)
+        controller.gameState.board.cell(24).getColor should be("red")
 
-        val inputCard2 = InputCardMaster.UpdateCardInput()
+        controller.gameState.board.getPieceIndex(24) should be(0)
+
+        val inputCard2: InputCard = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withOtherPlayer(0)
           .withPieceNum(List(1))
@@ -88,7 +96,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
         val cardList: List[CardTrait] = Card("0", "move", "blue") :: Nil
-        controller.testDistributeCardsToPlayer(playerNum = 3, cardList).getCard(0) should be(cardList.head)
+        controller.givePlayerCards(playerNum = 3, cardList).getCard(0) should be(cardList.head)
         val inputCard1 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withOtherPlayer(-1)
@@ -104,7 +112,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
         val cardList: List[CardTrait] = Card("1", "move", "blue") :: Card("8", "move", "blue") :: Nil
 
-        controller.testDistributeCardsToPlayer(playerNum = 3, cardList)
+        controller.givePlayerCards(playerNum = 3, cardList).cardList should be(cardList)
         val inputCard1 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(0)
           .withPieceNum(List(0))
@@ -127,14 +135,14 @@ class ControllerSpec extends WordSpec with Matchers {
 
       }
       "swap two players" in {
-        controller.createNewBoard(28)
-        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
+        controller.createNewBoard(28) should be(new Board(28))
+        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1.length should be(4)
         val cardListP2: List[CardTrait] = Card("swap", "swap", "red") :: Nil
         val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("9", "move", "blue") :: Nil
 
         //set cards
-        controller.testDistributeCardsToPlayer(playerNum = 2, cardListP2).cardList should be(cardListP2)
-        controller.testDistributeCardsToPlayer(playerNum = 3, cardListP3).cardList should be(cardListP3)
+        controller.givePlayerCards(playerNum = 2, cardListP2).cardList should be(cardListP2)
+        controller.givePlayerCards(playerNum = 3, cardListP3).cardList should be(cardListP3)
 
         //init input
         val inputCard1 = InputCardMaster.UpdateCardInput()
@@ -175,11 +183,11 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.gameState.players._1(2).piece(2).pos should be(2)
 
         //check position on board
-        controller.gameState.board.getBoardMap(14).p.get.nameAndIdx._1 should be("Player4")
-        controller.gameState.board.getBoardMap(2).p.get.nameAndIdx._1 should be("Player3")
+        controller.gameState.board.cell(14).p.get.nameAndIdx._1 should be("Player4")
+        controller.gameState.board.cell(2).p.get.nameAndIdx._1 should be("Player3")
 
-        controller.board.getBoardMap(14).p.get.nameAndIdx._1 should be("Player4")
-        controller.board.getBoardMap(2).p.get.nameAndIdx._1 should be("Player3")
+        controller.board.cell(14).p.get.nameAndIdx._1 should be("Player4")
+        controller.board.cell(2).p.get.nameAndIdx._1 should be("Player3")
       }
       "swap two players when no player is on the field" in {
         controller.createNewBoard(28)
@@ -187,7 +195,7 @@ class ControllerSpec extends WordSpec with Matchers {
         val cardListP1: List[CardTrait] = Card("swap", "swap", "red") :: Nil
 
         //set cards
-        controller.testDistributeCardsToPlayer(playerNum = 1, cardListP1).cardList should be(cardListP1)
+        controller.givePlayerCards(playerNum = 1, cardListP1).cardList should be(cardListP1)
         val inputCard1 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(1)
           .withOtherPlayer(2)
@@ -204,7 +212,7 @@ class ControllerSpec extends WordSpec with Matchers {
       "play a Card" in {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
-        controller.testDistributeCardsToPlayer(playerNum = 0, List(Card("5", "move", "blue")))
+        controller.givePlayerCards(playerNum = 0, List(Card("5", "move", "blue")))
         val handCards: List[CardTrait] = controller.gameState.players._1(0).cardList
         controller.gameState.players._1(0).cardList should not be empty
 
@@ -217,7 +225,7 @@ class ControllerSpec extends WordSpec with Matchers {
         cardDeck._1.length should be(cardDeck._2)
       }
       "draw Cards" in {
-        controller.drawFewCards(10).foreach(x => be(x.isInstanceOf[CardTrait]))
+        controller.drawCards(10).foreach(x => be(x.isInstanceOf[CardTrait]))
       }
       "draw Card from Deck" in {
         controller.drawCardFromDeck.isInstanceOf[CardTrait] should be(true)
