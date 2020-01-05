@@ -42,11 +42,6 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withoutLastPlayed(): UpdateGame = {
-      lastPlayedCard = None
-      this
-    }
-
     def withPlayers(setPlayers: Vector[Player]): UpdateGame = {
       players = setPlayers
       this
@@ -63,8 +58,11 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withRestoredActualPlayerCards(): UpdateGame = {
-      players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = cardDeckActualPlayer))
+    def withRestoredActualPlayerCards(state: State): UpdateGame = {
+      state match {
+        case JokerState.unpacked => players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = cardDeckActualPlayer))
+        case _ =>
+      }
       this
     }
 
