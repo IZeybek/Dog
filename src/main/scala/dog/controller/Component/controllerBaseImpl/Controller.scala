@@ -69,7 +69,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         gameState = gameStateMaster.UpdateGame()
           .withBoard(newState._1)
           .withPlayers(newState._2)
-          .withClickedField(-1)
           .buildGame
 
         publish(new BoardChanged)

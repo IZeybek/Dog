@@ -139,13 +139,14 @@ object CardLogic {
   val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
     println("joker")
     val playerVektor = gameState.players._1
-    val actPlayer = gameState.players._1(inputCard.actualPlayerIdx)
+    val actPlayer = playerVektor(inputCard.actualPlayerIdx)
 
     if (JokerState.state.equals(JokerState.unpacked)) {
       println("unpacked -> ")
       JokerState.handle
       val updatedGameState = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
-      val players = playerVektor.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
+      val players = updatedGameState._2.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
+      //TODO:
       InputCardMaster.UpdateCardInput().withCardNum(JokerState.cachedCardList._2, 0).buildCardInput()
 
       (updatedGameState._1, players, 0)
