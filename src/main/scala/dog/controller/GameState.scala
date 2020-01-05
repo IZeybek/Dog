@@ -39,7 +39,6 @@ class GameStateMaster extends GameStateMasterTrait {
     .withPiece(pieceAmount, (boardSize / playerNames.length) * i)
     .withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
   override var actualPlayerIdx: Int = 0
-  override var cardDeckActualPlayer: List[CardTrait] = players(actualPlayerIdx).cardList
 
   //cards
   override var cardDeck: Vector[CardTrait] = CardDeck.CardDeckBuilder().

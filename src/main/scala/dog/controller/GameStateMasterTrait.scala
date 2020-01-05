@@ -14,7 +14,6 @@ trait GameStateMasterTrait {
   var players: Vector[Player]
   var actualPlayerIdx: Int
   var pieceAmount: Int
-  var cardDeckActualPlayer: List[CardTrait]
 
   var roundAndCardsToDistribute: (Int, Int)
   var cardDeck: Vector[CardTrait]
@@ -52,19 +51,6 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withSwappedActualPlayerCards(setHandCards: List[CardTrait]): UpdateGame = {
-      cardDeckActualPlayer = players(actualPlayerIdx).cardList
-      players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = setHandCards))
-      this
-    }
-
-    def withRestoredActualPlayerCards(state: State): UpdateGame = {
-      state match {
-        case JokerState.unpacked => players = players.updated(actualPlayerIdx, players(actualPlayerIdx).copy(cardList = cardDeckActualPlayer))
-        case _ =>
-      }
-      this
-    }
 
     def withNextPlayer(): UpdateGame = {
       val newPlayer = actualPlayerIdx + 1
