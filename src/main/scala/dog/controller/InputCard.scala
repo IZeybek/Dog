@@ -1,9 +1,7 @@
 package dog.controller
 
-import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
-
 
 
 case class InputCard(actualPlayerIdx: Int, otherPlayer: Int, selPieceList: List[Int], cardIdxAndOption: (Int, Int), selectedCard: CardTrait, moveBy: Int)
@@ -19,9 +17,17 @@ object InputCardMaster {
   var actualPlayer: Player = _
   var moveBy: Int = 0
   var selCard: CardTrait = _
-  var strategyMode: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = _
 
   case class UpdateCardInput() {
+    //
+    //    def reset(): Unit = {
+    //
+    //      otherPlayer = -1
+    //      selPieceList = List(0)
+    //      cardNum = (0, 0)
+    //      actualPlayerIdx = 0
+    //      moveBy = 0
+    //    }
 
     def withOtherPlayer(otherP: Int): UpdateCardInput = {
       otherPlayer = otherP
@@ -40,11 +46,6 @@ object InputCardMaster {
 
     def withCardNum(cardN: (Int, Int)): UpdateCardInput = {
       cardNum = cardN
-      this
-    }
-
-    def withStrategyMode(mode: (GameState, InputCard) => (BoardTrait, Vector[Player], Int)): UpdateCardInput = {
-      strategyMode = mode
       this
     }
 
