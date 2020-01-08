@@ -33,9 +33,9 @@ class Controller extends ControllerTrait {
    */
   override def toStringHouse: String = ""
 
-  override def createPlayers(playerNames: List[String], pieceAmount: Int): GameState = gameState
+  override def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player] = Vector.empty[Player]
 
-  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector(Card("5", "move", "blau")), 0)
+  override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector.empty[CardTrait], 0)
 
   override def toStringCardDeck: String = ""
 
@@ -45,7 +45,7 @@ class Controller extends ControllerTrait {
 
   override def toStringPlayerHands: String = ""
 
-  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = gameState.players._1(0)
+  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = Player.PlayerBuilder().build()
 
   override def createNewBoard(size: Int): BoardTrait = new Board(size)
 
@@ -82,5 +82,9 @@ class Controller extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = ""
 
-  override def clickedField(clickedFieldIdx: Int): Int = -1
+  override def clickedField(clickedFieldIdx: Int): Int = 0
+
+  override def save: Unit = {}
+
+  override def load: Unit = {}
 }

@@ -29,7 +29,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.toStringBoard should be(controller.toStringHouse + board.toString)
       }
       "create a player" in {
-        val players: Vector[Player] = controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1
+        val players: Vector[Player] = controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
         players(0).toString should be("Player1")
         players(1).toString should be("Player2")
         players(2).toString should be("Player3")
@@ -129,7 +129,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "swap two players" in {
         controller.createNewBoard(28) should be(new Board(28))
-        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1.length should be(4)
+        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).length should be(4)
         val cardListP2: List[CardTrait] = Card("swap", "swap", "red") :: Nil
         val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("9", "move", "blue") :: Nil
 

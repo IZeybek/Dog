@@ -51,7 +51,6 @@ trait GameStateMasterTrait {
       this
     }
 
-
     def withNextPlayer(): UpdateGame = {
       val newPlayer = actualPlayerIdx + 1
       actualPlayerIdx = newPlayer % players.size
@@ -102,6 +101,15 @@ trait GameStateMasterTrait {
       lastPlayedCard = None
 
       GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
+    }
+
+    def loadGame(gameState: GameState): Unit = {
+      cardDeck = gameState.cardDeck._1
+      cardPointer = gameState.cardDeck._2
+      board = gameState.board
+      players = gameState.players._1
+      actualPlayerIdx = gameState.players._2
+      lastPlayedCard = gameState.lastPlayedCardOpt
     }
 
     def buildGame: GameState = {

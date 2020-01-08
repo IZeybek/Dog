@@ -37,7 +37,7 @@ trait ControllerTrait extends Publisher {
 
   //Player
   //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
-  def createPlayers(playerNames: List[String], pieceAmount: Int): GameState
+  def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player]
 
   def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int)
 
@@ -74,5 +74,9 @@ trait ControllerTrait extends Publisher {
    */
   def manageRound(inputCard: InputCard): String
 
-  def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int) 
+  def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int)
+
+  def save: Unit
+
+  def load: Unit
 }

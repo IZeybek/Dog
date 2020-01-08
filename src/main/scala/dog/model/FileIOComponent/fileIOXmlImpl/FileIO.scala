@@ -24,35 +24,46 @@ class FileIO extends FileIOTrait {
 
   def gameStateToXml(gameState: GameState): Elem = {
     <gamestate actPlayer={gameState.players._2.toString} cardDeckPointer={gameState.cardDeck._2.toString}>
+      <player>
+        {gameState.players._1.map(x => playerToXml(x))}
+      </player>
+      <board>
+        {boardToXml(gameState.board)}
+      </board>
     </gamestate>
   }
 
   def playerToXml(player: Player): Elem = {
-    <player name={player.nameAndIdx._1} color={player.color} piece={pieceToXml(player.piece)}>
+    <player idx={player.nameAndIdx._2.toString} name={player.nameAndIdx._1} color={player.color}>
+      <piece>
+        {player.piece.map(x => pieceToXml(x._1, x._2))}
+      </piece>
+      <card>
+        {player.cardList.map(x => cardToXml(x))}
+      </card>
     </player>
   }
 
-  def pieceToXml(piece: Map[Int, Piece]): Elem = {
-    <piece>
-      {piece.foreach(x => x._2.pos)}
+  def pieceToXml(pieceNum: Int, piece: Piece): Elem = {
+    <piece pieceNum={pieceNum.toString} position={piece.pos.toString}>
     </piece>
   }
 
   def cardToXml(card: CardTrait): Elem = {
-    <card>
-      {card}
+    <card symbol={card.symbol} task={card.task} color={card.color}>
     </card>
   }
 
   def boardToXml(board: BoardTrait): Elem = {
     <board size={board.size.toString}>
-      {(0 until board.size).foreach(x => cellToXml(board.cell(x)))}
+      {(0 until board.size).map(x => cellToXml(board.cell(x)))}
     </board>
   }
 
   def cellToXml(cell: CellTrait): Elem = {
     <cell player={cell.p match {
-      case Some(p) => playerToXml(p).toString()
+      case Some(p) => p.nameAndIdx._2.toString
+      case None => "-1"
     }}>
     </cell>
   }
