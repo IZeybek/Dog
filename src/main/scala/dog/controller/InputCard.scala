@@ -26,7 +26,6 @@ object InputCardMaster {
       otherPlayer = -1
       selPieceList = List(0)
       cardNum = (-1, -1)
-      actualPlayerIdx = -1
       moveBy = 0
       selCard = Card("pseudo", "pseudo", "pseudo")
     }

@@ -137,64 +137,78 @@ class ControllerSpec extends WordSpec with Matchers {
       "swap two players" in {
         controller.createNewBoard(28) should be(new Board(28))
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1.length should be(4)
-        val cardListP2: List[CardTrait] = Card("swap", "swap", "red") :: Nil
-        val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("6", "move", "blue") :: Nil
+        val cardListP2: List[CardTrait] = Card("3", "move", "blue") :: Card("swap", "swap", "red") :: Nil
+        val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("6", "move", "blue") :: Nil
 
         //set cards
         controller.givePlayerCards(playerNum = 2, cardListP2).cardList should be(cardListP2)
+        controller.gameState.players._1(2).cardList.size should be(2)
+
         controller.givePlayerCards(playerNum = 3, cardListP3).cardList should be(cardListP3)
+        controller.gameState.players._1(3).cardList.size should be(2)
+
 
         //init input
         val inputCard1 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withPieceNum(List(0))
           .withCardNum((0, 0))
-          .withSelectedCard(cardListP3.head)
+          .withSelectedCard(controller.gameState.players._1(3).getCard(0))
           .buildCardInput()
+        controller.manageRound(inputCard1)
+        controller.gameState.players._1(3).cardList.size should be(1)
+
         val inputCard2 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(2)
           .withPieceNum(List(2))
           .withCardNum((0, 0))
-          .withSelectedCard(cardListP3.head)
+          .withSelectedCard(controller.gameState.players._1(2).getCard(0))
           .buildCardInput()
+        controller.manageRound(inputCard2)
+        controller.gameState.players._1(2).cardList.size should be(1)
+
         val inputCard3 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withPieceNum(List(2))
           .withCardNum((0, 0))
-          .withSelectedCard(cardListP3(2))
+          .withSelectedCard(controller.gameState.players._1(3).getCard(0))
           .buildCardInput()
-        //use CardLogic
-        controller.manageRound(inputCard1)
-        controller.manageRound(inputCard2)
         controller.manageRound(inputCard3)
+        controller.gameState.players._1(3).cardList.size should be(0)
+
+        //use CardLogic
 
 
         controller.gameState.players._1(3).piece(2).pos should be(27)
-        controller.gameState.players._1(2).piece(2).pos should be(19)
+        controller.gameState.players._1(2).piece(2).pos should be(17)
+
         val inputCard4 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(2)
           .withOtherPlayer(3)
           .withPieceNum(List(2, 2))
           .withCardNum((0, 0))
-          .withSelectedCard(cardListP2.head)
+          .withSelectedCard(controller.gameState.players._1(2).getCard(0))
           .buildCardInput()
-
         println("player 3: piece 2 pos: " + controller.gameState.players._1(3).piece(2).pos)
         println("player 2: piece 2 pos: " + controller.gameState.players._1(2).piece(2).pos)
         val newState = controller.useCardLogic(inputCard4)
         newState._3 should be(0)
         controller.manageRound(inputCard4)
-        println("player 3: piece 2 pos: " + controller.gameState.players._1(3).piece(2).pos + " should be 19")
+
+        controller.gameState.players._1(2).cardList.size should be(0)
+
+
+        println("player 3: piece 2 pos: " + controller.gameState.players._1(3).piece(2).pos + " should be 17")
         println("player 2: piece 2 pos: " + controller.gameState.players._1(2).piece(2).pos + " should be 27")
         //check position
-        controller.gameState.players._1(3).piece(2).pos should be(19)
+        controller.gameState.players._1(3).piece(2).pos should be(17)
         controller.gameState.players._1(2).piece(2).pos should be(27)
 
         //check position on board
-        controller.gameState.board.cell(19).p.get.nameAndIdx._1 should be("Player4")
+        controller.gameState.board.cell(17).p.get.nameAndIdx._1 should be("Player4")
         controller.gameState.board.cell(27).p.get.nameAndIdx._1 should be("Player3")
 
-        controller.board.cell(19).p.get.nameAndIdx._1 should be("Player4")
+        controller.board.cell(17).p.get.nameAndIdx._1 should be("Player4")
         controller.board.cell(27).p.get.nameAndIdx._1 should be("Player3")
       }
       "swap two players when no player is on the field" in {
