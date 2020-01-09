@@ -20,14 +20,14 @@ object InputCardMaster {
 
   case class UpdateCardInput() {
 
-    def reset(): Unit = {
-
-      otherPlayer = -1
-      selPieceList = List(0)
-      cardNum = (0, 0)
-      actualPlayerIdx = 0
-      moveBy = 0
-    }
+    //    def reset(): Unit = {
+    //
+    //      otherPlayer = -1
+    //      selPieceList = List(0)
+    //      cardNum = (0, 0)
+    //      actualPlayerIdx = 0
+    //      moveBy = 0
+    //    }
 
     def withOtherPlayer(otherP: Int): UpdateCardInput = {
       otherPlayer = otherP

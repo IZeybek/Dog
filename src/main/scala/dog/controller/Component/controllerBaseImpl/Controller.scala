@@ -65,10 +65,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
       case 1 =>
-        println("joker packingState: " + JokerState.state)
+        println("joker packingState: " + (if (JokerState.state.equals(JokerState.unpacked)) "unpacked" else "packed"))
         gameState = gameStateMaster.UpdateGame()
           .withBoard(newState._1)
           .withPlayers(newState._2)
+          .withClickedField(-1)
           .buildGame
 
         publish(new BoardChanged)

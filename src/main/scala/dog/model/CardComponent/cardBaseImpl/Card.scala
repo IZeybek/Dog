@@ -158,7 +158,7 @@ object CardLogic {
       (updatedGameState._1, players, 0)
     } else {
       JokerState.handle
-      JokerState.cachedCardList = (gameState.players._1(inputCard.actualPlayerIdx).cardList, inputCard.cardIdxAndOption._1)
+      JokerState.cachedCardList = (actPlayer.cardList, inputCard.cardIdxAndOption._1)
       val players = playerVector.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList))
 
       (gameState.board, players, 1)

@@ -219,6 +219,79 @@ class ControllerSpec extends WordSpec with Matchers {
         //check if player stays the same
         controller.gameState.players._1(1).piece(2).pos should be(7)
       }
+      "Joker pressed and chosen card" in {
+        controller.createNewBoard(28)
+        controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
+        controller.givePlayerCards(playerNum = 0, List(Card("questionmark", "joker", "red")))
+        val handCards: List[CardTrait] = controller.gameState.players._1(0).cardList
+        controller.gameState.players._1(0).cardList should not be empty
+        controller.gameState.players._1(0).cardList.size should be(1)
+        //set cards
+
+        val inputCard1 = InputCardMaster.UpdateCardInput()
+          .withActualPlayer(0)
+          .withPieceNum(List(0))
+          .withCardNum((0, 0))
+          .withSelectedCard(controller.gameState.players._1(0).getCard(0))
+          .buildCardInput()
+
+
+        controller.manageRound(inputCard1)
+
+        controller.gameState.players._1(0).piece(0).pos should be(0)
+        controller.gameState.players._1(0).cardList.size should be(14)
+
+        val inputCard2 = InputCardMaster.UpdateCardInput()
+          .withActualPlayer(0)
+          .withPieceNum(List(0))
+          .withCardNum((6, 0))
+          .withSelectedCard(controller.gameState.players._1(0).getCard(6))
+          .buildCardInput()
+
+        //use CardLogic
+
+        val newState = controller.useCardLogic(inputCard2)
+
+        controller.manageRound(inputCard2)
+        newState._3 should be(0)
+
+        controller.gameState.players._1(0).piece(0).pos should be(2)
+
+        //trying other card -4 move with joker
+        controller.givePlayerCards(playerNum = 0, List(Card("questionmark", "joker", "red")))
+        val handCardsAgain: List[CardTrait] = controller.gameState.players._1(0).cardList
+        controller.gameState.players._1(0).cardList should not be empty
+        controller.gameState.players._1(0).cardList.size should be(1)
+
+        val inputCard3 = InputCardMaster.UpdateCardInput()
+          .withActualPlayer(0)
+          .withPieceNum(List(1))
+          .withCardNum((0, 0))
+          .withSelectedCard(controller.gameState.players._1(0).getCard(0))
+          .buildCardInput()
+
+        controller.manageRound(inputCard3)
+
+        controller.gameState.players._1(0).piece(1).pos should be(0)
+        controller.gameState.players._1(0).cardList.size should be(14)
+
+        val inputCard4 = InputCardMaster.UpdateCardInput()
+          .withActualPlayer(0)
+          .withPieceNum(List(1))
+          .withCardNum((1, 0))
+          .withSelectedCard(controller.gameState.players._1(0).getCard(1))
+          .buildCardInput()
+
+        //test CardLogic then use it
+
+        val newState2 = controller.useCardLogic(inputCard4)
+
+        controller.manageRound(inputCard4)
+        newState2._3 should be(0)
+
+        controller.gameState.players._1(0).piece(1).pos should be(24)
+
+      }
       "play a Card" in {
         controller.createNewBoard(28)
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4)
