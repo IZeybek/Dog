@@ -49,11 +49,11 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
     nBoard
   }
 
-  override def fill(cell: CellTrait, pos: Int): BoardTrait = copy(boardMap = boardMap.updated(pos, cell))
-
   override def createNewBoard: BoardTrait = (new BoardCreateStrategyNormal).createNewBoard(boardMap.size)
 
   override def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean = boardMap(newPos).isFilled
+
+  override def fill(cell: CellTrait, pos: Int): BoardTrait = copy(boardMap = boardMap.updated(pos, cell))
 
   override def fill(boardMap: Map[Int, CellTrait]): BoardTrait = copy(boardMap)
 }

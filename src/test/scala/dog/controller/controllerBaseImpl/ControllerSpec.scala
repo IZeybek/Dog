@@ -125,7 +125,6 @@ class ControllerSpec extends WordSpec with Matchers {
         val p2 = controller.gameState.players._1(3)
         p1.piece(0).pos should be(0)
         p2.piece(0).pos should be(1)
-
       }
       "swap two players" in {
         controller.createNewBoard(28) should be(new Board(28))
