@@ -6,6 +6,7 @@ import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck}
 import dog.model.Player
 
+
 case class GameState(players: (Vector[Player], Int),
                      cardDeck: (Vector[CardTrait], Int),
                      lastPlayedCardOpt: Option[CardTrait],
@@ -27,7 +28,6 @@ class GameStateMaster extends GameStateMasterTrait {
   override var pieceAmount = 4
   override var boardSize: Int = 64 // hast to be dividable by 4
   override var board: BoardTrait = new Board(boardSize)
-  override var clickedFieldIdx: Int = -1
 
   //player
   override var colors: Array[String] = Array("yellow", "white", "green", "red")

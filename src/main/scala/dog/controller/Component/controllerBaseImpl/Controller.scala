@@ -4,13 +4,13 @@ import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
 import dog.controller._
-import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
+import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.Player
-import dog.util.{SolveCommand, UndoManager}
+import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
 class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
@@ -21,7 +21,24 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
   override def clickedField(clickedFieldIdx: Int): Int = {
-    gameStateMaster.UpdateGame().withClickedField(clickedFieldIdx)
+    val clickedCell: CellTrait = gameState.board.cell(clickedFieldIdx)
+
+    if (!clickedCell.isFilled) {
+
+      SelectedState.reset()
+
+    } else {
+
+      val isOwnField = clickedCell.p.get.nameAndIdx._2 == gameStateMaster.actualPlayerIdx
+      val isOtherField = if (SelectedState.state.equals(SelectedState.ownPieceSelected) && !isOwnField) true else false
+      println("isOwnPlayerSelected: " + isOwnField)
+      println("isOtherFieldSelected: " + isOtherField)
+      if (SelectedState.state.equals(SelectedState.nothingSelected) && isOwnField) SelectedState.handle(gameState, clickedFieldIdx)
+      else if (SelectedState.state.equals(SelectedState.ownPieceSelected) && isOtherField) SelectedState.handle(gameState, clickedFieldIdx)
+      else SelectedState.reset()
+    }
+
+
     publish(new BoardChanged)
     clickedFieldIdx
   }
@@ -56,12 +73,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         gameState = gameStateMaster.UpdateGame()
           .withBoard(newState._1)
           .withPlayers(newState._2)
-          .withClickedField(-1)
           .withNextPlayer()
           .buildGame
 
         removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
-
+        SelectedState.reset()
         returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         publish(new BoardChanged)
       case 1 =>
@@ -69,7 +85,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         gameState = gameStateMaster.UpdateGame()
           .withBoard(newState._1)
           .withPlayers(newState._2)
-          .withClickedField(-1)
           .buildGame
 
         publish(new BoardChanged)

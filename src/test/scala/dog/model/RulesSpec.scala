@@ -57,14 +57,14 @@ class LevelSpec extends WordSpec with Matchers {
       val inputCard: InputCard = InputCardMaster.UpdateCardInput()
         .withActualPlayer(0)
         .buildCardInput()
-      Event.checkPiecesOnBoard(gameState, inputCard) should be(true)
+      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(true)
 
       player = Player.PlayerBuilder()
         .withPiece(5, 0)
         .build()
       gameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player)).buildGame
-      Event.checkPiecesOnBoard(gameState, inputCard) should be(false)
+      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(false)
     }
     "check if player has hand cards" in {
       controller.gameStateMaster.UpdateGame().resetGame
@@ -99,14 +99,14 @@ class LevelSpec extends WordSpec with Matchers {
       val inputCard: InputCard = InputCardMaster.UpdateCardInput()
         .withActualPlayer(0)
         .buildCardInput()
-      Event.checkCardPlayOnHand(gameState, inputCard) should be(true)
+      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(true)
 
       player = Player.PlayerBuilder()
         .withCards(Nil)
         .build()
       gameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player)).buildGame
-      Event.checkCardPlayOnHand(gameState, inputCard) should be(false)
+      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(false)
     }
     "check if pieces are selected" in {
       controller.gameStateMaster.UpdateGame().resetGame

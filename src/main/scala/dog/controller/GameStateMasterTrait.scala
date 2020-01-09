@@ -21,7 +21,6 @@ trait GameStateMasterTrait {
 
   var cardPointer: Int
   var board: BoardTrait
-  var clickedFieldIdx: Int
   var boardSize: Int
 
   case class UpdateGame() {
@@ -73,16 +72,10 @@ trait GameStateMasterTrait {
       this
     }
 
-    def withClickedField(clickedField: Int): UpdateGame = {
-      clickedFieldIdx = clickedField
-      this
-    }
-
     def resetGame: GameState = {
       //Board
       boardSize = 64 // hast to be dividable by 4
       board = new Board(boardSize)
-      clickedFieldIdx = -1
 
       // Player
       playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")

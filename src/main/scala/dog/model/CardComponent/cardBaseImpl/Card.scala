@@ -163,8 +163,6 @@ object CardLogic {
 
       (gameState.board, players, 1)
     }
-
-
   }
 
   def getLogic(mode: String): (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = {
@@ -183,12 +181,13 @@ object CardLogic {
     }
   }
 
-  trait State {
-    def changeState(): State
-  }
 
   def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
     callback(gameState, inputCard)
+  }
+
+  trait State {
+    def changeState(): State
   }
 
   object JokerState {
@@ -212,7 +211,6 @@ object CardLogic {
         state
       }
     }
-
   }
 
 }

@@ -1,6 +1,7 @@
 package dog.controller
 
 import dog.model.CardComponent.CardTrait
+import dog.model.CardComponent.cardBaseImpl.Card
 import dog.model.Player
 
 
@@ -20,14 +21,15 @@ object InputCardMaster {
 
   case class UpdateCardInput() {
 
-    //    def reset(): Unit = {
-    //
-    //      otherPlayer = -1
-    //      selPieceList = List(0)
-    //      cardNum = (0, 0)
-    //      actualPlayerIdx = 0
-    //      moveBy = 0
-    //    }
+    def reset(): Unit = {
+
+      otherPlayer = -1
+      selPieceList = List(0)
+      cardNum = (-1, -1)
+      actualPlayerIdx = -1
+      moveBy = 0
+      selCard = Card("pseudo", "pseudo", "pseudo")
+    }
 
     def withOtherPlayer(otherP: Int): UpdateCardInput = {
       otherPlayer = otherP
