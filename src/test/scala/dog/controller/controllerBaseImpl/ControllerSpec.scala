@@ -81,7 +81,9 @@ class ControllerSpec extends WordSpec with Matchers {
           .withSelectedCard(cardList(1))
           .buildCardInput()
 
-        controller.useCardLogic(inputCard2) should be(0)
+        val newState = controller.useCardLogic(inputCard2)
+        newState._3 should be(0)
+        controller.manageRound(inputCard2)
         controller.gameState.players._1(3).piece(1).pos should be(26)
 
       }
@@ -112,7 +114,9 @@ class ControllerSpec extends WordSpec with Matchers {
           .withCardNum((0, 0))
           .withSelectedCard(cardList.head)
           .buildCardInput()
-        controller.useCardLogic(inputCard1) should be(0)
+
+        val newState = controller.useCardLogic(inputCard1)
+        newState._3 should be(0)
         val inputCard2 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
           .withOtherPlayer(0)
@@ -120,7 +124,10 @@ class ControllerSpec extends WordSpec with Matchers {
           .withCardNum((0, 0))
           .withSelectedCard(cardList(1))
           .buildCardInput()
-        controller.useCardLogic(inputCard2) should be(0)
+
+        val newState2 = controller.useCardLogic(inputCard2)
+        controller.manageRound(inputCard2)
+        newState2._3 should be(0)
         val p1 = controller.gameState.players._1(0)
         val p2 = controller.gameState.players._1(3)
         p1.piece(0).pos should be(0)
@@ -131,7 +138,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.createNewBoard(28) should be(new Board(28))
         controller.createPlayers(List("Player1", "Player2", "Player3", "Player4"), 4).players._1.length should be(4)
         val cardListP2: List[CardTrait] = Card("swap", "swap", "red") :: Nil
-        val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("9", "move", "blue") :: Nil
+        val cardListP3: List[CardTrait] = Card("5", "move", "blue") :: Card("3", "move", "blue") :: Card("6", "move", "blue") :: Nil
 
         //set cards
         controller.givePlayerCards(playerNum = 2, cardListP2).cardList should be(cardListP2)
@@ -145,10 +152,10 @@ class ControllerSpec extends WordSpec with Matchers {
           .withSelectedCard(cardListP3.head)
           .buildCardInput()
         val inputCard2 = InputCardMaster.UpdateCardInput()
-          .withActualPlayer(3)
-          .withPieceNum(List(1))
+          .withActualPlayer(2)
+          .withPieceNum(List(2))
           .withCardNum((0, 0))
-          .withSelectedCard(cardListP3(1))
+          .withSelectedCard(cardListP3.head)
           .buildCardInput()
         val inputCard3 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(3)
@@ -161,7 +168,9 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.manageRound(inputCard2)
         controller.manageRound(inputCard3)
 
-        controller.gameState.players._1(3).piece(2).pos should be(2)
+
+        controller.gameState.players._1(3).piece(2).pos should be(27)
+        controller.gameState.players._1(2).piece(2).pos should be(19)
         val inputCard4 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(2)
           .withOtherPlayer(3)
@@ -169,18 +178,24 @@ class ControllerSpec extends WordSpec with Matchers {
           .withCardNum((0, 0))
           .withSelectedCard(cardListP2.head)
           .buildCardInput()
-        controller.useCardLogic(inputCard4) should be(0)
 
+        println("player 3: piece 2 pos: " + controller.gameState.players._1(3).piece(2).pos)
+        println("player 2: piece 2 pos: " + controller.gameState.players._1(2).piece(2).pos)
+        val newState = controller.useCardLogic(inputCard4)
+        newState._3 should be(0)
+        controller.manageRound(inputCard4)
+        println("player 3: piece 2 pos: " + controller.gameState.players._1(3).piece(2).pos + " should be 19")
+        println("player 2: piece 2 pos: " + controller.gameState.players._1(2).piece(2).pos + " should be 27")
         //check position
-        controller.gameState.players._1(3).piece(2).pos should be(14)
-        controller.gameState.players._1(2).piece(2).pos should be(2)
+        controller.gameState.players._1(3).piece(2).pos should be(19)
+        controller.gameState.players._1(2).piece(2).pos should be(27)
 
         //check position on board
-        controller.gameState.board.cell(14).p.get.nameAndIdx._1 should be("Player4")
-        controller.gameState.board.cell(2).p.get.nameAndIdx._1 should be("Player3")
+        controller.gameState.board.cell(19).p.get.nameAndIdx._1 should be("Player4")
+        controller.gameState.board.cell(27).p.get.nameAndIdx._1 should be("Player3")
 
-        controller.board.cell(14).p.get.nameAndIdx._1 should be("Player4")
-        controller.board.cell(2).p.get.nameAndIdx._1 should be("Player3")
+        controller.board.cell(19).p.get.nameAndIdx._1 should be("Player4")
+        controller.board.cell(27).p.get.nameAndIdx._1 should be("Player3")
       }
       "swap two players when no player is on the field" in {
         controller.createNewBoard(28)
@@ -197,7 +212,9 @@ class ControllerSpec extends WordSpec with Matchers {
           .withSelectedCard(cardListP1.head)
           .buildCardInput()
         //use CardLogic
-        controller.useCardLogic(inputCard1) should be(-1)
+
+        val newState = controller.useCardLogic(inputCard1)
+        newState._3 should be(-1)
 
         //check if player stays the same
         controller.gameState.players._1(1).piece(2).pos should be(7)
