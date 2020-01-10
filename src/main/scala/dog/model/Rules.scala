@@ -63,11 +63,13 @@ object Event {
 
   val checkPiecesOnBoardAndPlayable: (GameState, InputCard) => Boolean = (gameState: GameState, inputCard: InputCard) => {
     var isPieceOnBoard: Boolean = false
-    gameState.actualPlayer.piece.foreach(x => if (x._2.pos != gameState.actualPlayer.homePosition) {
+    gameState.actualPlayer.piece.foreach(x => if (gameState.board.cell(x._2.pos).isFilled) {
       isPieceOnBoard = true
     })
+    println("isPieceOnBoard?: " + isPieceOnBoard)
     var isPlayable: Boolean = false
-    gameState.actualPlayer.cardList.foreach(x => (0 until 3).foreach(y => if (x.parse(y).task == "play") isPlayable = true))
+    println("isPlayable?: " + isPlayable)
+    gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play")) isPlayable = true)
     isPieceOnBoard || isPlayable
   }
 

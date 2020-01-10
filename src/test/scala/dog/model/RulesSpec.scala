@@ -47,23 +47,39 @@ class LevelSpec extends WordSpec with Matchers {
     "check if pieces on board" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
-      var player: Player = Player.PlayerBuilder()
+      val player: Player = Player.PlayerBuilder()
         .withPieces(Map(0 -> Piece(5)))
+        .withCards(List(Card("", "", "")))
         .build()
       var gameState: GameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player))
-        .withBoard(new Board(20).fill(Map(0 -> Cell(Some(player)))))
+        .withBoard(new Board(20))
+        .withActualPlayer(0).buildGame
+      val board2 = gameState.board.fill(gameState.board.cell(5).addPlayerToCell(player), 5)
+      gameState = controller.gameStateMaster.UpdateGame().withBoard(board2).buildGame
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
+        .withActualPlayer(0)
+        .buildCardInput()
+      println("is cell 5 filled?: " + board2.cell(5).isFilled)
+      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(true)
+    }
+    "check if pieces on board (no PiecesOnBoard)" in {
+      controller.gameStateMaster.UpdateGame().resetGame
+
+      val player: Player = Player.PlayerBuilder()
+        .withPieces(Map(0 -> Piece(0)))
+        .withCards(List(Card("3", "move", "blue")))
+        .build()
+      val gameState: GameState = controller.gameStateMaster.UpdateGame()
+        .withPlayers(Vector(player))
+        .withBoard(new Board(20))
         .withActualPlayer(0).buildGame
       val inputCard: InputCard = InputCardMaster.UpdateCardInput()
         .withActualPlayer(0)
         .buildCardInput()
-      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(true)
-
-      player = Player.PlayerBuilder()
-        .withPiece(5, 0)
-        .build()
-      gameState = controller.gameStateMaster.UpdateGame()
-        .withPlayers(Vector(player)).buildGame
+      (0 until 20).foreach(x => print(gameState.board.cell(x).isFilled + " "))
+      println()
+      println(gameState.actualPlayer.cardList)
       Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(false)
     }
     "check if player has hand cards" in {
@@ -111,17 +127,21 @@ class LevelSpec extends WordSpec with Matchers {
     "check if pieces are selected" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
-      val gameState: GameState = controller.gameStateMaster.UpdateGame().buildGame
-      var inputCard: InputCard = InputCardMaster.UpdateCardInput()
-        .withOtherPlayer(-1)
-        .withPieceNum(List(-1))
-        .buildCardInput()
-      Event.checkSelected(gameState, inputCard) should be(false)
+      val player: Player = Player.PlayerBuilder()
+        .withPieces(Map(0 -> Piece(5)))
+        .build()
+      var gameState: GameState = controller.gameStateMaster.UpdateGame()
+        .withPlayers(Vector(player))
+        .withBoard(new Board(20).fill(Map(5 -> Cell(Some(player)))))
+        .withActualPlayer(0).buildGame
+      val board2 = gameState.board.fill(gameState.board.cell(5).addPlayerToCell(player), 5)
+      controller.gameState = controller.gameStateMaster.UpdateGame().withBoard(board2).buildGame
 
-      inputCard = InputCardMaster.UpdateCardInput()
-        .withOtherPlayer(-1)
-        .withPieceNum(List(0))
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
+        .withActualPlayer(0)
         .buildCardInput()
+
+      controller.clickedField(5)
       Event.checkSelected(gameState, inputCard) should be(true)
     }
     "check if won" in {
