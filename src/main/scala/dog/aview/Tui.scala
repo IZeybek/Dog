@@ -30,6 +30,12 @@ class Tui(controller: ControllerTrait) extends Reactor {
         } else {
           result = "no players created"
         }
+      case "save" :: Nil =>
+        controller.save
+        result = "saved game"
+      case "load" :: Nil =>
+        controller.load
+        result = "loaded game"
       case "undo" :: Nil =>
         controller.undoCommand()
         result = "undone"

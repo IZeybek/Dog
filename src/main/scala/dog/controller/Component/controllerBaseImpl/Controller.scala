@@ -4,12 +4,13 @@ import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
 import dog.controller._
-import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
+import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
-import dog.model.{CheckRules, Player}
+import dog.model.FileIOComponent.FileIOTrait
+import dog.model.Player
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
@@ -17,6 +18,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
+  val fileIo = injector.instance[FileIOTrait]
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
@@ -50,6 +52,22 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def redoCommand(): Unit = {
     undoManager.redoStep()
     publish(new BoardChanged)
+  }
+
+  /**
+   * save the game to a JSON or XML file
+   * specified thru dependency injection
+   */
+  override def save: Unit = {
+    fileIo.save(gameState)
+  }
+
+  /**
+   * load the game from a file
+   */
+  override def load: Unit = {
+    gameState = fileIo.load
+    gameStateMaster.UpdateGame().loadGame(gameState)
   }
 
   /**
@@ -136,7 +154,12 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     oldCard
   }
 
-  //Board
+  /**
+   * creates a new Board with <code>size</code>
+   *
+   * @param size is the size of the new Board
+   * @return a new Board
+   */
   override def createNewBoard(size: Int): BoardTrait = {
     val newBoard = new Board(size)
     board = newBoard
@@ -145,6 +168,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     newBoard
   }
 
+  /**
+   * creates a new Board using dependency injection
+   *
+   * @return a new Board
+   */
   override def createNewBoard: BoardTrait = {
     board.size match {
       case 1 => board = injector.instance[BoardTrait](Names.named("nano"))
@@ -158,6 +186,12 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     board
   }
 
+  /**
+   * creates a new random Board with <code>size</code>
+   *
+   * @param size is the size of the new Board
+   * @return a new random Board
+   */
   def createRandomBoard(size: Int): BoardTrait = {
     val board = new BoardCreateStrategyRandom().createNewBoard(size)
     this.board = board
@@ -166,10 +200,15 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     board
   }
 
-  //Player
 
-  //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
-  override def createPlayers(playerNames: List[String], pieceAmount: Int): GameState = {
+  /**
+   * create a Vector[Player]
+   *
+   * @param playerNames is a List of player names
+   * @param pieceAmount is the amount of pieces each player gets
+   * @return a Vector
+   */
+  override def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player] = {
     val colors = gameStateMaster.colors
     val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
       .withColor(colors(i))
@@ -179,7 +218,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     gameState = gameStateMaster.UpdateGame()
       .withPlayers(players)
       .buildGame
-    gameState
+    players
   }
 
   override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder()
