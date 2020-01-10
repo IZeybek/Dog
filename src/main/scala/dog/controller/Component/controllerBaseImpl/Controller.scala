@@ -10,7 +10,7 @@ import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.FileIOComponent.FileIOTrait
-import dog.model.{CheckRules, Player}
+import dog.model.Player
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
@@ -77,41 +77,26 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return a String that is returned to the TUI for more information
    */
   override def manageRound(inputCard: InputCard): String = {
-
-    if (CheckRules.checkLevels(gameState, inputCard)) {
-      var returnString: String = ""
+    var returnString: String = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+    val check: (Boolean, String) = Chain.tryChain(Chain.apply("manageround"))
+    if (check._1) {
       val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
-
       newState._3 match {
         case 0 =>
           doStep()
           this.board = newState._1
-          gameState = gameStateMaster.UpdateGame()
-            .withBoard(newState._1)
-            .withPlayers(newState._2)
-            .withNextPlayer()
-            .buildGame
-
+          gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withNextPlayer().buildGame
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
           SelectedState.reset()
-          returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
           publish(new BoardChanged)
+          returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
         case 1 =>
           println("joker packingState: " + (if (JokerState.state.equals(JokerState.unpacked)) "unpacked" else "packed"))
-          gameState = gameStateMaster.UpdateGame()
-            .withBoard(newState._1)
-            .withPlayers(newState._2)
-            .buildGame
-
+          gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).buildGame
           publish(new BoardChanged)
-        case _ =>
-          returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
       }
-      returnString
-    } else {
-
-      "failed Check !!!"
-    }
+    } else returnString = Chain.handleFail(check._2)
+    returnString
   }
 
   def noMovesPossible(inputCard: InputCard): Unit = {
@@ -252,16 +237,22 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     s"${player.consoleColor}${player.nameAndIdx._1}${Console.RESET}'s hand cards: " + player.cardList + "\n"
   }
 
-  override def toStringPlayerHands: String = {
+  override def toStringPlayerHands: String
+
+  = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
     player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.nameAndIdx._1}${Console.RESET} --> myHand: " + x.cardList + "\n")
     playerHands
   }
 
-  override def toStringBoard: String = toStringHouse + board.toString
+  override def toStringBoard: String
 
-  override def toStringHouse: String = {
+  = toStringHouse + board.toString
+
+  override def toStringHouse: String
+
+  = {
     val players: Vector[Player] = gameState.players._1
     val title: String = s"${Console.UNDERLINED}Houses${Console.RESET}"
     val up: String = "‾" * players.length * 3
@@ -271,5 +262,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
-  override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
+  override def toStringCardDeck: String
+
+  = CardDeck.toStringCardDeck(gameState.cardDeck)
 }
