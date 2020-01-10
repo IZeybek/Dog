@@ -1,6 +1,7 @@
 package dog.model
 
 
+import dog.controller.Chain.{gameState, inputCard}
 import dog.controller.Component.controllerBaseImpl.Controller
 import dog.controller.{GameState, InputCard, InputCardMaster}
 import dog.model.BoardComponent.boardBaseImpl.Board
@@ -69,16 +70,16 @@ object Event {
     println("isPieceOnBoard?: " + isPieceOnBoard)
     var isPlayable: Boolean = false
     println("isPlayable?: " + isPlayable)
-    gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play")) isPlayable = true)
+    gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play") || x.task.contains("joker")) isPlayable = true)
     isPieceOnBoard || isPlayable
   }
 
   val checkSelected: (GameState, InputCard) => Boolean = (gameState: GameState, inputCard: InputCard) => {
     var isSelected: Boolean = false
     SelectedState.state match {
-      case SelectedState.nothingSelected => if (inputCard.selectedCard.task.contains("play")) isSelected = true
-      case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
-      case SelectedState.otherPieceSelected => if (inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
+      case SelectedState.nothingSelected => if (inputCard.selectedCard.task.contains("play") || inputCard.selectedCard.task.contains("joker")) isSelected = true
+      case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.task.contains("swap")) isSelected = true else isSelected = false
+      case SelectedState.otherPieceSelected => if (inputCard.selectedCard.task.contains("swap")) isSelected = true else isSelected = false
     }
     isSelected
   }
@@ -122,7 +123,7 @@ object CheckRules {
     )
     var isValid = true
     events foreach { e: Event =>
-      Try(pro.handleEvent(e)) match {
+      Try(basic.handleEvent(e)) match {
         case Success(value) => isValid = isValid && true
         case Failure(exception) =>
           println(exception)
@@ -138,7 +139,7 @@ object Main {
   def main(args: Array[String]) {
     val pro: Level = new Level(None, 2)
     val advanced: Level = new Level(Some(pro), 1)
-    val basic: Level = new Level(None, 0)
+    val basic: Level = new Level(Some(advanced), 0)
 
     Event.setAttributes(new Controller(new Board(20)).gameState, InputCardMaster.UpdateCardInput()
       .withPieceNum(1 :: Nil)
@@ -151,7 +152,7 @@ object Main {
     )
 
     events foreach { e: Event =>
-      Try(advanced.handleEvent(e)) match {
+      Try(basic.handleEvent(e)) match {
         case Success(value) => true
         case Failure(exception) =>
           println(exception)

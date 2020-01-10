@@ -51,8 +51,10 @@ trait GameStateMasterTrait {
     }
 
     def withNextPlayer(): UpdateGame = {
-      val newPlayer = actualPlayerIdx + 1
-      actualPlayerIdx = newPlayer % players.size
+      do {
+        actualPlayerIdx = (actualPlayerIdx + 1) % players.size
+      }while(players(actualPlayerIdx).cardList.isEmpty)
+
       this
     }
 

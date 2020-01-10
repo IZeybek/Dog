@@ -2,6 +2,7 @@ package dog.controller.Component.controllerBaseImpl
 
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
+import com.sun.tools.javac.comp.Check
 import dog.DogModule
 import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
@@ -78,7 +79,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
 
-    if (CheckRules.checkLevels(gameState, inputCard)) {
+    if (Chain.processChain(gameState, inputCard)) {
       var returnString: String = ""
       val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
 
@@ -109,7 +110,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       }
       returnString
     } else {
-
+       if(!Chain.processStdCheck(gameState, inputCard)) noMovesPossible(inputCard)
       "failed Check !!!"
     }
   }
