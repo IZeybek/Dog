@@ -78,7 +78,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
     var returnString: String = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
-    val check: (Boolean, String) = Chain.tryChain(Chain.apply("manageround"))
+    val check: (Boolean, String) = Chain.tryChain(Chain.apply("manageround", gameState, inputCard))
     if (check._1) {
       val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
       newState._3 match {

@@ -15,19 +15,22 @@ object Chain {
     }
   }
   //such an expressive name :D
-  val checkers: ((Boolean, String)) => (Boolean, String) =
-    checkHandCard.tupled andThen
-      loggingFilter.tupled andThen
-      checkWon.tupled andThen
-      loggingFilter.tupled andThen
-      checkHandCard.tupled andThen
-      loggingFilter.tupled andThen
-      checkPiecesOnBoardAndPlayable.tupled andThen
-      loggingFilter.tupled
-  var gameState: GameState = new GameStateMaster().UpdateGame().buildGame
-  var inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
+  //  val checkers: ((Boolean, String)) => (Boolean, String) =
+  //    checkHandCard.tupled andThen
+  //      loggingFilter.tupled andThen
+  //      checkWon.tupled andThen
+  //      loggingFilter.tupled andThen
+  //      checkHandCard.tupled andThen
+  //      loggingFilter.tupled andThen
+  //      checkPiecesOnBoardAndPlayable.tupled andThen
+  //      loggingFilter.tupled
 
-  def apply(chainType: String): ((Boolean, String)) => (Boolean, String) = {
+  var gameState: GameState = _
+  var inputCard: InputCard = _
+
+  def apply(chainType: String, setGameState: GameState, setInputCard: InputCard): ((Boolean, String)) => (Boolean, String) = {
+    gameState = setGameState
+    inputCard = setInputCard
     chainType match {
       case "manageround" => checkHandCard.tupled andThen
         loggingFilter.tupled andThen
@@ -81,13 +84,13 @@ object Chain {
 
 //we could make similar compositions of the functions
 
-object MainTest {
-  def main(args: Array[String]): Unit = {
-    val chain: Boolean = Try(Chain.checkers(true, "")) match {
-      case Success(value) => true
-      case Failure(exception) =>
-        println(exception.getMessage)
-        false
-    }
-  }
-}
+//object MainTest {
+//  def main(args: Array[String]): Unit = {
+//    val chain: Boolean = Try(Chain.checkers(true, "")) match {
+//      case Success(value) => true
+//      case Failure(exception) =>
+//        println(exception.getMessage)
+//        false
+//    }
+//  }
+//}
