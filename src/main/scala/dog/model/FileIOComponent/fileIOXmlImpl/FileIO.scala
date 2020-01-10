@@ -13,6 +13,7 @@ import dog.model.{Piece, Player}
 import scala.xml.{Elem, Node, PrettyPrinter}
 
 //@TODO implement last played Card
+//@TODO implement card deck
 class FileIO extends FileIOTrait {
   override def load: GameState = {
     val file: Elem = scala.xml.XML.loadFile("gamestate.xml")
@@ -68,6 +69,7 @@ class FileIO extends FileIOTrait {
     })
   }
 
+  //------------------------------------------------------------------------------------------------------------------
 
   override def save(gameState: GameState): Unit = {
     val pw = new PrintWriter(new File("gamestate.xml"))

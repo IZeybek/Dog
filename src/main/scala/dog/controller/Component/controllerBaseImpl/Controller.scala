@@ -4,13 +4,13 @@ import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
 import dog.controller._
-import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
+import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.FileIOComponent.FileIOTrait
-import dog.model.Player
+import dog.model.{CheckRules, Player}
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
@@ -18,7 +18,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
-  val fileIo = injector.instance[FileIOTrait]
+  val fileIo: FileIOTrait = injector.instance[FileIOTrait]
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
@@ -139,7 +139,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * gets the selected card from the player
    *
    * @param playerIdx is the player
-   * @param cardIdx
+   * @param cardIdx   is the index of the removed card
    * @return the new card
    */
   override def removeSelectedCard(playerIdx: Int, cardIdx: Int): CardTrait = {
