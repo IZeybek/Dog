@@ -1,5 +1,7 @@
 package dog.controller
 
+import dog.util.SelectedState
+
 import scala.util.{Failure, Success, Try}
 
 
@@ -27,7 +29,12 @@ object Chain {
 
   def apply(chainType: String): ((Boolean, String)) => (Boolean, String) = {
     chainType match {
-      case "manageround" => checkHandCard.tupled andThen loggingFilter.tupled andThen checkPiecesOnBoardAndPlayable andThen
+      case "manageround" => checkHandCard.tupled andThen
+        loggingFilter.tupled andThen
+        checkPiecesOnBoardAndPlayable.tupled andThen
+        loggingFilter.tupled andThen
+        checkSelected.tupled andThen
+        loggingFilter.tupled
     }
   }
 
@@ -41,6 +48,16 @@ object Chain {
     var isPlayable: Boolean = false
     gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play") || x.task.contains("joker")) isPlayable = true)
     (status && (isPieceOnBoard || isPlayable), "pieceonboard")
+  }
+
+  def checkSelected: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
+    var isSelected: Boolean = false
+    SelectedState.state match {
+      case SelectedState.nothingSelected => if (inputCard.selectedCard.task.contains("play")) isSelected = true
+      case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
+      case SelectedState.otherPieceSelected => if (inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
+    }
+    (isSelected, "selected")
   }
 
   def tryChain(chain: ((Boolean, String)) => (Boolean, String)): (Boolean, String) = {
