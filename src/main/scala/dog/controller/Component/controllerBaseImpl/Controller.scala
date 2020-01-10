@@ -28,11 +28,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       SelectedState.reset()
 
     } else {
-
       val isOwnField = clickedCell.p.get.nameAndIdx._2 == gameStateMaster.actualPlayerIdx
       val isOtherField = if (SelectedState.state.equals(SelectedState.ownPieceSelected) && !isOwnField) true else false
-      println("isOwnPlayerSelected: " + isOwnField)
-      println("isOtherFieldSelected: " + isOtherField)
       if (SelectedState.state.equals(SelectedState.nothingSelected) && isOwnField) SelectedState.handle(gameState, clickedFieldIdx)
       else if (SelectedState.state.equals(SelectedState.ownPieceSelected) && isOtherField) SelectedState.handle(gameState, clickedFieldIdx)
       else SelectedState.reset()
