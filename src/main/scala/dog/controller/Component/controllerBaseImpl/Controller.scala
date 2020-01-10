@@ -9,7 +9,7 @@ import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
-import dog.model.Player
+import dog.model.{CheckRules, Player}
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
@@ -63,35 +63,50 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
 
-    var returnString: String = ""
-    val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
+    if (CheckRules.checkLevels(gameState, inputCard)) {
+      var returnString: String = ""
+      val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
 
-    newState._3 match {
-      case 0 =>
-        doStep()
-        this.board = newState._1
-        gameState = gameStateMaster.UpdateGame()
-          .withBoard(newState._1)
-          .withPlayers(newState._2)
-          .withNextPlayer()
-          .buildGame
+      newState._3 match {
+        case 0 =>
+          doStep()
+          this.board = newState._1
+          gameState = gameStateMaster.UpdateGame()
+            .withBoard(newState._1)
+            .withPlayers(newState._2)
+            .withNextPlayer()
+            .buildGame
 
-        removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
-        SelectedState.reset()
-        returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
-        publish(new BoardChanged)
-      case 1 =>
-        println("joker packingState: " + (if (JokerState.state.equals(JokerState.unpacked)) "unpacked" else "packed"))
-        gameState = gameStateMaster.UpdateGame()
-          .withBoard(newState._1)
-          .withPlayers(newState._2)
-          .buildGame
+          removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
+          SelectedState.reset()
+          returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
+          publish(new BoardChanged)
+        case 1 =>
+          println("joker packingState: " + (if (JokerState.state.equals(JokerState.unpacked)) "unpacked" else "packed"))
+          gameState = gameStateMaster.UpdateGame()
+            .withBoard(newState._1)
+            .withPlayers(newState._2)
+            .buildGame
 
-        publish(new BoardChanged)
-      case _ =>
-        returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+          publish(new BoardChanged)
+        case _ =>
+          returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+      }
+      returnString
+    } else {
+
+      "failed Check !!!"
     }
-    returnString
+  }
+
+  def noMovesPossible(inputCard: InputCard): Unit = {
+    val player = gameState.actualPlayer.copy(cardList = Nil)
+    val playerVector = gameState.players._1.updated(player.nameAndIdx._2, player)
+    gameState = gameStateMaster.UpdateGame()
+      .withPlayers(playerVector)
+      .withNextPlayer()
+      .buildGame
+    publish(new BoardChanged)
   }
 
   /**

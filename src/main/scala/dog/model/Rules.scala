@@ -76,7 +76,7 @@ object Event {
   val checkSelected: (GameState, InputCard) => Boolean = (gameState: GameState, inputCard: InputCard) => {
     var isSelected: Boolean = false
     SelectedState.state match {
-      case SelectedState.nothingSelected => isSelected = false
+      case SelectedState.nothingSelected => if (inputCard.selectedCard.task.contains("play")) isSelected = true
       case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
       case SelectedState.otherPieceSelected => if (inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
     }
@@ -99,10 +99,37 @@ object Event {
     mode match {
       case 0 => (checkHandCards, Some("check hand cards size are non zero"))
       case 1 => (checkPiecesOnBoardAndPlayable, Some("check available pieces onBoard "))
-      case 2 => (checkWon, Some("check if won "))
-      case 3 => (checkSelected, Some("check if piece is selected"))
+      //      case 2 => (checkWon, Some("check if won "))
+      case 2 => (checkSelected, Some("check if piece is selected"))
       case _ => throw new UnsupportedOperationException("unsupported level")
     }
+  }
+}
+
+object CheckRules {
+
+  def checkLevels(gameState: GameState, inputCard: InputCard): Boolean = {
+    val pro: Level = new Level(None, 2)
+    val advanced: Level = new Level(Some(pro), 1)
+    val basic: Level = new Level(None, 0)
+
+    Event.setAttributes(gameState, inputCard)
+
+    val events: List[Event] = List(
+      Event.setStrategy(0),
+      Event.setStrategy(1),
+      Event.setStrategy(2),
+    )
+    var isValid = true
+    events foreach { e: Event =>
+      Try(pro.handleEvent(e)) match {
+        case Success(value) => isValid = isValid && true
+        case Failure(exception) =>
+          println(exception)
+          isValid = isValid && false
+      }
+    }
+    isValid
   }
 }
 
@@ -121,11 +148,10 @@ object Main {
       Event.setStrategy(0),
       Event.setStrategy(1),
       Event.setStrategy(2),
-      Event.setStrategy(3),
     )
 
     events foreach { e: Event =>
-      Try(basic.handleEvent(e)) match {
+      Try(advanced.handleEvent(e)) match {
         case Success(value) => true
         case Failure(exception) =>
           println(exception)
