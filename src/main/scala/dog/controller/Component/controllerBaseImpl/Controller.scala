@@ -175,8 +175,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def createNewBoard: BoardTrait = {
     board.size match {
-      case 1 => board = injector.instance[BoardTrait](Names.named("nano"))
-      case 9 => board = injector.instance[BoardTrait](Names.named("micro"))
+      case 4 => board = injector.instance[BoardTrait](Names.named("nano"))
+      case 8 => board = injector.instance[BoardTrait](Names.named("micro"))
       case 20 => board = injector.instance[BoardTrait](Names.named("small"))
       case 64 => board = injector.instance[BoardTrait](Names.named("normal"))
       case _ =>

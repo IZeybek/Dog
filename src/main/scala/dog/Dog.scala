@@ -3,7 +3,7 @@ package dog
 import com.google.inject.{Guice, Injector}
 import dog.aview.Tui
 import dog.aview.gui.Gui
-import dog.controller.{BoardChanged, ControllerTrait}
+import dog.controller.{BoardChanged, ControllerTrait, test}
 
 object Dog {
   val injector: Injector = Guice.createInjector(new DogModule)
@@ -14,7 +14,7 @@ object Dog {
   controller.publish(new BoardChanged)
 
   def main(args: Array[String]): Unit = {
-//    gui.main(Array(""))
+    gui.main(Array(""))
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")

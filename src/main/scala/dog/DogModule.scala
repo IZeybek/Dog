@@ -18,8 +18,8 @@ class DogModule extends AbstractModule with ScalaModule {
     bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
     bind[BoardTrait].to[Board]
     bind[ControllerTrait].to[Controller]
-    bind[BoardTrait].annotatedWithName(name = "nano").toInstance(new Board(1))
-    bind[BoardTrait].annotatedWithName(name = "micro").toInstance(new Board(9))
+    bind[BoardTrait].annotatedWithName(name = "nano").toInstance(new Board(4))
+    bind[BoardTrait].annotatedWithName(name = "micro").toInstance(new Board(8))
     bind[BoardTrait].annotatedWithName(name = "small").toInstance(new Board(20))
     bind[BoardTrait].annotatedWithName(name = " normal").toInstance(new Board(64))
 
