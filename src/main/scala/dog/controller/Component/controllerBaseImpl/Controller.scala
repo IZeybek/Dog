@@ -161,11 +161,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return a new Board
    */
   override def createNewBoard(size: Int): BoardTrait = {
-    val newBoard = new Board(size)
-    board = newBoard
-    gameState = gameStateMaster.UpdateGame().withBoard(newBoard).buildGame
+    board = new Board(size)
+    gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
     publish(new BoardChanged)
-    newBoard
+    board
   }
 
   /**
@@ -209,9 +208,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return a Vector
    */
   override def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player] = {
-    val colors = gameStateMaster.colors
     val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
-      .withColor(colors(i))
+      .withColor(gameStateMaster.colors(i))
       .withName((playerNames(i), i))
       .withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i)
       .build()).toVector
@@ -257,7 +255,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
-    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.nameAndIdx} ${Console.RESET} --> myHand: " + x.cardList + "\n")
+    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.nameAndIdx._1}${Console.RESET} --> myHand: " + x.cardList + "\n")
     playerHands
   }
 
