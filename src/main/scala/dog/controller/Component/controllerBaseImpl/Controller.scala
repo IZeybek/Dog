@@ -18,7 +18,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override val undoManager: UndoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DogModule)
-  val fileIo = injector.instance[FileIOTrait]
+  val fileIo: FileIOTrait = injector.instance[FileIOTrait]
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
