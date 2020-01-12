@@ -39,6 +39,7 @@ class FileIO extends FileIOTrait {
     var card: List[CardTrait] = List.empty[CardTrait]
     (elem \\ "card").foreach(x => card = card.:+(xmlToCard(x)))
     Player((name, idx), color, piece, inHouse, card, homePosition)
+
   }
 
   //  implicit val pReads = Json.reads[Player]
