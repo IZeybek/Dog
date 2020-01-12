@@ -13,6 +13,7 @@ case class Player(nameAndIdx: (String, Int),
                   homePosition: Int) {
 
   def nextPiece(): Int = {
+
     Try(inHouse.head) match {
       case Success(inHouse) => inHouse
       case _ => -1

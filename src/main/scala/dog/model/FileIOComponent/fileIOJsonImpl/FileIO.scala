@@ -116,6 +116,7 @@ class FileIO extends FileIOTrait {
     "idx" -> player.nameAndIdx._2,
     "name" -> JsString(player.nameAndIdx._1),
     "homepos" -> JsNumber(player.homePosition),
+    "inHouse" -> player.inHouse,
     "color" -> JsString(player.color),
     "piecesVector" -> player.piece.map(x => Json.obj("piece" -> Json.toJson(pieceMap(x._1, x._2)))),
     "CardList" -> player.cardList.map(x => Json.obj("card" -> Json.toJson(x))),
