@@ -49,6 +49,7 @@ object CardLogic {
     val actPlayer: Player = players(actPlayerIdx)
     val board: BoardTrait = gameState.board
     val selPiece = inputC.selPieceList.head
+    println(s"selpiece: ${inputC.selPieceList}")
 
     val oldPos: Int = actPlayer.piecePosition(selPiece)
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
@@ -115,18 +116,25 @@ object CardLogic {
   val play: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
-    val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
+    val taskParsed = cardOption(inputCard.cardIdxAndOption._2)
 
-    if (nextPiecePlay < 0) {
-      (gameState.board, gameState.players._1, -1)
-    } else {
-      cardOption(inputCard.cardIdxAndOption._2) match {
-        case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
-        case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
-        case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
-        case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
-        case _ => (gameState.board, gameState.players._1, -1)
-      }
+
+    taskParsed match {
+      case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
+      case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
+      case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
+      case "play" =>
+
+        val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
+        if (nextPiecePlay < 0) {
+          (gameState.board, gameState.players._1, -1)
+        } else {
+          print(s"nextPiece: $nextPiecePlay ")
+          val iC = InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput()
+          println("ssss" + iC.selPieceList)
+          move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
+        }
+      case _ => (gameState.board, gameState.players._1, -1)
     }
   }
 

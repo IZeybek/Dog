@@ -80,19 +80,17 @@ class Tui(controller: ControllerTrait) extends Reactor {
               .buildCardInput())
 
           //for cards having multiple options
-          case cardNum :: cardOption :: pieceNum :: Nil =>
+          case cardNum :: cardOption :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
-              .withPieceNum(List(pieceNum))
               .withCardNum((cardNum, cardOption))
               .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())
 
           //for easy moving
-          case cardNum :: pieceNum :: Nil =>
+          case cardNum :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
-              .withPieceNum(List(pieceNum, -1))
               .withCardNum((cardNum, 0))
               .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())

@@ -15,7 +15,7 @@ case class Player(nameAndIdx: (String, Int),
   def nextPiece(): Int = {
 
     Try(inHouse.head) match {
-      case Success(inHouse) => inHouse
+      case Success(iH) => iH
       case _ => -1
     }
   }
