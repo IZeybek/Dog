@@ -46,6 +46,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def save: Unit = {
     fileIo.save(gameState)
+    publish(new BoardChanged)
   }
 
   /**
@@ -53,7 +54,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def load: Unit = {
     gameState = fileIo.load
+    board = gameState.board
+    println(gameState.board)
+
+    println(gameState.players)
+    println(gameState.actualPlayer.cardList)
     gameStateMaster.UpdateGame().loadGame(gameState)
+    publish(new BoardChanged)
   }
 
   /**

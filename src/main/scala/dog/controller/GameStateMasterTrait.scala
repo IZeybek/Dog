@@ -11,7 +11,7 @@ trait GameStateMasterTrait {
   //player
   var colors: Array[String]
   var playerNames: Array[String]
-  var players: Vector[Player]
+  var playerVektor: Vector[Player]
   var actualPlayerIdx: Int
   var pieceAmount: Int
 
@@ -32,7 +32,7 @@ trait GameStateMasterTrait {
     }
 
     def withDistributedCard(): UpdateGame = {
-      players.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(roundAndCardsToDistribute._2).buildRandomCardList))
+      playerVektor.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(roundAndCardsToDistribute._2).buildRandomCardList))
       this
     }
 
@@ -42,7 +42,7 @@ trait GameStateMasterTrait {
     }
 
     def withPlayers(setPlayers: Vector[Player]): UpdateGame = {
-      players = setPlayers
+      playerVektor = setPlayers
       this
     }
 
@@ -53,7 +53,7 @@ trait GameStateMasterTrait {
 
     def withNextPlayer(): UpdateGame = {
       val newPlayer = actualPlayerIdx + 1
-      actualPlayerIdx = newPlayer % players.size
+      actualPlayerIdx = newPlayer % playerVektor.size
       this
     }
 
@@ -87,7 +87,7 @@ trait GameStateMasterTrait {
       playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")
       colors = Array("yellow", "white", "green", "red")
       pieceAmount = 4
-      players = playerNames.indices.map(i => Player.PlayerBuilder().
+      playerVektor = playerNames.indices.map(i => Player.PlayerBuilder().
         withColor(colors(i)).
         withName((playerNames(i), i)).
         withPiece(pieceAmount, (boardSize / playerNames.length) * i).
@@ -100,20 +100,20 @@ trait GameStateMasterTrait {
       roundAndCardsToDistribute = (0, 6)
       lastPlayedCard = None
 
-      GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
+      GameState((playerVektor, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
 
     def loadGame(gameState: GameState): Unit = {
       cardDeck = gameState.cardDeck._1
       cardPointer = gameState.cardDeck._2
       board = gameState.board
-      players = gameState.players._1
+      playerVektor = gameState.players._1
       actualPlayerIdx = gameState.players._2
       lastPlayedCard = gameState.lastPlayedCardOpt
     }
 
     def buildGame: GameState = {
-      GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
+      GameState((playerVektor, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
   }
 

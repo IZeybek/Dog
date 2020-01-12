@@ -116,11 +116,15 @@ object CardLogic {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
     val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
-    cardOption(inputCard.cardIdxAndOption._2) match {
-      case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
-      case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
-      case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
-      case _ => (gameState.board, gameState.players._1, -1)
+    if (nextPiecePlay < 0) {
+      (gameState.board, gameState.players._1, -1)
+    } else {
+      cardOption(inputCard.cardIdxAndOption._2) match {
+        case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
+        case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
+        case "play" => move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
+        case _ => (gameState.board, gameState.players._1, -1)
+      }
     }
   }
 
@@ -208,6 +212,7 @@ object CardLogic {
     }
 
   }
+
 }
 
 object Card {

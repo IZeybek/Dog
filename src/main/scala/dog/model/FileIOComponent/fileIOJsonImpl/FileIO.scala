@@ -20,15 +20,16 @@ class FileIO extends FileIOTrait {
 
   def jsonToGameState(json: JsValue): GameState = {
     val actPlayer: Int = (json \ "gameState" \ "actPlayer").get.toString.toInt
-    var player: Vector[Player] = Vector.empty[Player]
-    (json \\ "playerVector").indices.foreach(x => player = player.:+(jsonToPlayer((json \\ "playerVector") (x))))
-    val board: BoardTrait = jsonToBoard((json \\ "board").head, player)
+    var playerVector: Vector[Player] = Vector.empty[Player]
+    (json \ "gameState" \ "playerVector" \\ "player").foreach(x => playerVector = playerVector.:+(jsonToPlayer(x)))
+    val board: BoardTrait = jsonToBoard((json \\ "board").head, playerVector)
     val cardDeckPointer: Int = (json \ "gameState" \ "cardDeckPointer").get.toString().toInt
-    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), lastPlayedCardOpt = None, board)
+    GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), lastPlayedCardOpt = None, board)
   }
 
   def jsonToPlayer(elem: JsValue): Player = {
-    val idx: Int = (elem \ "idx").get.toString.toInt
+    println(elem)
+    val idx: Int = (elem \ "idx").as[Int]
     val name: String = (elem \ "name").get.toString
     val color: String = (elem \ "color").get.toString
     val homePosition: Int = (elem \ "homepos").get.toString.toInt
@@ -39,36 +40,40 @@ class FileIO extends FileIOTrait {
     Player((name, idx), color, piece, Nil, card, homePosition)
   }
 
+  //  implicit val pReads = Json.reads[Player]
+  //  val pFromJson: JsResult[Player] = Json.fromJson[Player](jsonString)
+
+
   def jsonToPiece(elem: JsValue): (Int, Piece) = {
-    val pieceNum: Int = (elem \ "pieceNum").get.toString.toInt
-    val pos: Int = (elem \ "@position").get.toString.toInt
+    val pieceNum: Int = (elem \ "pieceNum").as[Int]
+    val pos: Int = (elem \ "position").as[Int]
     (pieceNum, Piece(pos))
   }
 
   def xmlToCard(elem: JsValue): CardTrait = {
-    val symbol: String = (elem \ "symbol").get.toString
-    val task: String = (elem \ "task").get.toString
-    val color: String = (elem \ "color").get.toString
+    val symbol: String = (elem \ "symbol").as[String]
+    val task: String = (elem \ "task").as[String]
+    val color: String = (elem \ "color").as[String]
     Card(symbol, task, color)
   }
 
-  def jsonToBoard(elem: JsValue, player: Vector[Player]): BoardTrait = {
-    val size: Int = (elem \ "size").get.toString.toInt
+  def jsonToBoard(elem: JsValue, playerVector: Vector[Player]): BoardTrait = {
+    val size: Int = (elem \ "size").as[Int]
     var board: List[CellTrait] = List.empty[CellTrait]
 
-    (elem \\ "cell").foreach(x => board = board.:+(jsonToCell(x, player)))
+    (elem \ "boardMap" \\ "cell").foreach(x => board = board.:+(jsonToCell(x, playerVector)))
 
     Board(Map.empty).fill((0 until size).map(x => (x, board(x))).toMap)
   }
 
   def jsonToCell(elem: JsValue, players: Vector[Player]): CellTrait = {
-    val player: Int = (elem \ "player").get.toString.toInt
+
+    val player: Int = (elem \ "player").as[Int]
     Cell(player match {
       case -1 => None
       case _ => Some(players(player))
     })
   }
-
 
 
   override def save(gameState: GameState): Unit = {
@@ -94,21 +99,26 @@ class FileIO extends FileIOTrait {
     "boardMap" -> (for {
       idx <- 0 until board.size
     } yield {
-      Json.obj("idx" -> idx, "Cell" -> Json.toJson(board.cell(idx)))
+      Json.obj("idx" -> idx, "cell" -> Json.toJson(board.cell(idx)))
     })
   )
 
   implicit val cellWrites: Writes[CellTrait] = (cell: CellTrait) => Json.obj(
-    "player" -> JsBoolean(cell.isFilled),
+    "player" -> {
+      cell.p match {
+        case Some(p) => p.nameAndIdx._2
+        case None => -1
+      }
+    },
   )
 
   implicit val playerWrites: Writes[Player] = (player: Player) => Json.obj(
-    "idx" -> JsNumber(player.nameAndIdx._2),
+    "idx" -> player.nameAndIdx._2,
     "name" -> JsString(player.nameAndIdx._1),
     "homepos" -> JsNumber(player.homePosition),
     "color" -> JsString(player.color),
     "piecesVector" -> player.piece.map(x => Json.obj("piece" -> Json.toJson(pieceMap(x._1, x._2)))),
-    "CardList" -> player.cardList.map(x => Json.obj("Card" -> Json.toJson(x))),
+    "CardList" -> player.cardList.map(x => Json.obj("card" -> Json.toJson(x))),
   )
 
   case class pieceMap(pieceNum: Int, piece: Piece)
