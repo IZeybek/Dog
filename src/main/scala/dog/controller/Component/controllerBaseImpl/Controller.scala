@@ -190,6 +190,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       case 8 => board = injector.instance[BoardTrait](Names.named("micro"))
       case 20 => board = injector.instance[BoardTrait](Names.named("small"))
       case 64 => board = injector.instance[BoardTrait](Names.named("normal"))
+      case 128 => board = injector.instance[BoardTrait](Names.named("big"))
       case _ =>
     }
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame

@@ -76,7 +76,7 @@ trait GameStateMasterTrait {
 
     def resetGame: GameState = {
       //Board
-      boardSize = 64 // hast to be dividable by 4
+      boardSize = 128 // hast to be dividable by 4
       board = new Board(boardSize)
 
       // Player
