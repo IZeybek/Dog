@@ -152,30 +152,31 @@ object CardLogic {
 
       (gameState.board, players, 1)
     }
-
-
   }
 
   def getLogic(mode: String): (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = {
-    if (JokerState.state.equals(JokerState.unpacked)) joker
-    mode match {
-      case "move" => move
-      case "swap" => swap
-      case "backward forward" => four
-      case "move play" => play
-      case "move move play" => play
-      case "joker" => joker
-      case _ => nothing
+    if (JokerState.state.equals(JokerState.packed)) {
+      mode match {
+        case "move" => move
+        case "swap" => swap
+        case "backward forward" => four
+        case "move play" => play
+        case "move move play" => play
+        case "joker" => joker
+        case _ => nothing
+      }
+    } else {
+      joker
     }
+  }
 
+
+  def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
+    callback(gameState, inputCard)
   }
 
   trait State {
     def changeState(): State
-  }
-
-  def setStrategy(callback: (GameState, InputCard) => (BoardTrait, Vector[Player], Int), gameState: GameState, inputCard: InputCard): (BoardTrait, Vector[Player], Int) = {
-    callback(gameState, inputCard)
   }
 
   object JokerState {
@@ -183,6 +184,12 @@ object CardLogic {
     var cachedCardList: (List[CardTrait], Int) = _
 
     def handle: State = state.changeState()
+
+    def reset: State = {
+      state = packed
+      cachedCardList = (List(Card("pseudo", "pseudo", "pseudo")), 0)
+      state
+    }
 
     object unpacked extends State {
       override def changeState(): State = {

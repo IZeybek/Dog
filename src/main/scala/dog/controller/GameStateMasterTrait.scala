@@ -3,6 +3,7 @@ package dog.controller
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
+import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck}
 import dog.model.Player
 
@@ -99,6 +100,7 @@ trait GameStateMasterTrait {
     }
 
     def loadGame(gameState: GameState): Unit = {
+      JokerState.reset
       cardDeck = gameState.cardDeck._1
       cardPointer = gameState.cardDeck._2
       board = gameState.board

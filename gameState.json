@@ -1,6 +1,6 @@
 {
   "gameState": {
-    "actPlayer": 2,
+    "actPlayer": 1,
     "cardDeckPointer": 140,
     "playerVector": [
       {
@@ -17,13 +17,13 @@
             {
               "piece": {
                 "pieceNum": 0,
-                "position": 37
+                "position": 34
               }
             },
             {
               "piece": {
                 "pieceNum": 1,
-                "position": 60
+                "position": 8
               }
             },
             {
@@ -39,7 +39,15 @@
               }
             }
           ],
-          "CardList": []
+          "CardList": [
+            {
+              "card": {
+                "symbol": "10",
+                "task": "move",
+                "color": "blue"
+              }
+            }
+          ]
         }
       },
       {
@@ -48,7 +56,6 @@
           "name": "Player 2",
           "homepos": 16,
           "inHouse": [
-            0,
             1,
             2,
             3
@@ -58,7 +65,7 @@
             {
               "piece": {
                 "pieceNum": 0,
-                "position": 16
+                "position": 63
               }
             },
             {
@@ -80,7 +87,22 @@
               }
             }
           ],
-          "CardList": []
+          "CardList": [
+            {
+              "card": {
+                "symbol": "questionmark",
+                "task": "joker",
+                "color": "red"
+              }
+            },
+            {
+              "card": {
+                "symbol": "9",
+                "task": "move",
+                "color": "blue"
+              }
+            }
+          ]
         }
       },
       {
@@ -89,6 +111,7 @@
           "name": "Player 3",
           "homepos": 32,
           "inHouse": [
+            1,
             2,
             3
           ],
@@ -97,13 +120,13 @@
             {
               "piece": {
                 "pieceNum": 0,
-                "position": 28
+                "position": 31
               }
             },
             {
               "piece": {
                 "pieceNum": 1,
-                "position": 13
+                "position": 32
               }
             },
             {
@@ -122,7 +145,14 @@
           "CardList": [
             {
               "card": {
-                "symbol": "10",
+                "symbol": "8",
+                "task": "move",
+                "color": "blue"
+              }
+            },
+            {
+              "card": {
+                "symbol": "2",
                 "task": "move",
                 "color": "blue"
               }
@@ -136,8 +166,6 @@
           "name": "Player 4",
           "homepos": 48,
           "inHouse": [
-            0,
-            1,
             2,
             3
           ],
@@ -146,7 +174,7 @@
             {
               "piece": {
                 "pieceNum": 0,
-                "position": 48
+                "position": 59
               }
             },
             {
@@ -168,7 +196,22 @@
               }
             }
           ],
-          "CardList": []
+          "CardList": [
+            {
+              "card": {
+                "symbol": "6",
+                "task": "move",
+                "color": "blue"
+              }
+            },
+            {
+              "card": {
+                "symbol": "2",
+                "task": "move",
+                "color": "blue"
+              }
+            }
+          ]
         }
       }
     ],
@@ -226,7 +269,7 @@
         {
           "idx": 8,
           "cell": {
-            "player": -1
+            "player": 0
           }
         },
         {
@@ -256,7 +299,7 @@
         {
           "idx": 13,
           "cell": {
-            "player": 2
+            "player": -1
           }
         },
         {
@@ -346,7 +389,7 @@
         {
           "idx": 28,
           "cell": {
-            "player": 2
+            "player": -1
           }
         },
         {
@@ -364,7 +407,7 @@
         {
           "idx": 31,
           "cell": {
-            "player": -1
+            "player": 2
           }
         },
         {
@@ -382,7 +425,7 @@
         {
           "idx": 34,
           "cell": {
-            "player": -1
+            "player": 0
           }
         },
         {
@@ -400,7 +443,7 @@
         {
           "idx": 37,
           "cell": {
-            "player": 0
+            "player": -1
           }
         },
         {
@@ -442,7 +485,7 @@
         {
           "idx": 44,
           "cell": {
-            "player": -1
+            "player": 3
           }
         },
         {
@@ -466,7 +509,7 @@
         {
           "idx": 48,
           "cell": {
-            "player": -1
+            "player": 3
           }
         },
         {
@@ -532,13 +575,13 @@
         {
           "idx": 59,
           "cell": {
-            "player": -1
+            "player": 3
           }
         },
         {
           "idx": 60,
           "cell": {
-            "player": 0
+            "player": -1
           }
         },
         {
@@ -556,15 +599,15 @@
         {
           "idx": 63,
           "cell": {
-            "player": -1
+            "player": 1
           }
         }
       ]
     },
     "lastPlacedCard": {
-      "symbol": "7",
-      "task": "burn",
-      "color": "red"
+      "symbol": "8",
+      "task": "move",
+      "color": "blue"
     }
   }
 }
