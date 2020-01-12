@@ -53,7 +53,7 @@ trait GameStateMasterTrait {
     def withNextPlayer(): UpdateGame = {
       do {
         actualPlayerIdx = (actualPlayerIdx + 1) % playerVektor.size
-      }while(players(actualPlayerIdx).cardList.isEmpty)
+      } while (playerVektor(actualPlayerIdx).cardList.isEmpty)
 
       this
     }
