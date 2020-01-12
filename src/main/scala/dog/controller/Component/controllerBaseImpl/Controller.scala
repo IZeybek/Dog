@@ -96,7 +96,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
             .withLastPlayedCard(inputCard.selectedCard)
             .withNextPlayer()
             .buildGame
-          println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
+
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
           SelectedState.reset
           JokerState.reset
@@ -109,7 +109,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
             .withPlayers(newState._2)
             .withLastPlayedCard(inputCard.selectedCard)
             .buildGame
-
+          SelectedState.reset
           publish(new BoardChanged)
         case _ =>
           returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
@@ -120,7 +120,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         gameState = gameStateMaster.UpdateGame()
           .withLastPlayedCard(inputCard.selectedCard)
           .buildGame
-        println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
         noMovesPossible(inputCard)
       }
       "failed Check !!!"

@@ -115,7 +115,7 @@ object PlayerStatusPanel {
 
   def newStatusPane(controller: ControllerTrait): BorderPane = new BorderPane() {
     top = newStatusDisplay(controller)
-    center = newPlacedCard(controller)
+//    center = newPlacedCard(controller)
   }
 
   def newPlacedCard(c: ControllerTrait): Button = {
@@ -250,13 +250,17 @@ object BoardPanel {
           println("selectedPieceList: " + InputCardMaster.selPieceList)
         }
       })
+      val stackpane = new StackPane() {
+        padding = Insets(30, 30, 30, 30)
+      }
 
-      center = new ScrollPane() {
+      val scrollPane = new ScrollPane() {
         fitToWidth = true
         fitToHeight = true
         content() = newBoardGrid(amount, fieldIconSeq)
       }
-
+      stackpane.getChildren.addAll(scrollPane, PlayerStatusPanel.newPlacedCard(controller))
+      center = stackpane
       right = CardDeckPanel.newCardDeck(controller)
       left = PlayerStatusPanel.newStatusPane(controller)
     }
