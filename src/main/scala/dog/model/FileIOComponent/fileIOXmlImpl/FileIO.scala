@@ -10,7 +10,7 @@ import dog.model.CardComponent.cardBaseImpl.Card
 import dog.model.FileIOComponent.FileIOTrait
 import dog.model.{Piece, Player}
 
-import scala.xml.{Elem, Node, PrettyPrinter}
+import scala.xml.{Elem, Node, NodeSeq, PrettyPrinter}
 
 //@TODO implement last played Card
 //@TODO implement card deck
@@ -26,7 +26,11 @@ class FileIO extends FileIOTrait {
     (elem \\ "player").foreach(x => player = player.:+(xmlToPlayer(x)))
     val board: BoardTrait = xmlToBoard((elem \\ "board").head, player)
     val cardDeckPointer: Int = (elem \\ "gamestate" \ "@cardDeckPointer").text.toInt
-    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), lastPlayedCardOpt = None, board)
+
+    var lastPlayedCard: CardTrait = xmlToCard((elem \\ "lastPlayed"))
+    //    val card = xmlToCard( elem \\ "gamestate" \ "@lastPlayed"))
+    println(lastPlayedCard)
+    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board)
   }
 
   def xmlToPlayer(elem: Node): Player = {
@@ -36,7 +40,6 @@ class FileIO extends FileIOTrait {
     val homePosition: Int = (elem \ "@homepos").text.toInt
     var inHouse: List[Int] = List.empty
     (elem \\ "inHouse").foreach(x => inHouse = xmlToInHouse(x) :: inHouse)
-
     var piece: Map[Int, Piece] = Map.empty
     (elem \\ "piece").foreach(x => piece = piece.+(xmlToPiece(x)))
     var card: List[CardTrait] = List.empty[CardTrait]
@@ -55,7 +58,7 @@ class FileIO extends FileIOTrait {
     (pieceNum, Piece(pos))
   }
 
-  def xmlToCard(elem: Node): CardTrait = {
+  def xmlToCard(elem: NodeSeq): CardTrait = {
     val symbol: String = (elem \ "@symbol").text
     val task: String = (elem \ "@task").text
     val color: String = (elem \ "@color").text
@@ -94,12 +97,13 @@ class FileIO extends FileIOTrait {
   }
 
   def lastPlayedCardToXml(card: Option[CardTrait]): Elem = {
-    <lastPlayed>
-      {card match {
-      case Some(c) => cardToXml(c)
-      case None => <card></card>
-    }}
-    </lastPlayed>
+    {
+      card match {
+        case Some(c) => <lastPlayed symbol={c.symbol} task={c.task} color={c.color}></lastPlayed>
+        case None => <lastPlayed></lastPlayed>
+      }
+    }
+
   }
 
   def inhouseToXml(x: Int): Elem = {
