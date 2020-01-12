@@ -310,6 +310,7 @@ case class SpecialCardsDeck() extends CardDeckTrait {
   }
 }
 
+
 case class NormalCardsDeck() extends CardDeckTrait {
 
   override val cardDeck: List[CardTrait] = generateDeck
