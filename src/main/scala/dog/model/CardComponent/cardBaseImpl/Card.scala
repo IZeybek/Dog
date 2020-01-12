@@ -80,22 +80,23 @@ object CardLogic {
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
-    var isValid = 0
     //swap a piece of the player that uses the card with the furthest piece of another player
     val actPlayer: Player = gameState.actualPlayer
     val swapPlayer: Player = gameState.players._1(inputCard.otherPlayer)
     val selPiece = inputCard.selPieceList.head
     val swapPos: (Int, Int) = (actPlayer.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
 
-    if (swapPos._2 == swapPlayer.homePosition) isValid = -1 //Second Player is not on the field
+    if (swapPos._2 == swapPlayer.homePosition) {
+      //Second Player is not on the field
+      (gameState.board, gameState.players._1, -1)
+    } else {
 
-    var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayerIdx, actPlayer.swapPiece(selPiece, swapPos._2)) //swap with second player
+      var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayerIdx, actPlayer.swapPiece(selPiece, swapPos._2)) //swap with second player
+      players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
+      val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players(actPlayer.nameAndIdx._2), players(swapPlayer.nameAndIdx._2), inputCard.selPieceList)
 
-    players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
-
-    val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players(actPlayer.nameAndIdx._2), players(swapPlayer.nameAndIdx._2), inputCard.selPieceList)
-
-    (nBoard, players, isValid)
+      (nBoard, players, 0)
+    }
   }
 
   val four: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
