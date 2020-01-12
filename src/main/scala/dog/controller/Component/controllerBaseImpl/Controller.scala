@@ -27,14 +27,14 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
     if (!clickedCell.isFilled) {
 
-      SelectedState.reset()
+      SelectedState.reset
 
     } else {
       val isOwnField = clickedCell.p.get.nameAndIdx._2 == gameStateMaster.actualPlayerIdx
       val isOtherField = if (SelectedState.state.equals(SelectedState.ownPieceSelected) && !isOwnField) true else false
       if (SelectedState.state.equals(SelectedState.nothingSelected) && isOwnField) SelectedState.handle(gameState, clickedFieldIdx)
       else if (SelectedState.state.equals(SelectedState.ownPieceSelected) && isOtherField) SelectedState.handle(gameState, clickedFieldIdx)
-      else SelectedState.reset()
+      else SelectedState.reset
     }
     publish(new BoardChanged)
     clickedFieldIdx
@@ -66,11 +66,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def load: Unit = {
     gameState = fileIo.load
-    board = gameState.board
-    println(gameState.board)
-
-    println(gameState.players)
-    println(gameState.actualPlayer.cardList)
+    //    board = gameState.board
+    //    println(gameState.board)
+    //    println(gameState.players)
+    //    println(gameState.actualPlayer.cardList)
     gameStateMaster.UpdateGame().loadGame(gameState)
     publish(new BoardChanged)
   }
@@ -99,7 +98,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
             .buildGame
           println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
-          SelectedState.reset()
+          SelectedState.reset
+          JokerState.reset
           returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
           publish(new BoardChanged)
         case 1 =>

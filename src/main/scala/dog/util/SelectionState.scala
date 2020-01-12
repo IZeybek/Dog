@@ -15,7 +15,7 @@ object SelectedState {
 
   def handle(gameState: GameState, idx: Int): SelectionState = state.changeState(gameState, idx)
 
-  def reset(): SelectionState = {
+  def reset: SelectionState = {
     ownFieldClicked = -1
     otherFieldClicked = -1
     ownPieceClicked = -1
@@ -57,7 +57,7 @@ object SelectedState {
 
   object otherPieceSelected extends SelectionState {
     override def changeState(gameState: GameState, clickedIdx: Int): SelectionState = {
-      reset()
+      reset
     }
   }
 
