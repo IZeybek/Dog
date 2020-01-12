@@ -14,7 +14,7 @@ object Dog {
   controller.publish(new BoardChanged)
 
   def main(args: Array[String]): Unit = {
-    //    gui.main(Array(""))
+    gui.main(Array(""))
 
     var input: String = ""
     print(f"Welcome ${Console.UNDERLINED}${System.getProperty("user.name")}${Console.RESET}! \n")

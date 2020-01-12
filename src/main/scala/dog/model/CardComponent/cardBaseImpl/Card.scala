@@ -116,26 +116,17 @@ object CardLogic {
   val play: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
 
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
-    val taskParsed = cardOption(inputCard.cardIdxAndOption._2)
 
-
-    taskParsed match {
+    cardOption(inputCard.cardIdxAndOption._2) match {
       case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
       case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
       case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
       case "play" =>
-
         val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
-        if (nextPiecePlay < 0) {
-          (gameState.board, gameState.players._1, -1)
-        } else {
-          print(s"nextPiece: $nextPiecePlay ")
-          val iC = InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput()
-          println("ssss" + iC.selPieceList)
-          move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
-        }
-      case _ => (gameState.board, gameState.players._1, -1)
+        println(s"nextPiecePlay $nextPiecePlay")
+        if (nextPiecePlay >= 0) move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
     }
+    (gameState.board, gameState.players._1, -1)
   }
 
   val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
