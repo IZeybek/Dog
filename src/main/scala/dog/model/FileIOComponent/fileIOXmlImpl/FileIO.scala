@@ -34,11 +34,19 @@ class FileIO extends FileIOTrait {
     val name: String = (elem \ "@name").text
     val color: String = (elem \ "@color").text
     val homePosition: Int = (elem \ "@homepos").text.toInt
+    var inHouse: List[Int] = List.empty
+    (elem \\ "inHouse").foreach(x => inHouse = xmlToInHouse(x) :: inHouse)
+
     var piece: Map[Int, Piece] = Map.empty
     (elem \\ "piece").foreach(x => piece = piece.+(xmlToPiece(x)))
     var card: List[CardTrait] = List.empty[CardTrait]
     (elem \\ "card").foreach(x => card = card.:+(xmlToCard(x)))
-    Player((name, idx), color, piece, Nil, card, homePosition)
+    Player((name, idx), color, piece, inHouse, card, homePosition)
+  }
+
+  def xmlToInHouse(elem: Node): Int = {
+    val pieceNum: Int = (elem \ "@pieceNum").text.toInt
+    pieceNum
   }
 
   def xmlToPiece(elem: Node): (Int, Piece) = {
@@ -94,11 +102,16 @@ class FileIO extends FileIOTrait {
     </lastPlayed>
   }
 
+  def inhouseToXml(x: Int): Elem = {
+    <inHouse pieceNum={x.toString}></inHouse>
+  }
+
   def playerToXml(player: Player): Elem = {
     <player idx={player.nameAndIdx._2.toString} name={player.nameAndIdx._1} homepos={player.homePosition.toString} color={player.color}>
-      {player.piece.map(x => pieceToXml(x._1, x._2))}{player.cardList.map(x => cardToXml(x))}
+      {player.inHouse.map(x => inhouseToXml(x))}{player.piece.map(x => pieceToXml(x._1, x._2))}{player.cardList.map(x => cardToXml(x))}
     </player>
   }
+
 
   def pieceToXml(pieceNum: Int, piece: Piece): Elem = {
     <piece pieceNum={pieceNum.toString} position={piece.pos.toString}></piece>
