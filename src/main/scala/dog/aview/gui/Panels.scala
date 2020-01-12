@@ -1,9 +1,10 @@
 package dog.aview.gui
 
 import dog.controller.{ControllerTrait, InputCardMaster}
-import dog.model.BoardComponent.{BoardTrait, CellTrait}
+import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
+import dog.util.SelectedState
 import javafx.scene.layout.GridPane
 import scalafx.Includes.when
 import scalafx.geometry.Insets
@@ -49,7 +50,7 @@ object CardPanel {
           .withCardNum((cardIdx, getId.toInt))
           .withSelectedCard(actPlayer.getCard(cardIdx))
           .buildCardInput()
-        controller.manageRound(inputCard)
+        if (inputCard.selPieceList.head != -1) controller.manageRound(inputCard)
       }
 
     })
@@ -235,36 +236,19 @@ object BoardPanel {
           case _ => "-fx-border-color:transparent;"
         }
 
-        this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (if (controller.gameStateMaster.clickedFieldIdx == idx)
-          whiteStyle
-        else
-          stdStyle + borderColor))
+        this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (
+          if (SelectedState.ownFieldClicked == idx || SelectedState.otherFieldClicked == idx)
+            whiteStyle
+          else
+            stdStyle + borderColor))
 
         idx = idx + 1
         //field OnClickListener
         onAction = _ => {
           println("pressed field = " + this.getId)
-          val clickedCell: CellTrait = controller.gameState.board.cell(this.getId.toInt)
-          val actPlayer: Int = controller.gameStateMaster.actualPlayerIdx
-          val otherPlayer: Int = if (clickedCell.isFilled)
-            clickedCell.p.head.nameAndIdx._2
-          else
-            -1
-
-          val pieceList: List[Int] = if (otherPlayer == -1)
-            List(0)
-          else
-            List(0, board.getPieceIndex(this.getId.toInt))
-          //          val pieceList = if (otherPlayer == -1) List(-1) else List(0, clickedCell.getPieceIdx)
-          InputCardMaster.UpdateCardInput()
-            .withActualPlayer(actPlayer)
-            .withOtherPlayer(otherPlayer)
-            .withPieceNum(if (clickedCell.isFilled && clickedCell.p.get.nameAndIdx._2 == actPlayer)
-              List(board.getPieceIndex(this.getId.toInt))
-            else
-              pieceList)
           controller.clickedField(this.getId.toInt)
-          println(InputCardMaster.selPieceList)
+
+          println("selectedPieceList: " + InputCardMaster.selPieceList)
         }
       })
 

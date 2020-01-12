@@ -43,9 +43,9 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
   override def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait = {
 
     val selPiece = selPieceList.head
-    val otherPlayerPiece = selPieceList(1)
+    val selOtherPiece = selPieceList(1)
     var nBoard: BoardTrait = fill(cell(actPlayer.piecePosition(selPiece)).addPlayerToCell(actPlayer), actPlayer.piecePosition(selPiece))
-    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piecePosition(otherPlayerPiece)).addPlayerToCell(swapPlayer), swapPlayer.piecePosition(otherPlayerPiece))
+    nBoard = nBoard.fill(nBoard.cell(swapPlayer.piecePosition(selOtherPiece)).addPlayerToCell(swapPlayer), swapPlayer.piecePosition(selOtherPiece))
     nBoard
   }
 
