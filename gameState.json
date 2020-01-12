@@ -1,6 +1,6 @@
 {
   "gameState": {
-    "actPlayer": 3,
+    "actPlayer": 0,
     "cardDeckPointer": 140,
     "playerVector": [
       {
@@ -43,13 +43,6 @@
           "CardList": [
             {
               "card": {
-                "symbol": "9",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
                 "symbol": "5",
                 "task": "move",
                 "color": "blue"
@@ -64,14 +57,21 @@
             },
             {
               "card": {
-                "symbol": "5",
+                "symbol": "3",
                 "task": "move",
                 "color": "blue"
               }
             },
             {
               "card": {
-                "symbol": "2",
+                "symbol": "7",
+                "task": "burn",
+                "color": "red"
+              }
+            },
+            {
+              "card": {
+                "symbol": "6",
                 "task": "move",
                 "color": "blue"
               }
@@ -85,6 +85,7 @@
           "name": "Player 2",
           "homepos": 16,
           "inHouse": [
+            0,
             1,
             2,
             3
@@ -116,43 +117,7 @@
               }
             }
           ],
-          "CardList": [
-            {
-              "card": {
-                "symbol": "6",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
-                "symbol": "8",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
-                "symbol": "12",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
-                "symbol": "swapCard",
-                "task": "swap",
-                "color": "red"
-              }
-            },
-            {
-              "card": {
-                "symbol": "9",
-                "task": "move",
-                "color": "blue"
-              }
-            }
-          ]
+          "CardList": []
         }
       },
       {
@@ -161,6 +126,7 @@
           "name": "Player 3",
           "homepos": 32,
           "inHouse": [
+            0,
             1,
             2,
             3
@@ -192,43 +158,7 @@
               }
             }
           ],
-          "CardList": [
-            {
-              "card": {
-                "symbol": "7",
-                "task": "burn",
-                "color": "red"
-              }
-            },
-            {
-              "card": {
-                "symbol": "7",
-                "task": "burn",
-                "color": "red"
-              }
-            },
-            {
-              "card": {
-                "symbol": "2",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
-                "symbol": "13 play",
-                "task": "move play",
-                "color": "red"
-              }
-            },
-            {
-              "card": {
-                "symbol": "3",
-                "task": "move",
-                "color": "blue"
-              }
-            }
-          ]
+          "CardList": []
         }
       },
       {
@@ -237,7 +167,6 @@
           "name": "Player 4",
           "homepos": 48,
           "inHouse": [
-            0,
             1,
             2,
             3
@@ -272,13 +201,6 @@
           "CardList": [
             {
               "card": {
-                "symbol": "6",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
                 "symbol": "swapCard",
                 "task": "swap",
                 "color": "red"
@@ -286,14 +208,7 @@
             },
             {
               "card": {
-                "symbol": "5",
-                "task": "move",
-                "color": "blue"
-              }
-            },
-            {
-              "card": {
-                "symbol": "6",
+                "symbol": "12",
                 "task": "move",
                 "color": "blue"
               }
@@ -308,6 +223,13 @@
             {
               "card": {
                 "symbol": "10",
+                "task": "move",
+                "color": "blue"
+              }
+            },
+            {
+              "card": {
+                "symbol": "12",
                 "task": "move",
                 "color": "blue"
               }
@@ -418,7 +340,7 @@
         {
           "idx": 16,
           "cell": {
-            "player": 1
+            "player": -1
           }
         },
         {
@@ -514,7 +436,7 @@
         {
           "idx": 32,
           "cell": {
-            "player": 2
+            "player": -1
           }
         },
         {
@@ -610,7 +532,7 @@
         {
           "idx": 48,
           "cell": {
-            "player": -1
+            "player": 3
           }
         },
         {

@@ -13,7 +13,7 @@ import scala.io.Source
 
 class FileIO extends FileIOTrait {
   override def load: GameState = {
-    val source: String = Source.fromFile("grid.json").getLines.mkString
+    val source: String = Source.fromFile("gameState.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     jsonToGameState(json)
   }
@@ -39,7 +39,6 @@ class FileIO extends FileIOTrait {
     var card: List[CardTrait] = List.empty[CardTrait]
     (elem \\ "card").foreach(x => card = card.:+(xmlToCard(x)))
     Player((name, idx), color, piece, inHouse, card, homePosition)
-
   }
 
   def jsonToPiece(elem: JsValue): (Int, Piece) = {
@@ -76,7 +75,7 @@ class FileIO extends FileIOTrait {
 
   override def save(gameState: GameState): Unit = {
     import java.io._
-    val pw = new PrintWriter(new File("grid.json"))
+    val pw = new PrintWriter(new File("gameState.json"))
     pw.write(Json.prettyPrint(gameStateToJson(gameState)))
     pw.close()
   }
