@@ -114,13 +114,12 @@ object CardDeckPanel {
 object PlayerStatusPanel {
 
   def newStatusPane(controller: ControllerTrait): BorderPane = new BorderPane() {
-    top = PlayerStatusPanel.newStatusDisplay(controller)
-    center = PlayerStatusPanel.newLaidCard(controller)
+    top = newStatusDisplay(controller)
+    center = newPlacedCard(controller)
   }
 
-  def newLaidCard(c: ControllerTrait): Button = {
-    val lastCard = if (!c.gameState.lastPlayedCard.symbol.equals("pseudo")) c.gameState.lastPlayedCard.symbol else "laidcarddeck"
-
+  def newPlacedCard(c: ControllerTrait): Button = {
+    val lastCard = if (c.gameStateMaster.lastPlayedCardOpt.nonEmpty) c.gameStateMaster.lastPlayedCardOpt.get.symbol else "laidcarddeck"
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = 200
       fitWidth = 125

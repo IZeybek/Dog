@@ -13,7 +13,11 @@ case class Player(nameAndIdx: (String, Int),
                   homePosition: Int) {
 
   def nextPiece(): Int = {
-    inHouse.head
+
+    Try(inHouse.head) match {
+      case Success(iH) => iH
+      case _ => -1
+    }
   }
 
   val consoleColor: String = {
@@ -164,4 +168,5 @@ object Player {
       player
     }
   }
+
 }

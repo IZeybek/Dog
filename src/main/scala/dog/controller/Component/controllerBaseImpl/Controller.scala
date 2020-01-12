@@ -2,7 +2,6 @@ package dog.controller.Component.controllerBaseImpl
 
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
-import com.sun.tools.javac.comp.Check
 import dog.DogModule
 import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
@@ -11,7 +10,7 @@ import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.FileIOComponent.FileIOTrait
-import dog.model.{CheckRules, Player}
+import dog.model.Player
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
@@ -37,8 +36,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       else if (SelectedState.state.equals(SelectedState.ownPieceSelected) && isOtherField) SelectedState.handle(gameState, clickedFieldIdx)
       else SelectedState.reset()
     }
-
-
     publish(new BoardChanged)
     clickedFieldIdx
   }
@@ -61,6 +58,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def save: Unit = {
     fileIo.save(gameState)
+    publish(new BoardChanged)
   }
 
   /**
@@ -68,7 +66,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def load: Unit = {
     gameState = fileIo.load
+    board = gameState.board
+    println(gameState.board)
+
+    println(gameState.players)
+    println(gameState.actualPlayer.cardList)
     gameStateMaster.UpdateGame().loadGame(gameState)
+    publish(new BoardChanged)
   }
 
   /**
@@ -90,9 +94,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           gameState = gameStateMaster.UpdateGame()
             .withBoard(newState._1)
             .withPlayers(newState._2)
+            .withLastPlayedCard(inputCard.selectedCard)
             .withNextPlayer()
             .buildGame
-
+          println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
           SelectedState.reset()
           returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
@@ -102,6 +107,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           gameState = gameStateMaster.UpdateGame()
             .withBoard(newState._1)
             .withPlayers(newState._2)
+            .withLastPlayedCard(inputCard.selectedCard)
             .buildGame
 
           publish(new BoardChanged)
@@ -110,7 +116,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       }
       returnString
     } else {
-       if(!Chain.processStdCheck(gameState, inputCard)) noMovesPossible(inputCard)
+      if (!Chain.processStdCheck(gameState, inputCard)) {
+        gameState = gameStateMaster.UpdateGame()
+          .withLastPlayedCard(inputCard.selectedCard)
+          .buildGame
+        println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
+        noMovesPossible(inputCard)
+      }
       "failed Check !!!"
     }
   }
@@ -149,7 +161,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val newPlayer: Vector[Player] = player.updated(playerIdx, player(playerIdx).removeCard(oldCard))
     doStep()
     gameState = gameStateMaster.UpdateGame()
-      .withLastPlayed(oldCard)
+      .withLastPlayedCard(oldCard)
       .withPlayers(newPlayer)
       .buildGame
     oldCard

@@ -33,7 +33,7 @@ class GameStateMaster extends GameStateMasterTrait {
   override var colors: Array[String] = Array("yellow", "white", "green", "red")
   override var playerNames: Array[String] = Array("Player 1", "Player 2", "Player 3", "Player 4")
   override var roundAndCardsToDistribute: (Int, Int) = (0, 6)
-  override var players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
+  override var playerVector: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
     .withColor(colors(i))
     .withName((playerNames(i), i))
     .withPiece(pieceAmount, (boardSize / playerNames.length) * i)
@@ -45,5 +45,5 @@ class GameStateMaster extends GameStateMasterTrait {
     withAmount(List(10, 10)).
     withShuffle.buildCardVector
   override var cardPointer: Int = cardDeck.length
-  override var lastPlayedCard: Option[CardTrait] = None
+  override var lastPlayedCardOpt: Option[CardTrait] = None
 }

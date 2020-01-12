@@ -27,6 +27,7 @@ object GenGui {
 
     val mainScene: Scene = new Scene(1550, 800) {
 
+
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
         minWidth = 100
@@ -37,11 +38,18 @@ object GenGui {
           val redo: MenuItem = new MenuItem("Redo") {
             onAction = _ => controller.redoCommand()
           }
-          val save: MenuItem = new MenuItem("Save")
+          val save: MenuItem = new MenuItem("Save") {
+            onAction = _ => controller.save
+          }
+          val load: MenuItem = new MenuItem("Load") {
+            onAction = _ => controller.load
+          }
+
 
           items.add(undo)
           items.add(redo)
           items.add(save)
+          items.add(load)
         }
         menus.add(menuList)
       }
