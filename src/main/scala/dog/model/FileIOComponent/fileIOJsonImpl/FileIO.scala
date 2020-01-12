@@ -19,26 +19,26 @@ class FileIO extends FileIOTrait {
   }
 
   def jsonToGameState(json: JsValue): GameState = {
-    val actPlayer: Int = (json \ "gameState" \ "actPlayer").get.toString.toInt
+    val actPlayer: Int = (json \ "gameState" \ "actPlayer").as[Int]
     var playerVector: Vector[Player] = Vector.empty[Player]
     (json \ "gameState" \ "playerVector" \\ "player").foreach(x => playerVector = playerVector.:+(jsonToPlayer(x)))
     val board: BoardTrait = jsonToBoard((json \\ "board").head, playerVector)
-    val cardDeckPointer: Int = (json \ "gameState" \ "cardDeckPointer").get.toString().toInt
+    val cardDeckPointer: Int = (json \ "gameState" \ "cardDeckPointer").as[Int]
     GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), lastPlayedCardOpt = None, board)
   }
 
   def jsonToPlayer(elem: JsValue): Player = {
     println(elem)
     val idx: Int = (elem \ "idx").as[Int]
-    val name: String = (elem \ "name").get.toString
-    val color: String = (elem \ "color").get.toString
-    val homePosition: Int = (elem \ "homepos").get.toString.toInt
-    val inHouse = (elem \ "inHouse").get.as[List[Int]]
-    var piece: Map[Int, Piece] = Map.empty
-    (elem \\ "piece").foreach(x => piece = piece.+(jsonToPiece(x)))
+    val name: String = (elem \ "name").as[String]
+    val color: String = (elem \ "color").as[String]
+    val homePosition: Int = (elem \ "homepos").as[Int]
+    val inHouse = (elem \ "inHouse").as[List[Int]]
+    var pieceMap: Map[Int, Piece] = Map.empty
+    (elem \\ "piece").foreach(x => pieceMap = pieceMap.+(jsonToPiece(x)))
     var card: List[CardTrait] = List.empty[CardTrait]
-    (elem \\ "card").foreach(x => card = card.:+(xmlToCard(x)))
-    Player((name, idx), color, piece, inHouse, card, homePosition)
+    (elem \\ "card").foreach(x => card = card.:+(jsonToCard(x)))
+    Player((name, idx), color, pieceMap, inHouse, card, homePosition)
   }
 
   def jsonToPiece(elem: JsValue): (Int, Piece) = {
@@ -47,7 +47,7 @@ class FileIO extends FileIOTrait {
     (pieceNum, Piece(pos))
   }
 
-  def xmlToCard(elem: JsValue): CardTrait = {
+  def jsonToCard(elem: JsValue): CardTrait = {
     val symbol: String = (elem \ "symbol").as[String]
     val task: String = (elem \ "task").as[String]
     val color: String = (elem \ "color").as[String]
