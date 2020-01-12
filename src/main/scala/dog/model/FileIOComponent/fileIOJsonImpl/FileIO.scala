@@ -24,7 +24,8 @@ class FileIO extends FileIOTrait {
     (json \ "gameState" \ "playerVector" \\ "player").foreach(x => playerVector = playerVector.:+(jsonToPlayer(x)))
     val board: BoardTrait = jsonToBoard((json \\ "board").head, playerVector)
     val cardDeckPointer: Int = (json \ "gameState" \ "cardDeckPointer").as[Int]
-    GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), lastPlayedCardOpt = None, board)
+    val lastPlayedCard: CardTrait = jsonToCard((json \ "gameState" \\ "lastPlacedCard").head)
+    GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board)
   }
 
   def jsonToPlayer(elem: JsValue): Player = {
@@ -86,7 +87,8 @@ class FileIO extends FileIOTrait {
         "actPlayer" -> JsNumber(gameState.actualPlayer.nameAndIdx._2),
         "cardDeckPointer" -> JsNumber(gameState.cardDeck._2),
         "playerVector" -> gameState.players._1.map(x => Json.obj("player" -> Json.toJson(x))),
-        "board" -> Json.toJson(gameState.board)
+        "board" -> Json.toJson(gameState.board),
+        "lastPlacedCard" -> Json.toJson(gameState.lastPlayedCardOpt.get)
       )
     )
   }
