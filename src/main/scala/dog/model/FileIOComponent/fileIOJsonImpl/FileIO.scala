@@ -42,10 +42,6 @@ class FileIO extends FileIOTrait {
 
   }
 
-  //  implicit val pReads = Json.reads[Player]
-  //  val pFromJson: JsResult[Player] = Json.fromJson[Player](jsonString)
-
-
   def jsonToPiece(elem: JsValue): (Int, Piece) = {
     val pieceNum: Int = (elem \ "pieceNum").as[Int]
     val pos: Int = (elem \ "position").as[Int]
