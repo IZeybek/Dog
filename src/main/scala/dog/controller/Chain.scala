@@ -44,7 +44,7 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
   def checkPlayCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     val opt: Int = inputCard.cardIdxAndOption._2
-    (inputCard.selectedCard.parse(opt).task.contains("play") && status, "play")
+    ((inputCard.selectedCard.parse(opt).task.contains("play") || inputCard.selectedCard.task.contains("joker")) && status, "play")
   }
 
   def checkSelected: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
