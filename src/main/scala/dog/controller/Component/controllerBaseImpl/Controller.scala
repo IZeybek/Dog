@@ -116,16 +116,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     returnString
   }
 
-  def noMovesPossible(inputCard: InputCard): Unit = {
-    val player = gameState.actualPlayer.copy(cardList = Nil)
-    val playerVector = gameState.players._1.updated(player.nameAndIdx._2, player)
-    gameState = gameStateMaster.UpdateGame()
-      .withPlayers(playerVector)
-      .withNextPlayer()
-      .buildGame
-    publish(new BoardChanged)
-  }
-
   def handleFail(msg: String): String = {
     msg match {
       case "handcard" =>
