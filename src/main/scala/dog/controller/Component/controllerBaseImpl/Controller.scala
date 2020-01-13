@@ -111,7 +111,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       gameState = gameStateMaster.UpdateGame()
         .withLastPlayedCard(inputCard.selectedCard)
         .buildGame
-      println(check._2)
       returnString = handleFail(check._2)
     }
     returnString
@@ -135,6 +134,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       case "pieceonboard" =>
         givePlayerCards(gameState.players._2, Nil)
         gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        SelectedState.reset
+        publish(new BoardChanged)
         "Player has neither pieces on board nor a card to play"
       case "play" =>
         "Player has to choose play card"
