@@ -106,14 +106,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
             .buildGame
           SelectedState.reset
           publish(new BoardChanged)
-        case _ =>
-          returnString = s"Move was not possible! Please retry player ${gameState.actualPlayer.toStringColor} ;)\n"
       }
     } else {
       gameState = gameStateMaster.UpdateGame()
         .withLastPlayedCard(inputCard.selectedCard)
         .buildGame
-      noMovesPossible(inputCard)
       println(check._2)
       returnString = handleFail(check._2)
     }

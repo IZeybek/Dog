@@ -5,7 +5,7 @@ import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
-import dog.model.{Event, Piece, Player}
+import dog.model.{Piece, Player}
 import org.scalatest.{Matchers, WordSpec}
 
 class ChainSpec extends WordSpec with Matchers {
@@ -162,13 +162,6 @@ class ChainSpec extends WordSpec with Matchers {
       chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkPlayCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
 
-    }
-    "check if won" in {
-      controller.gameStateMaster.UpdateGame().resetGame
-
-      val gameState: GameState = controller.gameStateMaster.UpdateGame().buildGame
-      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
-      Event.checkWon(gameState, inputCard) should be(true)
     }
   }
 }
