@@ -60,14 +60,15 @@ class Tui(controller: ControllerTrait) extends Reactor {
         val actPlayer = controller.gameState.actualPlayer
         input.toList.filter(c => c != ' ').filter(_.isDigit).map(c => c.toString.toInt) match {
           //for having full control
-          case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
-            result = controller.manageRound(InputCardMaster.UpdateCardInput()
-              .withActualPlayer(actualPlayerIdx)
-              .withOtherPlayer(otherPlayer)
-              .withPieceNum(List(pieceNum1, pieceNum2))
-              .withCardNum((cardNum, cardOption))
-              .withSelectedCard(actPlayer.getCard(cardNum))
-              .buildCardInput())
+          //@TODO: this one isn't in use at the moment and has some issues somehow, can u confirm that?
+          //          case cardNum :: cardOption :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
+          //            result = controller.manageRound(InputCardMaster.UpdateCardInput()
+          //              .withActualPlayer(actualPlayerIdx)
+          //              .withOtherPlayer(otherPlayer)
+          //              .withPieceNum(List(pieceNum1, pieceNum2))
+          //              .withCardNum((cardNum, cardOption))
+          //              .withSelectedCard(actPlayer.getCard(cardNum))
+          //              .buildCardInput())
 
           //for swapping
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
