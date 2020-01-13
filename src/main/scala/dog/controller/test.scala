@@ -1,6 +1,5 @@
 package dog.controller
 
-import dog.model.Event.{gameState, inputCard}
 import dog.util.SelectedState
 
 object Chain {
@@ -26,7 +25,7 @@ object Chain {
 
 
   val loggingFilter: Boolean => Boolean = (status: Boolean) => {
-    if (status) println("SUCCEESSS") else println("FAAAAAIIILED")
+    if (status) println("SUCCESS") else println("FAILED")
     status
   }
 
