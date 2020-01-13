@@ -76,11 +76,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return a String that is returned to the TUI for more information
    */
   override def manageRound(inputCard: InputCard): String = {
-
-    if (Rules.processChain(gameState, inputCard)) {
-      var returnString: String = ""
+    var returnString: String = s"Move was not possible! Please retry player ${gameState.actualPlayer.toStringColor} ;)\n"
+    val chain: Chain = Chain(gameState, inputCard)
+    val check: (Boolean, String) = chain.tryChain(chain.apply("manageround"))
+    if (check._1) {
       val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
-
       newState._3 match {
         case 0 =>
           doStep()
@@ -107,18 +107,17 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           SelectedState.reset
           publish(new BoardChanged)
         case _ =>
-          returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
+          returnString = s"Move was not possible! Please retry player ${gameState.actualPlayer.toStringColor} ;)\n"
       }
-      returnString
     } else {
-      if (!Rules.processStdCheck(gameState, inputCard)) {
-        gameState = gameStateMaster.UpdateGame()
-          .withLastPlayedCard(inputCard.selectedCard)
-          .buildGame
-        noMovesPossible(inputCard)
-      }
-      "failed Check !!!"
+      gameState = gameStateMaster.UpdateGame()
+        .withLastPlayedCard(inputCard.selectedCard)
+        .buildGame
+      noMovesPossible(inputCard)
+      println(check._2)
+      returnString = handleFail(check._2)
     }
+    returnString
   }
 
   def noMovesPossible(inputCard: InputCard): Unit = {
@@ -129,6 +128,23 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       .withNextPlayer()
       .buildGame
     publish(new BoardChanged)
+  }
+
+  def handleFail(msg: String): String = {
+    msg match {
+      case "handcard" =>
+        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        "Player has no hand cards"
+      case "pieceonboard" =>
+        givePlayerCards(gameState.players._2, Nil)
+        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        "Player has neither pieces on board nor a card to play"
+      case "play" =>
+        "Player has to choose play card"
+      case "won" =>
+        "Player won"
+      case _ => ""
+    }
   }
 
   /**
@@ -254,18 +270,19 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     gameState = gameStateMaster.UpdateGame()
       .withPlayers(newPlayer)
       .buildGame
+    publish(new BoardChanged)
     newPlayer(playerNum)
   }
 
   override def toStringActivePlayerHand: String = {
     val player: Player = gameState.players._1(gameState.players._2)
-    s"${player.consoleColor}${player.nameAndIdx._1}${Console.RESET}'s hand cards: " + player.cardList + "\n"
+    s"${gameState.actualPlayer.toStringColor}'s hand cards: " + player.cardList + "\n"
   }
 
   override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
-    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.nameAndIdx._1}${Console.RESET} --> myHand: " + x.cardList + "\n")
+    player.foreach(x => playerHands = playerHands + s"${x.toStringColor}'s hand cards: " + x.cardList + "\n")
     playerHands
   }
 

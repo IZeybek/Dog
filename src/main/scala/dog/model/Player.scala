@@ -100,6 +100,8 @@ case class Player(nameAndIdx: (String, Int),
   }
 
   override def toString: String = nameAndIdx._1
+
+  def toStringColor: String = s"$consoleColor$toString${Console.RESET}"
 }
 
 
