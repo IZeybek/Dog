@@ -27,7 +27,7 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   override def getPieceIndex(idx: Int): Int = {
     boardMap(idx).p match {
-      case Some(player) => println("sssssssssssssssssssss"); player.getPieceNum(idx)
+      case Some(player) => player.getPieceNum(idx)
       case None => -1
     }
   }

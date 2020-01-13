@@ -26,8 +26,6 @@ object GenGui {
   def newGUI(controller: ControllerTrait): PrimaryStage = {
 
     val mainScene: Scene = new Scene(1550, 800) {
-
-
       val menuBar: MenuBar = new MenuBar {
         useSystemMenuBar = true
         minWidth = 100
@@ -53,6 +51,7 @@ object GenGui {
         }
         menus.add(menuList)
       }
+
       root = new BorderPane() {
         style = "-fx-background-color:#3d3d3d"
         top = menuBar
@@ -66,6 +65,7 @@ object GenGui {
             .buildCardPane()
       }
     }
+
     val stage = new PrimaryStage {
       title = "main"
     }

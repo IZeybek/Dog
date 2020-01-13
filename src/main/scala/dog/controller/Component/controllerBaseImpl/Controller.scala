@@ -66,10 +66,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def load: Unit = {
     gameState = fileIo.load
-    //    board = gameState.board
-    //    println(gameState.board)
-    //    println(gameState.players)
-    //    println(gameState.actualPlayer.cardList)
     gameStateMaster.UpdateGame().loadGame(gameState)
     publish(new BoardChanged)
   }
@@ -96,7 +92,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
             .withLastPlayedCard(inputCard.selectedCard)
             .withNextPlayer()
             .buildGame
-          println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
+
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
           SelectedState.reset
           JokerState.reset
@@ -109,7 +105,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
             .withPlayers(newState._2)
             .withLastPlayedCard(inputCard.selectedCard)
             .buildGame
-
+          SelectedState.reset
           publish(new BoardChanged)
         case _ =>
           returnString = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
@@ -120,7 +116,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         gameState = gameStateMaster.UpdateGame()
           .withLastPlayedCard(inputCard.selectedCard)
           .buildGame
-        println(">>>>>>>>>>>>>>>>>> " + gameStateMaster.lastPlayedCardOpt.get)
         noMovesPossible(inputCard)
       }
       "failed Check !!!"
@@ -191,6 +186,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       case 8 => board = injector.instance[BoardTrait](Names.named("micro"))
       case 20 => board = injector.instance[BoardTrait](Names.named("small"))
       case 64 => board = injector.instance[BoardTrait](Names.named("normal"))
+      case 80 => board = injector.instance[BoardTrait](Names.named("big"))
+      case 96 => board = injector.instance[BoardTrait](Names.named("extra big"))
+      case 128 => board = injector.instance[BoardTrait](Names.named("ultra big"))
       case _ =>
     }
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame

@@ -9,9 +9,9 @@ import javafx.scene.layout.GridPane
 import scalafx.Includes.when
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos.Center
-import scalafx.scene.control.{Button, Label, ScrollPane}
+import scalafx.scene.control.{Button, Label}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, StackPane, VBox}
+import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
 import scalafx.scene.paint.Color._
 
 object CardPanel {
@@ -113,9 +113,12 @@ object CardDeckPanel {
 
 object PlayerStatusPanel {
 
-  def newStatusPane(controller: ControllerTrait): BorderPane = new BorderPane() {
-    top = newStatusDisplay(controller)
-    center = newPlacedCard(controller)
+  def newStatusPane(controller: ControllerTrait): HBox = new HBox {
+    alignment = Center
+    children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller))
+
+    //    top = newStatusDisplay(controller)
+    //    center = newPlacedCard(controller)
   }
 
   def newPlacedCard(c: ControllerTrait): Button = {
@@ -123,12 +126,13 @@ object PlayerStatusPanel {
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = 200
       fitWidth = 125
+
     }) {
       style = "-fx-background-radius: 5em; " +
-        "-fx-min-width: 30px; " +
-        "-fx-min-height: 30px; " +
-        "-fx-max-width: 100px; " +
-        "-fx-max-height: 50px;" +
+        "-fx-min-width: 30; " +
+        "-fx-min-height: 30; " +
+        "-fx-max-width: 100; " +
+        "-fx-max-height: 175;" +
         "-fx-padding:5;"
     }
   }
@@ -139,6 +143,7 @@ object PlayerStatusPanel {
   def newStatusDisplay(c: ControllerTrait): VBox = {
     val player: Player = c.gameState.players._1(c.gameState.players._2)
     val playerStateLabel = new Label(player.toString) {
+
       style = "-fxf-font-size: 20pt"
       textFill = player.color match {
         case "green" => Green;
@@ -149,7 +154,7 @@ object PlayerStatusPanel {
       }
     }
     var idx = 0
-    val inHouse = Seq.fill(4)(new Button("") {
+    val inHouse = Seq.fill(player.piece.size)(new Button("") {
       val color: String = if (player.inHouse.size <= idx) "" else player.color
       idx = idx + 1
       val colorHouses: String = color match {
@@ -173,7 +178,8 @@ object PlayerStatusPanel {
     }
 
     new VBox() {
-      padding = Insets(100, 20, 20, 20)
+      alignment = Center
+
       children.add(playerStateLabel)
       children.add(gridHouse)
     }
@@ -187,7 +193,7 @@ object BoardPanel {
 
   def newBoardPane(controller: ControllerTrait): BorderPane = {
     new BorderPane() {
-      style = bgColor
+
 
       val board: BoardTrait = controller.gameState.board
       val amount: Int = board.size
@@ -205,7 +211,7 @@ object BoardPanel {
 
 
         //Padding of FieldButtons
-        val stdStyle: String = bgColor +
+        val stdStyle: String = "-fx-background-color: transparent;" +
           "-fx-min-width: 30px; " +
           "-fx-min-height: 30px; " +
           "-fx-max-width: 50px; " +
@@ -250,15 +256,16 @@ object BoardPanel {
           println("selectedPieceList: " + InputCardMaster.selPieceList)
         }
       })
+      val stackPane: StackPane = new StackPane
 
-      center = new ScrollPane() {
-        fitToWidth = true
-        fitToHeight = true
-        content() = newBoardGrid(amount, fieldIconSeq)
-      }
+      //      val scrollPane: ScrollPane = new ScrollPane() {
+      //
+      //        content() = newBoardGrid(amount, fieldIconSeq)
+      //      }
 
-      right = CardDeckPanel.newCardDeck(controller)
-      left = PlayerStatusPanel.newStatusPane(controller)
+      stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, fieldIconSeq))
+      center = stackPane
+
     }
   }
 
@@ -266,9 +273,9 @@ object BoardPanel {
 
     new GridPane {
       setAlignment(Center)
-      setPadding(Insets(10, 10, 10, 10))
-      setStyle(bgColor)
 
+      //      setStyle(bgColor)
+      //      setBackground(Background.Empty)
       //computes and displays Board on view, as an horizontal rectangle
       val leftAndRightEdge: Int = amount / 8
       val topAndBottomEdge: Int = (amount / 4) + leftAndRightEdge
