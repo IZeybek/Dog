@@ -129,10 +129,10 @@ object PlayerStatusPanel {
 
     }) {
       style = "-fx-background-radius: 5em; " +
-        "-fx-min-width: 50px; " +
-        "-fx-min-height: 125px; " +
-        "-fx-max-width: 125px; " +
-        "-fx-max-height: 200px;" +
+        "-fx-min-width: 30; " +
+        "-fx-min-height: 30; " +
+        "-fx-max-width: 100; " +
+        "-fx-max-height: 175;" +
         "-fx-padding:5;"
     }
   }

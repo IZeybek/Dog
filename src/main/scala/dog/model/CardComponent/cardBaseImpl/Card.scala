@@ -50,8 +50,6 @@ object CardLogic {
     val board: BoardTrait = gameState.board
     val selPiece = inputC.selPieceList.head
 
-    println(s"selpiece: ${selPiece}")
-
     val oldPos: Int = actPlayer.piecePosition(selPiece)
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
@@ -74,7 +72,6 @@ object CardLogic {
       //update Vector when not overridden
       players = players.updated(actPlayerIdx, actPlayer.setPosition(selPiece, newPos))
     }
-    println("----------------------------" + isValid)
     (board.updateMovePlayer(players(actPlayerIdx), oldPos, newPos), players, isValid)
   }
 
