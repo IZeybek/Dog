@@ -26,7 +26,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val clickedCell: CellTrait = gameState.board.cell(clickedFieldIdx)
 
     if (!clickedCell.isFilled) {
-
       SelectedState.reset
 
     } else {

@@ -252,8 +252,6 @@ object BoardPanel {
         onAction = _ => {
           println("pressed field = " + this.getId)
           controller.clickedField(this.getId.toInt)
-
-          println("selectedPieceList: " + InputCardMaster.selPieceList)
         }
       })
       val stackPane: StackPane = new StackPane
