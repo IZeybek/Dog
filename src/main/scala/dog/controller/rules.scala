@@ -23,7 +23,6 @@ object Chain {
     isSuccess
   }
 
-
   val loggingFilter: Boolean => Boolean = (status: Boolean) => {
     println(status)
     status
