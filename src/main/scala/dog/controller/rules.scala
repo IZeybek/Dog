@@ -25,7 +25,7 @@ object Chain {
 
 
   val loggingFilter: Boolean => Boolean = (status: Boolean) => {
-    if (status) println("SUCCESS") else println("FAILED")
+    println(status)
     status
   }
 
@@ -57,9 +57,7 @@ object Chain {
     gameState.actualPlayer.piece.foreach(x => if (gameState.board.cell(x._2.pos).isFilled) {
       isPieceOnBoard = true
     })
-    println("isPieceOnBoard?: " + isPieceOnBoard)
     var isPlayable: Boolean = false
-    //println("isPlayable?: " + isPlayable)
     gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play") || x.task.contains("joker")) isPlayable = true)
     predecessorStatus && (isPieceOnBoard || isPlayable)
 
