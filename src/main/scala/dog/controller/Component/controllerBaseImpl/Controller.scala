@@ -22,7 +22,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
-  override def clickedField(clickedFieldIdx: Int): Int = {
+  override def selectedField(clickedFieldIdx: Int): Int = {
     val clickedCell: CellTrait = gameState.board.cell(clickedFieldIdx)
 
     if (!clickedCell.isFilled) {
@@ -108,9 +108,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           publish(new BoardChanged)
       }
     } else {
-      gameState = gameStateMaster.UpdateGame()
-        .withLastPlayedCard(inputCard.selectedCard)
-        .buildGame
       returnString = handleFail(check._2)
     }
     returnString
@@ -119,17 +116,17 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   def handleFail(msg: String): String = {
     msg match {
       case "handcard" =>
-        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        gameState = gameStateMaster.UpdateGame()
+          .withNextPlayer().buildGame
         publish(new BoardChanged)
         s"${gameState.actualPlayer.toStringColor} has no hand cards"
       case "pieceonboard" =>
         givePlayerCards(gameState.players._2, Nil)
         gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
         SelectedState.reset
+        JokerState.reset
         publish(new BoardChanged)
         s"${gameState.actualPlayer.toStringColor} has neither pieces on board nor a card to play"
-      case "play" =>
-        s"${gameState.actualPlayer.toStringColor} has to choose play or questionmark card"
       case "won" =>
         s"${gameState.actualPlayer.toStringColor} won"
       case "selected" =>

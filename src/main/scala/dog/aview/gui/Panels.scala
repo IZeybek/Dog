@@ -251,7 +251,7 @@ object BoardPanel {
         //field OnClickListener
         onAction = _ => {
           println("pressed field = " + this.getId)
-          controller.clickedField(this.getId.toInt)
+          controller.selectedField(this.getId.toInt)
         }
       })
       val stackPane: StackPane = new StackPane

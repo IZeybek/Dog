@@ -73,11 +73,9 @@ class Tui(controller: ControllerTrait) extends Reactor {
           //for swapping now with Clicked field which is necessary
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
             val fieldPosOwn = controller.gameState.actualPlayer.piece(pieceNum1).pos
-            println(fieldPosOwn)
             val fieldPosOther = controller.gameState.players._1(otherPlayer).piece(pieceNum2).pos
-            println(fieldPosOther)
-            controller.clickedField(fieldPosOwn)
-            controller.clickedField(fieldPosOther)
+            controller.selectedField(fieldPosOwn)
+            controller.selectedField(fieldPosOther)
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
               .withOtherPlayer(otherPlayer)
@@ -88,7 +86,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
           //for cards having multiple options
           case cardNum :: cardOption :: pieceNum :: Nil =>
             val fieldPos = controller.gameState.actualPlayer.piece(pieceNum).pos
-            controller.clickedField(fieldPos)
+            controller.selectedField(fieldPos)
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
               .withCardNum((cardNum, cardOption))
@@ -96,7 +94,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
               .buildCardInput())
 
           //for play Cards
-          // clicked field is not necessary fot play Cards as u cant select a Piece
+          // clicked field is not necessary for the cards with the task 'play' as u can't select a Piece
           case cardNum :: cardOption :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
@@ -105,7 +103,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
               .buildCardInput())
 
           //for easy moving
-          //@TODO: this one can't be used anymore, as u have to select a Piece.
+          //@TODO: this one can't be used anymore, as u have to select a Piece. it can be used for joker only
           case cardNum :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)

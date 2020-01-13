@@ -14,8 +14,6 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
           loggingFilter.tupled andThen
           checkPiecesOnBoardAndPlayable.tupled andThen
           loggingFilter.tupled andThen
-          checkPlayCard.tupled andThen
-          loggingFilter.tupled andThen
           checkSelected.tupled andThen
           loggingFilter.tupled
       case _ => loggingFilter.tupled
@@ -42,18 +40,18 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
     ((isPieceOnBoard || isPlayable) && status, "pieceonboard")
   }
 
-  def checkPlayCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
-    val opt: Int = inputCard.cardIdxAndOption._2
-    ((inputCard.selectedCard.parse(opt).task.contains("play") || inputCard.selectedCard.task.contains("joker")) && status, "play")
-  }
 
   def checkSelected: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
+    print("checkSelected: ")
     var isSelected: Boolean = false
+    val selTask = inputCard.selectedCard.task.split("\\s+")(inputCard.cardIdxAndOption._2)
+
     SelectedState.state match {
-      case SelectedState.nothingSelected => if (inputCard.selectedCard.task.contains("play")) isSelected = true
-      case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
-      case SelectedState.otherPieceSelected => if (inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
+      case SelectedState.nothingSelected => if (selTask.equals("play") || selTask.equals("joker")) isSelected = true
+      case SelectedState.ownPieceSelected => if (!selTask.equals("swap")) isSelected = true else isSelected = false
+      case SelectedState.otherPieceSelected => if (selTask.equals("swap")) isSelected = true else isSelected = false
     }
+
     (isSelected && status, "selected")
   }
 

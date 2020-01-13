@@ -3,7 +3,6 @@ package dog.controller.controllerBaseImpl
 import dog.controller.Component.controllerBaseImpl.Controller
 import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
-import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 import dog.model.{Piece, Player}
 import org.scalatest.{Matchers, WordSpec}
@@ -122,46 +121,10 @@ class ChainSpec extends WordSpec with Matchers {
         .withActualPlayer(0)
         .buildCardInput()
 
-      controller.clickedField(5)
+      controller.selectedField(5)
 
       val chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkSelected.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
-    }
-    "check if play card is selected" in {
-      controller.gameStateMaster.UpdateGame().resetGame
-      val card: CardTrait = Card("1 11 play", "move move play", "red")
-
-      val player: Player = Player.PlayerBuilder()
-        .withCards(List())
-        .build()
-
-      val gameState: GameState = controller.gameStateMaster.UpdateGame()
-        .withPlayers(Vector(player))
-        .withActualPlayer(0)
-        .buildGame
-
-      var inputCard: InputCard = InputCardMaster.UpdateCardInput()
-        .withOtherPlayer(-1)
-        .withPieceNum(List(0))
-        .withActualPlayer(0)
-        .withCardNum((0, 2))
-        .withSelectedCard(card)
-        .buildCardInput()
-
-      var chain: Chain = Chain(gameState, inputCard)
-      chain.tryChain(chain.checkPlayCard.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
-
-      inputCard = InputCardMaster.UpdateCardInput()
-        .withOtherPlayer(-1)
-        .withPieceNum(List(0))
-        .withActualPlayer(0)
-        .withCardNum((0, 1))
-        .withSelectedCard(card)
-        .buildCardInput()
-
-      chain = Chain(gameState, inputCard)
-      chain.tryChain(chain.checkPlayCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
-
     }
   }
 }

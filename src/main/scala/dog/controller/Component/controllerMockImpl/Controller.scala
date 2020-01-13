@@ -82,7 +82,7 @@ class Controller extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = ""
 
-  override def clickedField(clickedFieldIdx: Int): Int = 0
+  override def selectedField(clickedFieldIdx: Int): Int = 0
 
   override def save: Unit = {}
 

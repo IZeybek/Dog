@@ -8,7 +8,7 @@ import dog.util.UndoManager
 import scala.swing.Publisher
 
 trait ControllerTrait extends Publisher {
-  def clickedField(clickedFieldIdx: Int): Int
+  def selectedField(clickedFieldIdx: Int): Int
 
 
   val undoManager: UndoManager

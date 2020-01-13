@@ -141,7 +141,7 @@
 //        .withActualPlayer(0)
 //        .buildCardInput()
 //
-//      controller.clickedField(5)
+//      controller.selectedField(5)
 //      Event.checkSelected(gameState, inputCard) should be(true)
 //    }
 //    "check if won" in {
