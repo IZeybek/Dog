@@ -60,3 +60,5 @@ codestyles/
 
 # Log
 *.log
+.xml
+.json

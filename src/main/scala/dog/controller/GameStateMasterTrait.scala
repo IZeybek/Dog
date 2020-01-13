@@ -3,6 +3,7 @@ package dog.controller
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
+import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck}
 import dog.model.Player
 
@@ -11,13 +12,13 @@ trait GameStateMasterTrait {
   //player
   var colors: Array[String]
   var playerNames: Array[String]
-  var players: Vector[Player]
+  var playerVector: Vector[Player]
   var actualPlayerIdx: Int
   var pieceAmount: Int
 
   var roundAndCardsToDistribute: (Int, Int)
   var cardDeck: Vector[CardTrait]
-  var lastPlayedCard: Option[CardTrait]
+  var lastPlayedCardOpt: Option[CardTrait]
 
   var cardPointer: Int
   var board: BoardTrait
@@ -31,17 +32,17 @@ trait GameStateMasterTrait {
     }
 
     def withDistributedCard(): UpdateGame = {
-      players.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(roundAndCardsToDistribute._2).buildRandomCardList))
+      playerVector.foreach(x => x.setHandCards(Card.RandomCardsBuilder().withAmount(roundAndCardsToDistribute._2).buildRandomCardList))
       this
     }
 
-    def withLastPlayed(setCard: CardTrait): UpdateGame = {
-      lastPlayedCard = Some(setCard)
+    def withLastPlayedCard(setCard: CardTrait): UpdateGame = {
+      lastPlayedCardOpt = Some(setCard)
       this
     }
 
     def withPlayers(setPlayers: Vector[Player]): UpdateGame = {
-      players = setPlayers
+      playerVector = setPlayers
       this
     }
 
@@ -52,8 +53,8 @@ trait GameStateMasterTrait {
 
     def withNextPlayer(): UpdateGame = {
       do {
-        actualPlayerIdx = (actualPlayerIdx + 1) % players.size
-      }while(players(actualPlayerIdx).cardList.isEmpty)
+        actualPlayerIdx = (actualPlayerIdx + 1) % playerVector.size
+      } while (playerVector(actualPlayerIdx).cardList.isEmpty)
 
       this
     }
@@ -75,14 +76,14 @@ trait GameStateMasterTrait {
 
     def resetGame: GameState = {
       //Board
-      boardSize = 64 // hast to be dividable by 4
+      boardSize = 128 // hast to be dividable by 4
       board = new Board(boardSize)
 
       // Player
       playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")
       colors = Array("yellow", "white", "green", "red")
       pieceAmount = 4
-      players = playerNames.indices.map(i => Player.PlayerBuilder().
+      playerVector = playerNames.indices.map(i => Player.PlayerBuilder().
         withColor(colors(i)).
         withName((playerNames(i), i)).
         withPiece(pieceAmount, (boardSize / playerNames.length) * i).
@@ -93,22 +94,23 @@ trait GameStateMasterTrait {
       cardDeck = CardDeck.CardDeckBuilder().withAmount(List(10, 10)).withShuffle.buildCardVector
       cardPointer = cardDeck.length
       roundAndCardsToDistribute = (0, 6)
-      lastPlayedCard = None
+      lastPlayedCardOpt = Some(Card("pseudo", "pseudo", "pseudo"))
 
-      GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
+      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
 
     def loadGame(gameState: GameState): Unit = {
+      JokerState.reset
       cardDeck = gameState.cardDeck._1
       cardPointer = gameState.cardDeck._2
       board = gameState.board
-      players = gameState.players._1
+      playerVector = gameState.players._1
       actualPlayerIdx = gameState.players._2
-      lastPlayedCard = gameState.lastPlayedCardOpt
+      lastPlayedCardOpt = gameState.lastPlayedCardOpt
     }
 
     def buildGame: GameState = {
-      GameState((players, actualPlayerIdx), (cardDeck, cardPointer), None, board)
+      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), lastPlayedCardOpt, board)
     }
   }
 

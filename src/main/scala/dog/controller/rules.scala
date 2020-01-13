@@ -68,12 +68,14 @@ object Chain {
   def checkSelected(): Boolean => Boolean = (predecessorStatus: Boolean) => {
     print("checkSelected: ")
     var isSelected: Boolean = false
+    val selTask = inputCard.selectedCard.task.split("\\s+")(inputCard.cardIdxAndOption._2)
+
     if (predecessorStatus) {
 
       SelectedState.state match {
-        case SelectedState.nothingSelected => if (inputCard.selectedCard.task.contains("play") || inputCard.selectedCard.task.contains("joker")) isSelected = true
-        case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.task.contains("swap")) isSelected = true else isSelected = false
-        case SelectedState.otherPieceSelected => if (inputCard.selectedCard.task.contains("swap")) isSelected = true else isSelected = false
+        case SelectedState.nothingSelected => if (selTask.equals("play") || selTask.equals("joker")) isSelected = true
+        case SelectedState.ownPieceSelected => if (!selTask.equals("swap")) isSelected = true else isSelected = false
+        case SelectedState.otherPieceSelected => if (selTask.equals("swap")) isSelected = true else isSelected = false
       }
     }
 

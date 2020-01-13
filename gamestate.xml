@@ -1,0 +1,117 @@
+<gamestate actPlayer="1" cardDeckPointer="140">
+    <player idx="0" name="Player 1" homepos="0" color="yellow">
+        <inHouse pieceNum="0"></inHouse>
+        <inHouse pieceNum="1"></inHouse>
+        <inHouse pieceNum="2"></inHouse>
+        <inHouse pieceNum="3"></inHouse>
+        <piece pieceNum="0" position="0"></piece>
+        <piece pieceNum="1" position="0"></piece>
+        <piece pieceNum="2" position="0"></piece>
+        <piece pieceNum="3" position="0"></piece>
+    </player>
+    <player idx="1" name="Player 2" homepos="16" color="white">
+        <inHouse pieceNum="1"></inHouse>
+        <inHouse pieceNum="2"></inHouse>
+        <inHouse pieceNum="3"></inHouse>
+        <piece pieceNum="0" position="28"></piece>
+        <piece pieceNum="1" position="16"></piece>
+        <piece pieceNum="2" position="16"></piece>
+        <piece pieceNum="3" position="16"></piece>
+        <card symbol="8" task="move" color="blue"></card>
+        <card symbol="swapCard" task="swap" color="red"></card>
+        <card symbol="7" task="burn" color="red"></card>
+        <card symbol="10" task="move" color="blue"></card>
+    </player>
+    <player idx="2" name="Player 3" homepos="32" color="green">
+        <inHouse pieceNum="1"></inHouse>
+        <inHouse pieceNum="2"></inHouse>
+        <piece pieceNum="0" position="32"></piece>
+        <piece pieceNum="1" position="32"></piece>
+        <piece pieceNum="2" position="32"></piece>
+        <piece pieceNum="3" position="32"></piece>
+        <card symbol="questionmark" task="joker" color="red"></card>
+        <card symbol="swapCard" task="swap" color="red"></card>
+        <card symbol="8" task="move" color="blue"></card>
+        <card symbol="5" task="move" color="blue"></card>
+    </player>
+    <player idx="3" name="Player 4" homepos="48" color="red">
+        <inHouse pieceNum="1"></inHouse>
+        <inHouse pieceNum="2"></inHouse>
+        <inHouse pieceNum="3"></inHouse>
+        <piece pieceNum="0" position="50"></piece>
+        <piece pieceNum="1" position="48"></piece>
+        <piece pieceNum="2" position="48"></piece>
+        <piece pieceNum="3" position="48"></piece>
+        <card symbol="questionmark" task="joker" color="red"></card>
+        <card symbol="7" task="burn" color="red"></card>
+        <card symbol="5" task="move" color="blue"></card>
+        <card symbol="8" task="move" color="blue"></card>
+    </player>
+    <board size="64">
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="2"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="3"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+        <cell player="-1"></cell>
+    </board>
+    <lastPlayed symbol="2" task="move" color="blue"></lastPlayed>
+</gamestate>
