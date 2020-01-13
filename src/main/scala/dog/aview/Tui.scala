@@ -70,17 +70,33 @@ class Tui(controller: ControllerTrait) extends Reactor {
           //              .withSelectedCard(actPlayer.getCard(cardNum))
           //              .buildCardInput())
 
-          //for swapping
+          //for swapping now with Clicked field which is necessary
           case cardNum :: otherPlayer :: pieceNum1 :: pieceNum2 :: Nil =>
+            val fieldPosOwn = controller.gameState.actualPlayer.piece(pieceNum1).pos
+            println(fieldPosOwn)
+            val fieldPosOther = controller.gameState.players._1(otherPlayer).piece(pieceNum2).pos
+            println(fieldPosOther)
+            controller.clickedField(fieldPosOwn)
+            controller.clickedField(fieldPosOther)
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
               .withOtherPlayer(otherPlayer)
-              .withPieceNum(List(pieceNum1, pieceNum2))
               .withCardNum((cardNum, 0))
               .withSelectedCard(actPlayer.getCard(cardNum))
               .buildCardInput())
 
           //for cards having multiple options
+          case cardNum :: cardOption :: pieceNum :: Nil =>
+            val fieldPos = controller.gameState.actualPlayer.piece(pieceNum).pos
+            controller.clickedField(fieldPos)
+            result = controller.manageRound(InputCardMaster.UpdateCardInput()
+              .withActualPlayer(actualPlayerIdx)
+              .withCardNum((cardNum, cardOption))
+              .withSelectedCard(actPlayer.getCard(cardNum))
+              .buildCardInput())
+
+          //for play Cards
+          // clicked field is not necessary fot play Cards as u cant select a Piece
           case cardNum :: cardOption :: Nil =>
             result = controller.manageRound(InputCardMaster.UpdateCardInput()
               .withActualPlayer(actualPlayerIdx)
