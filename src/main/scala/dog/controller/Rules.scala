@@ -2,7 +2,7 @@ package dog.controller
 
 import dog.util.SelectedState
 
-object Chain {
+object Rules {
 
   var gameState: GameState = _
   var inputCard: InputCard = _

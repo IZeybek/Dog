@@ -78,7 +78,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
 
-    if (Chain.processChain(gameState, inputCard)) {
+    if (Rules.processChain(gameState, inputCard)) {
       var returnString: String = ""
       val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
 
@@ -112,7 +112,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       }
       returnString
     } else {
-      if (!Chain.processStdCheck(gameState, inputCard)) {
+      if (!Rules.processStdCheck(gameState, inputCard)) {
         gameState = gameStateMaster.UpdateGame()
           .withLastPlayedCard(inputCard.selectedCard)
           .buildGame
