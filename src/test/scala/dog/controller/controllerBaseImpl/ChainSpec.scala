@@ -1,47 +1,14 @@
-package dog.model
+package dog.controller.controllerBaseImpl
 
 import dog.controller.Component.controllerBaseImpl.Controller
 import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
+import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
+import dog.model.{Event, Piece, Player}
 import org.scalatest.{Matchers, WordSpec}
 
-class LevelSpec extends WordSpec with Matchers {
-  "Levels" when {
-    "created" should {
-      val pro: Level = new Level(None, 2)
-      val advanced: Level = new Level(Some(pro), 1)
-      val basic: Level = new Level(Some(advanced), 0)
-      "have attributes" in {
-
-        basic.successor.get should be(advanced)
-        basic.level should be(0)
-
-        pro.successor should be(None)
-      }
-    }
-  }
-  "Events" when {
-    "created" should {
-      Event.setAttributes(new Controller(new Board(20)).gameState, InputCardMaster.UpdateCardInput().buildCardInput())
-      val event: Event = Event.setStrategy(0)
-      "have a level" in {
-        event.level should be(0)
-      }
-      "have a check" in {
-        event.check should be(Event.getLogic(0)._1)
-      }
-      "have a GameState" in {
-        event.gameState should not be null
-      }
-      "have an InputCard" in {
-        event.inputCard should not be null
-      }
-      "have a message" in {
-        event.message should be(Event.getLogic(0)._2)
-      }
-    }
-  }
+class ChainSpec extends WordSpec with Matchers {
   "checking" should {
     val controller: ControllerTrait = new Controller(new Board(20))
     "check if pieces on board" in {
@@ -61,26 +28,28 @@ class LevelSpec extends WordSpec with Matchers {
         .withActualPlayer(0)
         .buildCardInput()
 
-      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(true)
+      val chain: Chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
     }
-    "check if pieces on board (no PiecesOnBoard)" in {
+    "check if pieces on board (no Pieces On Board)" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
       val player: Player = Player.PlayerBuilder()
-        .withPieces(Map(0 -> Piece(0)))
-        .withCards(List(Card("3", "move", "blue")))
+        .withPiece(1, 0)
+        .withCards(Nil)
         .build()
+
       val gameState: GameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player))
         .withBoard(new Board(20))
         .withActualPlayer(0).buildGame
+
       val inputCard: InputCard = InputCardMaster.UpdateCardInput()
         .withActualPlayer(0)
         .buildCardInput()
-      (0 until 20).foreach(x => print(gameState.board.cell(x).isFilled + " "))
-      println()
-      println(gameState.actualPlayer.cardList)
-      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(false)
+
+      val chain: Chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
     }
     "check if player has hand cards" in {
       controller.gameStateMaster.UpdateGame().resetGame
@@ -88,26 +57,33 @@ class LevelSpec extends WordSpec with Matchers {
       var player: Player = Player.PlayerBuilder()
         .withCards(Nil)
         .build()
+      player.cardList.nonEmpty should be(false)
       var gameState: GameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player))
-        .withActualPlayer(0).buildGame
+        .withActualPlayer(0)
+        .buildGame
       val inputCard: InputCard = InputCardMaster.UpdateCardInput()
         .withActualPlayer(0)
         .buildCardInput()
-      Event.checkHandCards(gameState, inputCard) should be(false)
+
+      var chain: Chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkHandCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
 
       player = Player.PlayerBuilder()
         .withCards(List(Card("", "", "")))
         .build()
       gameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player)).buildGame
-      Event.checkHandCards(gameState, inputCard) should be(true)
+
+      chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkHandCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
     }
     "check if player has card play on hand" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
       var player: Player = Player.PlayerBuilder()
         .withCards(List(Card("1 11 play", "move move play", "red")))
+        .withPieces(Map(0 -> Piece(0)))
         .build()
       var gameState: GameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player))
@@ -115,14 +91,19 @@ class LevelSpec extends WordSpec with Matchers {
       val inputCard: InputCard = InputCardMaster.UpdateCardInput()
         .withActualPlayer(0)
         .buildCardInput()
-      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(true)
+
+      var chain: Chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
 
       player = Player.PlayerBuilder()
         .withCards(Nil)
+        .withPieces(Map(0 -> Piece(0)))
         .build()
       gameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player)).buildGame
-      Event.checkPiecesOnBoardAndPlayable(gameState, inputCard) should be(false)
+
+      chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
     }
     "check if pieces are selected" in {
       controller.gameStateMaster.UpdateGame().resetGame
@@ -142,7 +123,45 @@ class LevelSpec extends WordSpec with Matchers {
         .buildCardInput()
 
       controller.clickedField(5)
-      Event.checkSelected(gameState, inputCard) should be(true)
+
+      val chain: Chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkSelected.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
+    }
+    "check if play card is selected" in {
+      controller.gameStateMaster.UpdateGame().resetGame
+      val card: CardTrait = Card("1 11 play", "move move play", "red")
+
+      val player: Player = Player.PlayerBuilder()
+        .withCards(List())
+        .build()
+
+      val gameState: GameState = controller.gameStateMaster.UpdateGame()
+        .withPlayers(Vector(player))
+        .withActualPlayer(0)
+        .buildGame
+
+      var inputCard: InputCard = InputCardMaster.UpdateCardInput()
+        .withOtherPlayer(-1)
+        .withPieceNum(List(0))
+        .withActualPlayer(0)
+        .withCardNum((0, 2))
+        .withSelectedCard(card)
+        .buildCardInput()
+
+      var chain: Chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkPlayCard.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
+
+      inputCard = InputCardMaster.UpdateCardInput()
+        .withOtherPlayer(-1)
+        .withPieceNum(List(0))
+        .withActualPlayer(0)
+        .withCardNum((0, 1))
+        .withSelectedCard(card)
+        .buildCardInput()
+
+      chain = Chain(gameState, inputCard)
+      chain.tryChain(chain.checkPlayCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
+
     }
     "check if won" in {
       controller.gameStateMaster.UpdateGame().resetGame

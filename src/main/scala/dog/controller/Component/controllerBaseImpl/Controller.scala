@@ -14,6 +14,8 @@ import dog.model.Player
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
 
+import scala.util.Try
+
 class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
   override val undoManager: UndoManager = new UndoManager
@@ -77,8 +79,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return a String that is returned to the TUI for more information
    */
   override def manageRound(inputCard: InputCard): String = {
-    var returnString: String = s"Move was not possible! Please retry player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._2}${Console.RESET} ;)\n"
-    val check: (Boolean, String) = Chain.tryChain(Chain.apply("manageround", gameState, inputCard))
+    var returnString: String = s"Move was not possible! Please retry player ${gameState.actualPlayer.toStringColor} ;)\n"
+    val chain: Chain = Chain(gameState, inputCard)
+    val check: (Boolean, String) = chain.tryChain(chain.apply("manageround"))
     if (check._1) {
       val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
       newState._3 match {
@@ -88,25 +91,34 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).withNextPlayer().buildGame
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
           SelectedState.reset()
-          publish(new BoardChanged)
-          returnString = s"Player ${gameState.players._1(gameState.players._2).consoleColor}${gameState.players._1(gameState.players._2).nameAndIdx}${Console.RESET}'s turn\n"
+          Try(publish(new BoardChanged))
+          returnString = s"Player ${gameState.actualPlayer.toStringColor}'s turn\n"
         case 1 =>
           println("joker packingState: " + (if (JokerState.state.equals(JokerState.unpacked)) "unpacked" else "packed"))
           gameState = gameStateMaster.UpdateGame().withBoard(newState._1).withPlayers(newState._2).buildGame
-          publish(new BoardChanged)
+          Try(publish(new BoardChanged))
       }
-    } else returnString = Chain.handleFail(check._2)
+    } else
+      println(check._2)
+    returnString = handleFail(check._2)
     returnString
   }
 
-  def noMovesPossible(inputCard: InputCard): Unit = {
-    val player = gameState.actualPlayer.copy(cardList = Nil)
-    val playerVector = gameState.players._1.updated(player.nameAndIdx._2, player)
-    gameState = gameStateMaster.UpdateGame()
-      .withPlayers(playerVector)
-      .withNextPlayer()
-      .buildGame
-    publish(new BoardChanged)
+  def handleFail(msg: String): String = {
+    msg match {
+      case "handcard" =>
+        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        "Player has no hand cards"
+      case "pieceonboard" =>
+        givePlayerCards(gameState.players._2, Nil)
+        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        "Player has neither pieces on board nor a card to play"
+      case "play" =>
+        "Player has to choose play card"
+      case "won" =>
+        "Player won"
+      case _ => ""
+    }
   }
 
   /**
@@ -229,30 +241,25 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     gameState = gameStateMaster.UpdateGame()
       .withPlayers(newPlayer)
       .buildGame
+    publish(new BoardChanged)
     newPlayer(playerNum)
   }
 
   override def toStringActivePlayerHand: String = {
     val player: Player = gameState.players._1(gameState.players._2)
-    s"${player.consoleColor}${player.nameAndIdx._1}${Console.RESET}'s hand cards: " + player.cardList + "\n"
+    s"${gameState.actualPlayer.toStringColor}'s hand cards: " + player.cardList + "\n"
   }
 
-  override def toStringPlayerHands: String
-
-  = {
+  override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
     var playerHands: String = ""
-    player.foreach(x => playerHands = playerHands + s"${x.consoleColor}${x.nameAndIdx._1}${Console.RESET} --> myHand: " + x.cardList + "\n")
+    player.foreach(x => playerHands = playerHands + s"${x.toStringColor}'s hand cards: " + x.cardList + "\n")
     playerHands
   }
 
-  override def toStringBoard: String
+  override def toStringBoard: String = toStringHouse + board.toString
 
-  = toStringHouse + board.toString
-
-  override def toStringHouse: String
-
-  = {
+  override def toStringHouse: String = {
     val players: Vector[Player] = gameState.players._1
     val title: String = s"${Console.UNDERLINED}Houses${Console.RESET}"
     val up: String = "‾" * players.length * 3
@@ -262,7 +269,5 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
-  override def toStringCardDeck: String
-
-  = CardDeck.toStringCardDeck(gameState.cardDeck)
+  override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
 }

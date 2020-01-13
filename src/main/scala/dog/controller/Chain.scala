@@ -5,44 +5,33 @@ import dog.util.SelectedState
 import scala.util.{Failure, Success, Try}
 
 
-object Chain {
+case class Chain(gameState: GameState, inputCard: InputCard) {
 
-  val loggingFilter: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
+  def apply(chainType: String): ((Boolean, String)) => (Boolean, String) = {
+    chainType match {
+      case "manageround" =>
+        checkHandCard.tupled andThen
+          loggingFilter.tupled andThen
+          checkPiecesOnBoardAndPlayable.tupled andThen
+          loggingFilter.tupled andThen
+          checkPlayCard.tupled andThen
+          loggingFilter.tupled andThen
+          checkSelected.tupled andThen
+          loggingFilter.tupled
+      case _ => loggingFilter.tupled
+    }
+  }
+
+  def loggingFilter: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     if (status) {
       (status, msg)
     } else {
       throw new Exception(msg)
     }
   }
-  //such an expressive name :D
-  //  val checkers: ((Boolean, String)) => (Boolean, String) =
-  //    checkHandCard.tupled andThen
-  //      loggingFilter.tupled andThen
-  //      checkWon.tupled andThen
-  //      loggingFilter.tupled andThen
-  //      checkHandCard.tupled andThen
-  //      loggingFilter.tupled andThen
-  //      checkPiecesOnBoardAndPlayable.tupled andThen
-  //      loggingFilter.tupled
-
-  var gameState: GameState = _
-  var inputCard: InputCard = _
-
-  def apply(chainType: String, setGameState: GameState, setInputCard: InputCard): ((Boolean, String)) => (Boolean, String) = {
-    gameState = setGameState
-    inputCard = setInputCard
-    chainType match {
-      case "manageround" => checkHandCard.tupled andThen
-        loggingFilter.tupled andThen
-        checkPiecesOnBoardAndPlayable.tupled andThen
-        loggingFilter.tupled andThen
-        checkSelected.tupled andThen
-        loggingFilter.tupled
-    }
-  }
 
   def checkHandCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
-    (gameState.actualPlayer.cardList.nonEmpty && status, "handcard")
+    (gameState.players._1(gameState.players._2).cardList.nonEmpty && status, "handcard")
   }
 
   def checkPiecesOnBoardAndPlayable: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
@@ -50,7 +39,12 @@ object Chain {
     gameState.actualPlayer.piece.foreach(x => if (gameState.board.cell(x._2.pos).isFilled) isPieceOnBoard = true)
     var isPlayable: Boolean = false
     gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play") || x.task.contains("joker")) isPlayable = true)
-    (status && (isPieceOnBoard || isPlayable), "pieceonboard")
+    ((isPieceOnBoard || isPlayable) && status, "pieceonboard")
+  }
+
+  def checkPlayCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
+    val opt: Int = inputCard.cardIdxAndOption._2
+    (inputCard.selectedCard.parse(opt).task.contains("play") && status, "play")
   }
 
   def checkSelected: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
@@ -60,37 +54,28 @@ object Chain {
       case SelectedState.ownPieceSelected => if (!inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
       case SelectedState.otherPieceSelected => if (inputCard.selectedCard.symbol.equals("swap")) isSelected = true else isSelected = false
     }
-    (isSelected, "selected")
-  }
-
-  def tryChain(chain: ((Boolean, String)) => (Boolean, String)): (Boolean, String) = {
-    Try(chain) match {
-      case Success(value) => (true, "")
-      case Failure(exception) => (false, exception.getMessage)
-    }
-  }
-
-  def handleFail(msg: String): String = {
-    msg match {
-      case "won" => "Player won"
-      case _ => ""
-    }
+    (isSelected && status, "selected")
   }
 
   def checkWon: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     (false, "won")
   }
+
+  def tryChain(chain: ((Boolean, String)) => (Boolean, String)): (Boolean, String) = {
+    Try(chain(true, "")) match {
+      case Success(value) => (true, "")
+      case Failure(exception) => (false, exception.getMessage)
+    }
+  }
 }
 
 //we could make similar compositions of the functions
 
-//object MainTest {
-//  def main(args: Array[String]): Unit = {
-//    val chain: Boolean = Try(Chain.checkers(true, "")) match {
-//      case Success(value) => true
-//      case Failure(exception) =>
-//        println(exception.getMessage)
-//        false
-//    }
-//  }
-//}
+object MainTest {
+  def main(args: Array[String]): Unit = {
+    val gameState: GameState = new GameStateMaster().UpdateGame().buildGame
+    val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
+    val chain: Chain = Chain(gameState, inputCard)
+    println(chain.tryChain(chain.apply("manageround")))
+  }
+}
