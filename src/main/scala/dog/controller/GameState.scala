@@ -26,7 +26,7 @@ class GameStateMaster extends GameStateMasterTrait {
 
   //board
   override var pieceAmount = 4
-  override var boardSize: Int = 128 // hast to be dividable by 4
+  override var boardSize: Int = 96 // hast to be dividable by 4
   override var board: BoardTrait = new Board(boardSize)
 
   //player
