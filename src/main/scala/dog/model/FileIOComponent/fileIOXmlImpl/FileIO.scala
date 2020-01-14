@@ -106,14 +106,14 @@ class FileIO extends FileIOTrait {
 
   }
 
-  def inhouseToXml(x: Int): Elem = {
-    <inHouse pieceNum={x.toString}></inHouse>
-  }
-
   def playerToXml(player: Player): Elem = {
     <player idx={player.nameAndIdx._2.toString} name={player.nameAndIdx._1} homepos={player.homePosition.toString} color={player.color}>
       {player.inHouse.map(x => inhouseToXml(x))}{player.piece.map(x => pieceToXml(x._1, x._2))}{player.cardList.map(x => cardToXml(x))}
     </player>
+  }
+
+  def inhouseToXml(x: Int): Elem = {
+    <inHouse pieceNum={x.toString}></inHouse>
   }
 
 

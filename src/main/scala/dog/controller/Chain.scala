@@ -42,7 +42,6 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
 
   def checkSelected: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
-    print("checkSelected: ")
     var isSelected: Boolean = false
     val selTask = inputCard.selectedCard.task.split("\\s+")(inputCard.cardIdxAndOption._2)
 

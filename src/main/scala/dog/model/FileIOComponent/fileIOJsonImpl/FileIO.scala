@@ -88,7 +88,7 @@ class FileIO extends FileIOTrait {
         "cardDeckPointer" -> JsNumber(gameState.cardDeck._2),
         "playerVector" -> gameState.players._1.map(x => Json.obj("player" -> Json.toJson(x))),
         "board" -> Json.toJson(gameState.board),
-        "lastPlacedCard" -> Json.toJson(gameState.lastPlayedCardOpt.get)
+        "lastPlacedCard" -> Json.toJson(gameState.lastPlayedCard)
       )
     )
   }
