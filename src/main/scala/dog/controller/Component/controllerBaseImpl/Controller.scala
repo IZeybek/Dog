@@ -100,12 +100,25 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     returnString
   }
 
+  /**
+   * checks chain and handles the fail if false
+   *
+   * @param inputCard is needed for the chain
+   * @param typeChain is used for the strategy pattern in Chain
+   * @return if it failed and the message returned by handleFail in the case it failed
+   */
   override def check(inputCard: InputCard, typeChain: String): (Boolean, String) = {
     val chain = Chain(gameState, inputCard)
     val (bool, str): (Boolean, String) = chain.tryChain(chain.apply(typeChain))
     (bool, if (!bool) handleFail(str) else "")
   }
 
+  /**
+   * handles the fail
+   *
+   * @param msg is used to determine which error has to be handled
+   * @return a message
+   */
   private def handleFail(msg: String): String = {
     msg match {
       case "handcard" =>
