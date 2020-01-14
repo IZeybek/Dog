@@ -16,6 +16,11 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
           loggingFilter.tupled andThen
           checkSelected.tupled andThen
           loggingFilter.tupled
+      case "afterround" =>
+        checkAllPlayerHandCards.tupled andThen
+          loggingFilter.tupled andThen
+          checkPiecesOnBoardAndPlayable.tupled andThen
+          loggingFilter.tupled
       case _ => loggingFilter.tupled
     }
   }
@@ -30,6 +35,12 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
   def checkHandCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     (gameState.players._1(gameState.players._2).cardList.nonEmpty && status, "handcard")
+  }
+
+  def checkAllPlayerHandCards: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
+    var hasCards: Boolean = false
+    gameState.players._1.foreach(x => if (x.cardList.nonEmpty) hasCards = true)
+    (hasCards, "noplayercards")
   }
 
   def checkPiecesOnBoardAndPlayable: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
@@ -53,6 +64,7 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
     (isSelected && status, "selected")
   }
+
 
   def checkWon: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     (false, "won")

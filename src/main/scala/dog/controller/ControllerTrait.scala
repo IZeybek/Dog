@@ -79,4 +79,6 @@ trait ControllerTrait extends Publisher {
   def save: Unit
 
   def load: Unit
+
+  def check(inputCard: InputCard, typeChain: String): (Boolean, String)
 }

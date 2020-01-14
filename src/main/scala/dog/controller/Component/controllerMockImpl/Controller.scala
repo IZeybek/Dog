@@ -87,4 +87,6 @@ class Controller extends ControllerTrait {
   override def save: Unit = {}
 
   override def load: Unit = {}
+
+  override def check(inputCard: InputCard, typeChain: String): (Boolean, String) = (true, "")
 }

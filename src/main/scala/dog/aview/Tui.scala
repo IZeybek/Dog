@@ -17,7 +17,6 @@ class Tui(controller: ControllerTrait) extends Reactor {
 
   def processInput(input: String): String = {
     var result: String = ""
-
     input.split("\\s+").toList match {
 
       case "n" :: "player" :: player =>

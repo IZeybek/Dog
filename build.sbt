@@ -19,6 +19,10 @@ libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6"
 
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.6"
 
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
+
+libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
+
 //// Add dependency on ScalaFX library
 libraryDependencies += "org.scalafx" %% "scalafx" % "12.0.2-R18"
 

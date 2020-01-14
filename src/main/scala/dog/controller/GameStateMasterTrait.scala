@@ -52,10 +52,15 @@ trait GameStateMasterTrait {
     }
 
     def withNextPlayer(): UpdateGame = {
-      do {
-        actualPlayerIdx = (actualPlayerIdx + 1) % playerVector.size
-      } while (playerVector(actualPlayerIdx).cardList.isEmpty)
+      //do {
+      actualPlayerIdx = (actualPlayerIdx + 1) % playerVector.size
+      //} while (playerVector(actualPlayerIdx).cardList.isEmpty)
+      this
+    }
 
+
+    def withNextRound(): UpdateGame = {
+      roundAndCardsToDistribute = (roundAndCardsToDistribute._1 + 1, roundAndCardsToDistribute._2 - 1)
       this
     }
 

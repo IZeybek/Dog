@@ -77,43 +77,36 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def manageRound(inputCard: InputCard): String = {
     var returnString: String = s"Move was not possible! Please retry player ${gameState.actualPlayer.toStringColor} ;)\n"
-    val chain: Chain = Chain(gameState, inputCard)
-    val check: (Boolean, String) = chain.tryChain(chain.apply("manageround"))
-    if (check._1) {
-      val newState: (BoardTrait, Vector[Player], Int) = useCardLogic(inputCard)
-      newState._3 match {
+    val (bool: Boolean, checkStr: String) = check(inputCard, "manageround")
+    if (bool) {
+      val (newBoard: BoardTrait, newPlayer: Vector[Player], returnValue: Int) = useCardLogic(inputCard)
+      returnValue match {
         case 0 =>
           doStep()
-          this.board = newState._1
-          gameState = gameStateMaster.UpdateGame()
-            .withBoard(newState._1)
-            .withPlayers(newState._2)
-            .withLastPlayedCard(inputCard.selectedCard)
-            .withNextPlayer()
-            .buildGame
-
+          this.board = newBoard
+          gameState = gameStateMaster.UpdateGame().withBoard(newBoard).withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).withNextPlayer().buildGame
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
-          SelectedState.reset
           JokerState.reset
+          check(inputCard, "afterround")
           returnString = s"Player ${gameState.actualPlayer.toStringColor}${Console.RESET}'s turn\n"
-          publish(new BoardChanged)
         case 1 =>
-          //          println("joker packingState: " + (if (JokerState.state.equals(JokerState.unpacked)) "unpacked" else "packed"))
-          gameState = gameStateMaster.UpdateGame()
-            .withBoard(newState._1)
-            .withPlayers(newState._2)
-            .withLastPlayedCard(inputCard.selectedCard)
-            .buildGame
-          SelectedState.reset
-          publish(new BoardChanged)
+          gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).buildGame
       }
     } else {
-      returnString = handleFail(check._2)
+      returnString = checkStr
     }
+    SelectedState.reset
+    publish(new BoardChanged)
     returnString
   }
 
-  def handleFail(msg: String): String = {
+  override def check(inputCard: InputCard, typeChain: String): (Boolean, String) = {
+    val chain = Chain(gameState, inputCard)
+    val (bool, str): (Boolean, String) = chain.tryChain(chain.apply(typeChain))
+    (bool, if (!bool) handleFail(str) else "")
+  }
+
+  private def handleFail(msg: String): String = {
     msg match {
       case "handcard" =>
         gameState = gameStateMaster.UpdateGame()
@@ -131,6 +124,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         s"${gameState.actualPlayer.toStringColor} won"
       case "selected" =>
         s"${gameState.actualPlayer.toStringColor} has to select a piece"
+      case "noplayercards" =>
+        gameState = gameStateMaster.UpdateGame().withNextRound().buildGame
+        val amountCards: Int = gameStateMaster.roundAndCardsToDistribute._2
+        gameState.players._1.indices.foreach(x => givePlayerCards(x, Card.RandomCardsBuilder().withAmount(amountCards).buildRandomCardList))
+        "No player has cards. Cards are distributed again to all players"
       case _ => "unknown bug"
     }
   }

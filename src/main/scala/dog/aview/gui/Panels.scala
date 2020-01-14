@@ -58,7 +58,6 @@ object CardPanel {
 
   //generates new Cards and puts it into Seq
   def newCards(gridSeq: Seq[GridPane], amount: Int, cardList: List[CardTrait]): Seq[Button] = {
-
     var idx = 0
     Seq.fill(amount)(new Button("", GenImages.genCardImage(cardList(idx).symbol)) {
       style = bgColor
