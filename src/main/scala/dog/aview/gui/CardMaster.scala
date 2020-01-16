@@ -1,7 +1,7 @@
 package dog.aview.gui
 
 //import dog.aview.gui.CardPanel.{newCards, newIcons}
-import dog.controller.ControllerTrait
+import dog.controller.ControllerComponent.ControllerTrait
 import dog.model.CardComponent.CardTrait
 import javafx.scene.layout.GridPane
 import scalafx.geometry.Insets

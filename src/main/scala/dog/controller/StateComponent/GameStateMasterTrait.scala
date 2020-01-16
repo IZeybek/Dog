@@ -1,4 +1,4 @@
-package dog.controller
+package dog.controller.StateComponent
 
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board

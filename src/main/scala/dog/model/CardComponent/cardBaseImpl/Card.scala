@@ -1,6 +1,6 @@
 package dog.model.CardComponent.cardBaseImpl
 
-import dog.controller.{GameState, InputCard, InputCardMaster}
+import dog.controller.StateComponent.{GameState, InputCard, InputCardMaster}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.{CardDeckTrait, CardTrait}
 import dog.model.Player
@@ -113,9 +113,7 @@ object CardLogic {
   }
 
   val play: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
-
     val cardOption = inputCard.selectedCard.symbol.split("\\s+")
-
     cardOption(inputCard.cardIdxAndOption._2) match {
       case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
       case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
@@ -146,8 +144,7 @@ object CardLogic {
     } else {
       JokerState.handle
       JokerState.cachedCardList = (gameState.players._1(inputCard.actualPlayerIdx).cardList, inputCard.cardIdxAndOption._1)
-      val players = playerVektor.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList))
-
+      val players = playerVektor.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList diff List(Card("questionmark", "joker", "red"))))
       (gameState.board, players, 1)
     }
   }

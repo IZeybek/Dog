@@ -1,6 +1,7 @@
 package dog.aview.gui
 
-import dog.controller.{BoardChanged, ControllerTrait, GuiChanged}
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.{BoardChanged, GuiChanged}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -37,7 +38,7 @@ object GenGui {
             onAction = _ => controller.redoCommand()
           }
           val save: MenuItem = new MenuItem("Save") {
-            onAction = _ => controller.save
+            onAction = _ => controller.save()
           }
           val load: MenuItem = new MenuItem("Load") {
             onAction = _ => controller.load

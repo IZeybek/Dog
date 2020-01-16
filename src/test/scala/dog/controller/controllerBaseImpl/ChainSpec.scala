@@ -1,6 +1,8 @@
 package dog.controller.controllerBaseImpl
 
-import dog.controller.Component.controllerBaseImpl.Controller
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.ControllerComponent.controllerBaseImpl.Controller
+import dog.controller.StateComponent.{GameState, InputCard, InputCardMaster}
 import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.CardComponent.cardBaseImpl.Card
@@ -75,7 +77,7 @@ class ChainSpec extends WordSpec with Matchers {
         .withPlayers(Vector(player)).buildGame
 
       chain = Chain(gameState, inputCard)
-      chain.tryChain(chain.checkHandCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
+      chain.tryChain(chain.checkHandCard.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
     }
     "check if player has card play on hand" in {
       controller.gameStateMaster.UpdateGame().resetGame

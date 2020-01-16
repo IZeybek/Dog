@@ -1,6 +1,6 @@
 package dog.util
 
-import dog.controller.{GameState, InputCardMaster}
+import dog.controller.StateComponent.{GameState, InputCardMaster}
 
 trait SelectionState {
   def changeState(gameState: GameState, clickedIdx: Int): SelectionState

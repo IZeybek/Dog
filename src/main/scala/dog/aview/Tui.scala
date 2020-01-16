@@ -1,6 +1,8 @@
 package dog.aview
 
-import dog.controller.{BoardChanged, ControllerTrait, InputCardMaster}
+import dog.controller.BoardChanged
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.StateComponent.InputCardMaster
 
 import scala.swing.Reactor
 
@@ -30,11 +32,10 @@ class Tui(controller: ControllerTrait) extends Reactor {
           result = "no players created"
         }
       case "save" :: Nil =>
-        controller.save
+        controller.save()
         result = "saved game"
       case "load" :: Nil =>
-        controller.load
-        result = "loaded game"
+        result = controller.load
       case "undo" :: Nil =>
         controller.undoCommand()
         result = "undone"

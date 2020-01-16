@@ -1,5 +1,6 @@
 package dog.controller
 
+import dog.controller.StateComponent.{GameState, GameStateMaster, InputCard, InputCardMaster}
 import dog.util.SelectedState
 
 import scala.util.{Failure, Success, Try}

@@ -1,6 +1,6 @@
 package dog.model.BoardComponent
 
-import dog.controller.InputCardMaster
+import dog.controller.StateComponent.InputCardMaster
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.{Piece, Player}
 import org.scalatest.{Matchers, WordSpec}

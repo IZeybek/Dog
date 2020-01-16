@@ -1,6 +1,6 @@
 package dog.model.FileIOComponent.fileIOJsonImpl
 
-import dog.controller.GameState
+import dog.controller.StateComponent.GameState
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
@@ -13,8 +13,10 @@ import scala.io.Source
 
 class FileIO extends FileIOTrait {
   override def load: GameState = {
-    val source: String = Source.fromFile("gameState.json").getLines.mkString
-    val json: JsValue = Json.parse(source)
+    val source = Source.fromFile("gameState.json")
+    val sourceString: String = source.getLines.mkString
+    val json: JsValue = Json.parse(sourceString)
+    source.close()
     jsonToGameState(json)
   }
 

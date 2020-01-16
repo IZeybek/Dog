@@ -1,6 +1,7 @@
 package dog.util
 
-import dog.controller.{ControllerTrait, GameState}
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.StateComponent.GameState
 
 class UndoManager {
   private var undoStack: List[Command] = Nil
@@ -20,22 +21,20 @@ class UndoManager {
   def undoStep(): Unit = {
     undoStack match {
       case Nil =>
-      case head :: stack => {
-        head.undoStep
+      case head :: stack =>
+        head.undoStep()
         undoStack = stack
         redoStack = head :: redoStack
-      }
     }
   }
 
   def redoStep(): Unit = {
     redoStack match {
       case Nil =>
-      case head :: stack => {
-        head.redoStep
+      case head :: stack =>
+        head.redoStep()
         redoStack = stack
         undoStack = head :: undoStack
-      }
     }
   }
 }

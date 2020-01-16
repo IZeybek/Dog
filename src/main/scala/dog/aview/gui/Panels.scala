@@ -1,6 +1,7 @@
 package dog.aview.gui
 
-import dog.controller.{ControllerTrait, InputCardMaster}
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.StateComponent.InputCardMaster
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player

@@ -137,6 +137,12 @@ object Player {
       this
     }
 
+    def withPieces(setPieces: Map[Int, Piece], setHomePosition: Int): PlayerBuilder = {
+      pieces = setPieces
+      pieceAmount = pieces.size
+      homePosition = setHomePosition
+      this
+    }
 
     def withPieces(setPieces: Map[Int, Piece]): PlayerBuilder = {
       pieces = setPieces

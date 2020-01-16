@@ -1,5 +1,6 @@
-package dog.controller
+package dog.controller.ControllerComponent
 
+import dog.controller.StateComponent.{GameState, GameStateMasterTrait, InputCard}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
@@ -8,12 +9,11 @@ import dog.util.UndoManager
 import scala.swing.Publisher
 
 trait ControllerTrait extends Publisher {
-  def selectedField(clickedFieldIdx: Int): Int
-
-
   val undoManager: UndoManager
   var gameState: GameState
   var gameStateMaster: GameStateMasterTrait
+
+  def selectedField(clickedFieldIdx: Int): Int
 
   def doStep(): Unit
 
@@ -76,9 +76,11 @@ trait ControllerTrait extends Publisher {
 
   def useCardLogic(inputCard: InputCard): (BoardTrait, Vector[Player], Int)
 
-  def save: Unit
+  def save(): Unit
 
-  def load: Unit
+  def load: String
 
   def check(inputCard: InputCard, typeChain: String): (Boolean, String)
+
+  def updateGame(): Unit
 }

@@ -1,6 +1,6 @@
 package dog.model.FileIOComponent
 
-import dog.controller.GameState
+import dog.controller.StateComponent.GameState
 
 trait FileIOTrait {
   def load: GameState

@@ -1,7 +1,7 @@
 //package dog.model
 //
-//import dog.controller.Component.controllerBaseImpl.Controller
-//import dog.controller.{ControllerTrait, GameState, InputCard, InputCardMaster}
+//import dog.controller.ControllerComponent.controllerBaseImpl.Controller
+//import dog.controller.{ControllerTrait, StateComponent, InputCard, InputCardMaster}
 //import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 //import dog.model.CardComponent.cardBaseImpl.Card
 //import org.scalatest.{Matchers, WordSpec}
@@ -31,7 +31,7 @@
 //      "have a check" in {
 //        event.check should be(Event.getLogic(0)._1)
 //      }
-//      "have a GameState" in {
+//      "have a StateComponent" in {
 //        event.gameState should not be null
 //      }
 //      "have an InputCard" in {
@@ -51,7 +51,7 @@
 //        .withPieces(Map(0 -> Piece(5)))
 //        .withCards(List(Card("", "", "")))
 //        .build()
-//      var gameState: GameState = controller.gameStateMaster.UpdateGame()
+//      var gameState: StateComponent = controller.gameStateMaster.UpdateGame()
 //        .withPlayers(Vector(player))
 //        .withBoard(new Board(20))
 //        .withActualPlayer(0).buildGame
@@ -70,7 +70,7 @@
 //        .withPieces(Map(0 -> Piece(0)))
 //        .withCards(List(Card("3", "move", "blue")))
 //        .build()
-//      val gameState: GameState = controller.gameStateMaster.UpdateGame()
+//      val gameState: StateComponent = controller.gameStateMaster.UpdateGame()
 //        .withPlayers(Vector(player))
 //        .withBoard(new Board(20))
 //        .withActualPlayer(0).buildGame
@@ -88,7 +88,7 @@
 //      var player: Player = Player.PlayerBuilder()
 //        .withCards(Nil)
 //        .build()
-//      var gameState: GameState = controller.gameStateMaster.UpdateGame()
+//      var gameState: StateComponent = controller.gameStateMaster.UpdateGame()
 //        .withPlayers(Vector(player))
 //        .withActualPlayer(0).buildGame
 //      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
@@ -109,7 +109,7 @@
 //      var player: Player = Player.PlayerBuilder()
 //        .withCards(List(Card("1 11 play", "move move play", "red")))
 //        .build()
-//      var gameState: GameState = controller.gameStateMaster.UpdateGame()
+//      var gameState: StateComponent = controller.gameStateMaster.UpdateGame()
 //        .withPlayers(Vector(player))
 //        .withActualPlayer(0).buildGame
 //      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
@@ -130,7 +130,7 @@
 //      val player: Player = Player.PlayerBuilder()
 //        .withPieces(Map(0 -> Piece(5)))
 //        .build()
-//      var gameState: GameState = controller.gameStateMaster.UpdateGame()
+//      var gameState: StateComponent = controller.gameStateMaster.UpdateGame()
 //        .withPlayers(Vector(player))
 //        .withBoard(new Board(20).fill(Map(5 -> Cell(Some(player)))))
 //        .withActualPlayer(0).buildGame
@@ -147,7 +147,7 @@
 //    "check if won" in {
 //      controller.gameStateMaster.UpdateGame().resetGame
 //
-//      val gameState: GameState = controller.gameStateMaster.UpdateGame().buildGame
+//      val gameState: StateComponent = controller.gameStateMaster.UpdateGame().buildGame
 //      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
 //      Event.checkWon(gameState, inputCard) should be(true)
 //    }

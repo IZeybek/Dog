@@ -2,8 +2,8 @@ package dog
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import dog.controller.Component.controllerBaseImpl.Controller
-import dog.controller.ControllerTrait
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.ControllerComponent.controllerBaseImpl.Controller
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardAdvancedImpl.Board
 import dog.model.FileIOComponent._

@@ -2,7 +2,7 @@ package dog.model.FileIOComponent.fileIOXmlImpl
 
 import java.io.{File, PrintWriter}
 
-import dog.controller.GameState
+import dog.controller.StateComponent.GameState
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
@@ -27,7 +27,7 @@ class FileIO extends FileIOTrait {
     val board: BoardTrait = xmlToBoard((elem \\ "board").head, player)
     val cardDeckPointer: Int = (elem \\ "gamestate" \ "@cardDeckPointer").text.toInt
 
-    var lastPlayedCard: CardTrait = xmlToCard((elem \\ "lastPlayed"))
+    var lastPlayedCard: CardTrait = xmlToCard(elem \\ "lastPlayed")
     //    val card = xmlToCard( elem \\ "gamestate" \ "@lastPlayed"))
     println(lastPlayedCard)
     GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board)

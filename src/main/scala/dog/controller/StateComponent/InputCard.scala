@@ -1,4 +1,4 @@
-package dog.controller
+package dog.controller.StateComponent
 
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card

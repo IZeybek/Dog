@@ -1,6 +1,6 @@
 package dog.aview
 
-import dog.controller.Component.controllerBaseImpl.Controller
+import dog.controller.ControllerComponent.controllerBaseImpl.Controller
 import dog.model.BoardComponent.boardBaseImpl.Board
 import org.scalatest._
 

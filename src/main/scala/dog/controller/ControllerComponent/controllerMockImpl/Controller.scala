@@ -1,6 +1,7 @@
-package dog.controller.Component.controllerMockImpl
+package dog.controller.ControllerComponent.controllerMockImpl
 
-import dog.controller._
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.StateComponent.{GameState, GameStateMaster, GameStateMasterTrait, InputCard}
 import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
@@ -84,9 +85,11 @@ class Controller extends ControllerTrait {
 
   override def selectedField(clickedFieldIdx: Int): Int = 0
 
-  override def save: Unit = {}
+  override def save(): Unit = {}
 
-  override def load: Unit = {}
+  override def load: String = "Loading successful"
 
   override def check(inputCard: InputCard, typeChain: String): (Boolean, String) = (true, "")
+
+  override def updateGame(): Unit = {}
 }

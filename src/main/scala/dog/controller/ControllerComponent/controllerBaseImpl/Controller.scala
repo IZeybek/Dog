@@ -1,8 +1,10 @@
-package dog.controller.Component.controllerBaseImpl
+package dog.controller.ControllerComponent.controllerBaseImpl
 
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.StateComponent._
 import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
@@ -13,6 +15,8 @@ import dog.model.FileIOComponent.FileIOTrait
 import dog.model.Player
 import dog.util.{SelectedState, SolveCommand, UndoManager}
 import net.codingwell.scalaguice.InjectorExtensions._
+
+import scala.util.{Failure, Success, Try}
 
 class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
@@ -55,7 +59,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * save the game to a JSON or XML file
    * specified thru dependency injection
    */
-  override def save: Unit = {
+  override def save(): Unit = {
     fileIo.save(gameState)
     publish(new BoardChanged)
   }
@@ -63,10 +67,17 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   /**
    * load the game from a file
    */
-  override def load: Unit = {
-    gameState = fileIo.load
+  override def load: String = {
+    var returnString: String = "loading successful"
+    val gameState: GameState = Try(fileIo.load) match {
+      case Success(value) => value
+      case Failure(_) =>
+        returnString = "loading failed due to missing save file"
+        this.gameState
+    }
     gameStateMaster.UpdateGame().loadGame(gameState)
     publish(new BoardChanged)
+    returnString
   }
 
   /**
@@ -113,38 +124,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     (bool, if (!bool) handleFail(str) else "")
   }
 
-  /**
-   * handles the fail
-   *
-   * @param msg is used to determine which error has to be handled
-   * @return a message
-   */
-  private def handleFail(msg: String): String = {
-    msg match {
-      case "handcard" =>
-        gameState = gameStateMaster.UpdateGame()
-          .withNextPlayer().buildGame
-        publish(new BoardChanged)
-        s"${gameState.actualPlayer.toStringColor} has no hand cards"
-      case "pieceonboard" =>
-        givePlayerCards(gameState.players._2, Nil)
-        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
-        SelectedState.reset
-        JokerState.reset
-        publish(new BoardChanged)
-        s"${gameState.actualPlayer.toStringColor} has neither pieces on board nor a card to play"
-      case "won" =>
-        s"${gameState.actualPlayer.toStringColor} won"
-      case "selected" =>
-        s"${gameState.actualPlayer.toStringColor} has to select a piece"
-      case "noplayercards" =>
-        gameState = gameStateMaster.UpdateGame().withNextRound().buildGame
-        val amountCards: Int = gameStateMaster.roundAndCardsToDistribute._2
-        gameState.players._1.indices.foreach(x => givePlayerCards(x, Card.RandomCardsBuilder().withAmount(amountCards).buildRandomCardList))
-        "No player has cards. Cards are distributed again to all players"
-      case _ => "unknown bug"
-    }
-  }
+  override def updateGame(): Unit = gameState = gameStateMaster.UpdateGame().buildGame
 
   /**
    * uses the card and extracts its logic
@@ -298,4 +278,37 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
+
+  /**
+   * handles the fail
+   *
+   * @param msg is used to determine which error has to be handled
+   * @return a message
+   */
+  private def handleFail(msg: String): String = {
+    SelectedState.reset
+    msg match {
+      case "handcard" =>
+        gameState = gameStateMaster.UpdateGame()
+          .withNextPlayer().buildGame
+        publish(new BoardChanged)
+        s"${gameState.actualPlayer.toStringColor} has no hand cards"
+      case "pieceonboard" =>
+        givePlayerCards(gameState.players._2, Nil)
+        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        JokerState.reset
+        publish(new BoardChanged)
+        s"${gameState.actualPlayer.toStringColor} has neither pieces on board nor a card to play"
+      case "won" =>
+        s"${gameState.actualPlayer.toStringColor} won"
+      case "selected" =>
+        s"${gameState.actualPlayer.toStringColor} has to select a piece"
+      case "noplayercards" =>
+        gameState = gameStateMaster.UpdateGame().withNextRound().buildGame
+        val amountCards: Int = gameStateMaster.roundAndCardsToDistribute._2
+        gameState.players._1.indices.foreach(x => givePlayerCards(x, Card.RandomCardsBuilder().withAmount(amountCards).buildRandomCardList))
+        "No player has cards. Cards are distributed again to all players"
+      case _ => "unknown bug"
+    }
+  }
 }

@@ -1,7 +1,8 @@
 package dog.model.CardComponent.Card
 
-import dog.controller.Component.controllerBaseImpl.Controller
-import dog.controller.{ControllerTrait, InputCardMaster}
+import dog.controller.ControllerComponent.ControllerTrait
+import dog.controller.ControllerComponent.controllerBaseImpl.Controller
+import dog.controller.StateComponent.InputCardMaster
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl._
