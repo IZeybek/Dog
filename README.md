@@ -3,11 +3,13 @@
 
 
 # Dog
+## Beschreibung
 
 Der Name vom Spiel sagt Ihnen nichts? Das ist überhaupt nicht schlimm, uns nämlich auch nicht. Aber wir lieben Hunde.
 Was sich hinter diesem Spiel verbirgt? ~~Mensch~~ Ärgern Sie sich nicht, wir sagen es Ihnen gleich, aber davor ersteinmal das Spielprinzip.
 
-# Ziel
+## Ziel
+
 Seine vier Spielsteine sicher in sein Häuschen bringen.
 Bewegung kommt durch Karten in Spiel, die Ihnen so manche Überraschung bereiten könnten. 
 Partnerschaftlich unterstützt man dabei seinen Teamkollegen. 
@@ -19,13 +21,13 @@ So wird das Spiel nicht aussehen. Aber ähnlich.. zumindest peilen wir das so an
 
 Falls Sie nach dem richtigen Spiel suchen sollten und sich auf github verirrt haben, [hier](https://www.amazon.de/Schmidt-Spiele-49201-Dog/dp/B01INZMDM6 "Hier dürfen Sie klicken") der Link
 
-# Entwicklung
+## Entwicklung
 
 Hinter diesem Projekt stecken zwei Studenten der [HTWG Konstanz](https://www.htwg-konstanz.de/ "Keine Angst, die Seite beißt nicht")
 Der eine heißt Ismail Zeybek und der andere nennt sich Josef Müller. Beide mit verrückten Ideen im Kopf, aber immer demselben Ziel: Das ultimative Scala Projekt. Ach ja, unser Spiel ist in Scala programmiert. Falls Sie gerade eben das erste Mal von dieser Programmiersprache gehört haben, schauen Sie Mal [hier](https://www.scala-lang.org/ "Ist klickbar, vertrauen Sie uns") vorbei.
 
-# FAQ
+## Tools & Sprachen
 
-Da bis jetzt noch nicht viel entwickelt wurde, behalten wir uns vor hier noch nichts zu schreiben
-
-Schauen Sie gerne öfter Mal vorbei. Wir freuen uns auf Sie.
+* [ ] Java
+* [X] Scala
+* [X] IntelliJ
