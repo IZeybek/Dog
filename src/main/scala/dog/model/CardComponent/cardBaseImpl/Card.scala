@@ -294,7 +294,6 @@ case class SpecialCardsDeck() extends CardDeckTrait {
   override def generateDeck: List[CardTrait] = {
     List(Card("1 11 play", "move move play", "red"),
       Card("4", "backward forward", "red"),
-      Card("7", "burn", "red"),
       Card("swapCard", "swap", "red"),
       Card("questionmark", "joker", "red"),
       Card("13 play", "move play", "red"))
@@ -311,6 +310,7 @@ case class NormalCardsDeck() extends CardDeckTrait {
       Card("3", "move", "blue"),
       Card("5", "move", "blue"),
       Card("6", "move", "blue"),
+      Card("7", "move", "blue"),
       Card("8", "move", "blue"),
       Card("9", "move", "blue"),
       Card("10", "move", "blue"),
