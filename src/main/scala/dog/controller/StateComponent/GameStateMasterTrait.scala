@@ -88,11 +88,12 @@ trait GameStateMasterTrait {
       playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")
       colors = Array("yellow", "white", "green", "red")
       pieceAmount = 4
-      playerVector = playerNames.indices.map(i => Player.PlayerBuilder().
-        withColor(colors(i)).
-        withName((playerNames(i), i)).
-        withPiece(pieceAmount, (boardSize / playerNames.length) * i).
-        withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
+      playerVector = playerNames.indices.map(i => Player.PlayerBuilder()
+        .withColor(colors(i))
+        .withName((playerNames(i), i))
+        .withPiece(pieceAmount, (boardSize / playerNames.length) * i)
+        .withGarage(i)
+        .withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
       actualPlayerIdx = 0
 
       // Card

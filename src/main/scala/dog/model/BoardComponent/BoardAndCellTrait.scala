@@ -6,7 +6,7 @@ trait BoardTrait {
 
   def createNewBoard: BoardTrait
 
-  def toString: String
+  //  def toString: String
 
   def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean
 

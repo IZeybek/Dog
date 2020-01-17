@@ -26,7 +26,7 @@ class GameStateMaster extends GameStateMasterTrait {
 
   //board
   override var pieceAmount = 4
-  override var boardSize: Int = 28 // hast to be dividable by 4
+  override var boardSize: Int = 96 // hast to be dividable by 4
   override var board: BoardTrait = new Board(boardSize)
 
   //player
@@ -37,6 +37,7 @@ class GameStateMaster extends GameStateMasterTrait {
     .withColor(colors(i))
     .withName((playerNames(i), i))
     .withPiece(pieceAmount, (boardSize / playerNames.length) * i)
+    .withGarage(i)
     .withGeneratedCards(roundAndCardsToDistribute._2).build()).toVector
   override var actualPlayerIdx: Int = 0
 

@@ -198,14 +198,26 @@ object BoardPanel {
 
       val board: BoardTrait = controller.gameState.board
       val amount: Int = board.size
-
-      val fieldIconSeq: Seq[Button] = generateFieldIconSeq(amount, board, controller)
-      var idx = 0
       val playerSize: Int = controller.gameState.players._1.size
-      var garageFieldIconSeq: Seq[Seq[Button]] = Seq.empty
-      (0 until playerSize)
-        .foreach(x => garageFieldIconSeq = garageFieldIconSeq :+ generateFieldIconSeq(controller.gameState.players._1(x).garage.size, controller.gameState.players._1(x).garage, controller)
-        )
+      val playerVector: Vector[Player] = controller.gameState.players._1
+
+      var idx: Int = 0
+      val fieldIconSeq: Seq[Button] = for {
+        i <- 0 until amount
+      } yield genFieldButton(i, board, controller, (if (playerVector(idx).homePosition == i) {
+        val color = playerVector(idx).color
+        if (idx < playerSize - 1) idx = idx + 1
+        color
+      } else ""))
+
+
+      var garageFieldIconSeq: Seq[Seq[Button]] = for {
+        i <- 0 until playerSize
+      } yield
+        for {
+          idx <- 0 until controller.gameState.actualPlayer.garage.size
+        } yield genFieldButton(idx, playerVector(i).garage, controller, playerVector(i).color)
+
 
       val stackPane: StackPane = new StackPane
 
@@ -219,9 +231,9 @@ object BoardPanel {
     }
   }
 
-  def generateFieldIconSeq(amount: Int, board: BoardTrait, controller: ControllerTrait): Seq[Button] = {
-    var idx = 0
-    Seq.fill(amount)(new Button("", new ImageView(
+  def genFieldButton(idx: Int, board: BoardTrait, controller: ControllerTrait, garageColor: String): Button = {
+
+    new Button("", new ImageView(
       stdPath +
         (if (board.cell(idx).isFilled)
           board.cell(idx).getColor
@@ -229,7 +241,9 @@ object BoardPanel {
       fitWidth = 35
       fitHeight = 35
     }) {
-      id = idx.toString
+      id = if (!garageColor.equals("") && board.size == controller.gameState.actualPlayer.garage.size)
+        (garageColor.charAt(0).toInt).toString + " " + garageColor else idx.toString
+      println(getId)
       //Padding of FieldButtons
       val stdStyle: String = "-fx-background-color: transparent;" +
         "-fx-min-width: 30px; " +
@@ -249,9 +263,7 @@ object BoardPanel {
       val yellow: String = "-fx-border-color:#ffff00;"
       val green: String = "-fx-border-color:#00FF00;"
       var borderColor = ""
-      var homeColor = ""
-
-      controller.gameState.players._1.foreach(i => if (board.size == i.garage.size || i.homePosition == idx) homeColor = i.color)
+      var homeColor: String = garageColor
 
       borderColor = homeColor match {
         case "green" => green
@@ -262,18 +274,18 @@ object BoardPanel {
       }
 
       this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (
-        if (SelectedState.ownFieldClicked == idx || SelectedState.otherFieldClicked == idx)
+        if (board.size != controller.gameState.actualPlayer.garage.size && (SelectedState.ownFieldClicked == idx || SelectedState.otherFieldClicked == idx))
           whiteStyle
         else
           stdStyle + borderColor))
 
-      idx = idx + 1
       //field OnClickListener
       onAction = _ => {
         println("pressed field = " + this.getId)
-        controller.selectedField(this.getId.toInt)
+        //        val s = this.getId.split("\\s+")
+        if (this.getId.toString.split("\\s+").length < 2) controller.selectedField(this.getId.toInt)
       }
-    })
+    }
   }
 
   def newBoardGrid(amount: Int, c: ControllerTrait, fieldIconSeq: Seq[Button], garageFieldIconSeq: Seq[Seq[Button]]): GridPane = {
@@ -285,23 +297,39 @@ object BoardPanel {
       val leftAndRightEdge: Int = amount / 8
       val topAndBottomEdge: Int = (amount / 4) + leftAndRightEdge
       val garageSize: Int = c.gameState.actualPlayer.garage.size
-      val homePos: List[Int] = List.empty
-      c.gameState.players._1.foreach(x => homePos :+ x.homePosition)
+      var homePos: List[Int] = List.empty
+      c.gameState.players._1.foreach(x => homePos = homePos :+ x.homePosition)
       var fieldIdx = 0
 
-      for (i <- 0 until topAndBottomEdge) {
-        if (fieldIdx < garageSize) {
-          add(garageFieldIconSeq.head(fieldIdx), i + 2, 0)
-        }
-        add(fieldIconSeq(fieldIdx), i + 2, 1); fieldIdx = fieldIdx + 1
+      var hIdx = 0;
+      for {
+        fieldIdx <- 0 until topAndBottomEdge
+      } {
+        val diff = fieldIdx - homePos(hIdx)
+        if (diff >= 0 && diff < garageSize) add(garageFieldIconSeq(hIdx)(diff), fieldIdx + 1, 0)
+        else if (diff > garageSize) hIdx = hIdx + 1
+      }
 
+      for {
+        fieldIdx <- (topAndBottomEdge + leftAndRightEdge) until (2 * topAndBottomEdge + leftAndRightEdge)
+
+      } {
+        val diff = fieldIdx - homePos(hIdx)
+        val guiPos = topAndBottomEdge - (fieldIdx - leftAndRightEdge - topAndBottomEdge)
+        if (diff >= 0 && diff < garageSize) add(garageFieldIconSeq(hIdx)(diff), guiPos, leftAndRightEdge + 3)
+        else if (diff > garageSize && hIdx < homePos.size - 1) hIdx = hIdx + 1
+      }
+
+      for (i <- 0 until topAndBottomEdge) {
+        add(fieldIconSeq(fieldIdx), i + 1, 1); fieldIdx = fieldIdx + 1
       }
       for (i <- 0 until leftAndRightEdge) {
-        if (fieldIdx < garageSize) add(garageFieldIconSeq.head(fieldIdx), i + 2, 0)
-        add(fieldIconSeq(fieldIdx), topAndBottomEdge + 2, i + 2); fieldIdx = fieldIdx + 1
+
+        add(fieldIconSeq(fieldIdx), topAndBottomEdge + 1, i + 2); fieldIdx = fieldIdx + 1
       }
       for (i <- topAndBottomEdge until 0 by -1) {
-        add(fieldIconSeq(fieldIdx), i + 1, leftAndRightEdge + 2); fieldIdx = fieldIdx + 1
+
+        add(fieldIconSeq(fieldIdx), i, leftAndRightEdge + 2); fieldIdx = fieldIdx + 1
       }
       for (i <- leftAndRightEdge until 0 by -1) {
         add(fieldIconSeq(fieldIdx), 0, i + 1); fieldIdx = fieldIdx + 1

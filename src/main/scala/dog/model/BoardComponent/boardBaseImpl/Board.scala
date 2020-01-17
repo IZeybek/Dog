@@ -9,6 +9,10 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
   //can create a Board with a given size
   def this(size: Int) = this((0 until size).map(i => (i, Cell(None))).toMap)
 
+  def this(id: Int, size: Int) = {
+    this((0 until size).map(i => (i, Cell(None))).toMap)
+  }
+
   override def size: Int = boardMap.size
 
   override def cell(idx: Int): CellTrait = boardMap(idx)

@@ -217,6 +217,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       .withColor(gameStateMaster.colors(i))
       .withName((playerNames(i), i))
       .withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i)
+      .withGarage(i)
       .build()).toVector
     gameState = gameStateMaster.UpdateGame()
       .withPlayers(players)

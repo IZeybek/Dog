@@ -1,7 +1,7 @@
 package dog.model
 
 import dog.model.BoardComponent.BoardTrait
-import dog.model.BoardComponent.boardAdvancedImpl.Board
+import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 
@@ -15,7 +15,6 @@ case class Player(nameAndIdx: (String, Int),
                   homePosition: Int) {
 
   def nextPiece(): Int = {
-
     Try(inHouse.head) match {
       case Success(iH) => iH
       case _ => -1
@@ -55,7 +54,10 @@ case class Player(nameAndIdx: (String, Int),
     })
   }
 
-  def setNewGaragePosition(pieceIdx: Int, newPos: Int): Player = copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)), garage = garage.fill(garage.cell(newPos).addPlayerToCell(this), newPos))
+  def setNewGaragePosition(pieceIdx: Int, newPos: Int): Player = {
+    copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)),
+      garage = garage.fill(garage.cell(newPos).addPlayerToCell(this), newPos))
+  }
 
 
   def swapPiece(pieceIdx: Int, newPos: Int): Player = {
@@ -122,26 +124,39 @@ object Player {
   var homePosition = 0
   var pieces: Map[Int, Piece] = (0 until pieceAmount).map(i => (i, Piece(homePosition))).toMap
   var inHouse: List[Int] = List(0, 1, 2, 3)
-  var garage: BoardTrait = new Board(inHouse.size)
+  var garage: BoardTrait = new Board(5, 0)
 
   def reset(): Unit = {
     pieceAmount = 4
     color = "blue"
     name = ("Bob", 0)
     cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
+    garage = new Board(5, 0)
     pieces = (0 until pieceAmount).map(i => (i, Piece(homePosition))).toMap
   }
 
   case class PlayerBuilder() {
+
+
+    def withColor(c: String): PlayerBuilder = {
+      color = c
+      this
+    }
+
+    def withName(n: (String, Int)): PlayerBuilder = {
+      name = n
+      this
+    }
 
     def withPiece(piecesAmount: Int, homePos: Int): PlayerBuilder = {
       pieceAmount = piecesAmount
       homePosition = homePos
       pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
       inHouse = (0 until piecesAmount).toList
-      garage = new Board(inHouse.size)
+
       this
     }
+
 
     def withPieces(setPieces: Map[Int, Piece], setHomePosition: Int): PlayerBuilder = {
       pieces = setPieces
@@ -155,17 +170,6 @@ object Player {
       pieceAmount = pieces.size
       this
     }
-
-    def withColor(c: String): PlayerBuilder = {
-      color = c
-      this
-    }
-
-    def withName(n: (String, Int)): PlayerBuilder = {
-      name = n
-      this
-    }
-
     def withCards(cards: List[CardTrait]): PlayerBuilder = {
       cardsDeck = cards
       this
@@ -177,8 +181,8 @@ object Player {
     }
 
     // can be used for testing or a player with explicit garage
-    def withGarage(board: BoardTrait): PlayerBuilder = {
-      garage = board
+    def withGarage(id: Int): PlayerBuilder = {
+      garage = new Board(id, inHouse.size)
       this
     }
 
