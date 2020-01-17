@@ -1,4 +1,4 @@
-package dog.model.BoardComponent.boardMockImpl
+package dog.model.BoardComponent.boardStubImpl
 
 import dog.model.BoardComponent.boardBaseImpl.Cell
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
@@ -16,9 +16,9 @@ class Board(var size: Int) extends BoardTrait {
 
   override def getPieceIndex(idx: Int): Int = 0
 
-  override def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean = true
-
   override def updateMovePlayer(player: Player, oldPos: Int, newPos: Int): BoardTrait = this
 
   override def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait = this
+
+  override def checkOverrideOtherPlayer(newPos: Integer): Boolean = true
 }

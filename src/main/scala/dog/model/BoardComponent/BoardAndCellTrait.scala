@@ -8,8 +8,6 @@ trait BoardTrait {
 
   //  def toString: String
 
-  def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean
-
   def cell(idx: Int): CellTrait
 
   def size: Int
@@ -23,6 +21,8 @@ trait BoardTrait {
   def updateMovePlayer(player: Player, oldPos: Int, newPos: Int): BoardTrait
 
   def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait
+
+  def checkOverrideOtherPlayer(newPos: Integer): Boolean
 }
 
 trait CellTrait {
@@ -40,4 +40,6 @@ trait CellTrait {
   def isFilled: Boolean
 
   def checkIfPlayer(player: Player): Boolean
+
+  def getPlayerIdx: Int
 }

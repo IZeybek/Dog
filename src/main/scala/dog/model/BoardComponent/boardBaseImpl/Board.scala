@@ -38,14 +38,14 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   override def updateMovePlayer(player: Player, oldPos: Int, newPos: Int): BoardTrait = {
     //set old Cell unoccupied
-    var nBoard: Map[Int, CellTrait] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell())
-    //set new Pos as occupied
-    nBoard = nBoard.updated(newPos, boardMap(newPos).addPlayerToCell(p = player))
-    copy(boardMap = nBoard)
+
+    //    var nBoard: Map[Int, CellTrait] = boardMap.updated(oldPos, boardMap(oldPos).removePlayerFromCell())
+    val updatedBoard: BoardTrait = fill(cell(oldPos).removePlayerFromCell(), oldPos)
+    //set new position as occupied
+    updatedBoard.fill(updatedBoard.cell(newPos).addPlayerToCell(player), newPos)
   }
 
   override def updateSwapPlayers(actPlayer: Player, swapPlayer: Player, selPieceList: List[Int]): BoardTrait = {
-
     val selPiece = selPieceList.head
     val selOtherPiece = selPieceList(1)
     var nBoard: BoardTrait = fill(cell(actPlayer.piecePosition(selPiece)).addPlayerToCell(actPlayer), actPlayer.piecePosition(selPiece))
@@ -55,7 +55,7 @@ case class Board(boardMap: Map[Int, CellTrait]) extends BoardTrait {
 
   override def createNewBoard: BoardTrait = (new BoardCreateStrategyNormal).createNewBoard(boardMap.size)
 
-  override def checkOverrideOtherPlayer(player: Player, newPos: Integer): Boolean = boardMap(newPos).isFilled
+  override def checkOverrideOtherPlayer(newPos: Integer): Boolean = boardMap(newPos).isFilled
 
   override def fill(cell: CellTrait, pos: Int): BoardTrait = copy(boardMap = boardMap.updated(pos, cell))
 

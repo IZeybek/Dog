@@ -22,7 +22,6 @@ case class Player(nameAndIdx: (String, Int),
   }
 
   val consoleColor: String = {
-
     color match {
       case "green" => Console.GREEN
       case "white" => Console.WHITE
@@ -33,8 +32,7 @@ case class Player(nameAndIdx: (String, Int),
   }
 
   def getPieceNum(position: Int): Int = {
-    piece.foreach(x => if (x._2.pos == position)
-      return x._1)
+    piece.foreach(x => if (x._2.pos == position) return x._1)
     -1
   }
 
@@ -47,7 +45,7 @@ case class Player(nameAndIdx: (String, Int),
   def setPosition(pieceIdx: Int, newPos: Int): Player = {
     val oldPos: Int = piece(pieceIdx).pos
     copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)), inHouse = {
-      if (oldPos == homePosition && newPos - oldPos >= 0)
+      if (oldPos == homePosition && newPos == homePosition)
         inHouse.filter(_ != pieceIdx)
       else
         inHouse

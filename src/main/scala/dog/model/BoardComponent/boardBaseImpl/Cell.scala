@@ -18,8 +18,15 @@ case class Cell(p: Option[Player]) extends CellTrait {
 
   override def checkIfPlayer(player: Player): Boolean = {
     p match {
-      case Some(playerOnCell) => playerOnCell.color == player.color
+      case Some(playerOnCell) => playerOnCell.nameAndIdx == player.nameAndIdx
       case None => false
+    }
+  }
+
+  override def getPlayerIdx: Int = {
+    this.p match {
+      case Some(p) => p.nameAndIdx._2
+      case None => -1
     }
   }
 

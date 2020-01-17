@@ -45,14 +45,16 @@ object CardLogic {
     var isValid: Int = 0
     //move piece of specific player by returning a copy of the piece to the copy constructor player and returning a copy of the player
     var players: Vector[Player] = gameState.players._1
-    val actPlayerIdx: Int = inputC.actualPlayerIdx
-    val actPlayer: Player = players(actPlayerIdx)
+    val actPlayerIdx: Int = gameState.actualPlayer.nameAndIdx._2
+    val actPlayer: Player = gameState.actualPlayer
     val board: BoardTrait = gameState.board
-    val selPiece = inputC.selPieceList.head
+    val selPiece: Int = inputC.selPieceList.head
 
     val oldPos: Int = actPlayer.piecePosition(selPiece)
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
+    //overriding player
+    if (board.checkOverrideOtherPlayer(newPos)) {
     val garageDiff = newPos - actPlayer.homePosition
     if (garageDiff < actPlayer.garage.size && garageDiff > 0) {
 
@@ -63,17 +65,16 @@ object CardLogic {
 
       (newGameBoard, players, isValid)
 
-    } else if (board.checkOverrideOtherPlayer(actPlayer, newPos)) { //overriding player
+    } else  if (board.checkOverrideOtherPlayer(newPos)) { //overriding player
       //get indexes and pieces
-      val oPlayerIdx: Int = board.cell(newPos).p.get.nameAndIdx._2
-
-      val oPlayerPieceNum: Int = players(oPlayerIdx).getPieceNum(newPos) //get piece of other Player
+      val overriddenPlayerIdx: Int = board.cell(newPos).getPlayerIdx
+      val overriddenPlayerPieceNum: Int = players(overriddenPlayerIdx).getPieceNum(newPos) //get piece of other Player
 
       //check whether move valid or not
-      if (oPlayerPieceNum == -1) isValid = -1
+      if (overriddenPlayerPieceNum == -1) isValid = -1
 
       //update Vector when overridden
-      players = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
+      players = players.updated(overriddenPlayerIdx, gameState.players._1(overriddenPlayerIdx).overridePlayer(overriddenPlayerPieceNum))
       players = players.updated(actPlayerIdx, actPlayer.setPosition(selPiece, newPos))
       (board.updateMovePlayer(players(actPlayerIdx), oldPos, newPos), players, isValid)
 
@@ -91,17 +92,15 @@ object CardLogic {
     val actPlayer: Player = gameState.actualPlayer
     val swapPlayer: Player = gameState.players._1(inputCard.otherPlayer)
     val selPiece = inputCard.selPieceList.head
-    val swapPos: (Int, Int) = (actPlayer.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
+    val (actPlayerPos, swapPlayerPos): (Int, Int) = (actPlayer.piece(selPiece).pos, swapPlayer.piece(inputCard.selPieceList(1)).pos)
 
-    if (swapPos._2 == swapPlayer.homePosition) {
+    if (swapPlayerPos == swapPlayer.homePosition) {
       //Second Player is not on the field
       (gameState.board, gameState.players._1, -1)
     } else {
-
-      var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayerIdx, actPlayer.swapPiece(selPiece, swapPos._2)) //swap with second player
-      players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), swapPos._1)) //swap with first player
+      var players: Vector[Player] = gameState.players._1.updated(inputCard.actualPlayerIdx, actPlayer.swapPiece(selPiece, swapPlayerPos)) //swap with second player
+      players = players.updated(inputCard.otherPlayer, swapPlayer.swapPiece(inputCard.selPieceList(1), actPlayerPos)) //swap with first player
       val nBoard: BoardTrait = gameState.board.updateSwapPlayers(players(actPlayer.nameAndIdx._2), players(swapPlayer.nameAndIdx._2), inputCard.selPieceList)
-
       (nBoard, players, 0)
     }
   }
@@ -118,43 +117,40 @@ object CardLogic {
   }
 
   val nothing: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
-
     move(gameState, InputCardMaster.UpdateCardInput().buildCardInput())
   }
 
   val play: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
-    val cardOption = inputCard.selectedCard.symbol.split("\\s+")
+    val cardOption: Array[String] = inputCard.selectedCard.symbol.split("\\s+")
     cardOption(inputCard.cardIdxAndOption._2) match {
       case "1" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(1).buildCardInput())
       case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
       case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
       case "play" =>
         val nextPiecePlay = gameState.players._1(inputCard.actualPlayerIdx).nextPiece()
-        if (nextPiecePlay >= 0) move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
-        else (gameState.board, gameState.players._1, -1)
-
+        if (nextPiecePlay >= 0)
+          move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
+        else
+          (gameState.board, gameState.players._1, -1)
       case _ => (gameState.board, gameState.players._1, -1)
     }
   }
 
   val joker: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {
-    println("joker")
-    val playerVektor = gameState.players._1
-    val actPlayer = playerVektor(inputCard.actualPlayerIdx)
+    val playerVector: Vector[Player] = gameState.players._1
+    var actPlayer: Player = gameState.actualPlayer
 
     if (JokerState.state.equals(JokerState.unpacked)) {
-      println("unpacked -> ")
       JokerState.handle
-      val updatedGameState = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
-      val players = updatedGameState._2.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
-      //TODO:
+      val (updatedBoard, updatedPlayers, returnValue): (BoardTrait, Vector[Player], Int) = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
+      actPlayer = updatedPlayers(gameState.players._2)
+      val players: Vector[Player] = updatedPlayers.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
       InputCardMaster.UpdateCardInput().withCardNum(JokerState.cachedCardList._2, 0).buildCardInput()
-
-      (updatedGameState._1, players, 0)
+      (updatedBoard, players, returnValue)
     } else {
       JokerState.handle
       JokerState.cachedCardList = (gameState.players._1(inputCard.actualPlayerIdx).cardList, inputCard.cardIdxAndOption._1)
-      val players = playerVektor.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList diff List(Card("questionmark", "joker", "red"))))
+      val players = playerVector.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = CardDeck.CardDeckBuilder().withAmount(List(1, 1)).buildCardList diff List(Card("questionmark", "joker", "red"))))
       (gameState.board, players, 1)
     }
   }
@@ -170,9 +166,7 @@ object CardLogic {
         case "joker" => joker
         case _ => nothing
       }
-    } else {
-      joker
-    }
+    } else joker
   }
 
 
@@ -218,7 +212,7 @@ object CardLogic {
 
 object Card {
 
-  var amount = 6
+  var amount: Int = 6
   var shuffledCards: List[CardTrait] = Random.shuffle(CardDeck.CardDeckBuilder().withAmount(List(amount * 2, amount * 2)).buildCardList)
 
   case class RandomCardsBuilder() {

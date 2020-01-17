@@ -105,7 +105,7 @@ trait GameStateMasterTrait {
       GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), None, board)
     }
 
-    def loadGame(gameState: GameState): Unit = {
+    def loadGame(gameState: GameState): UpdateGame = {
       JokerState.reset
       cardDeck = gameState.cardDeck._1
       cardPointer = gameState.cardDeck._2
@@ -113,6 +113,7 @@ trait GameStateMasterTrait {
       playerVector = gameState.players._1
       actualPlayerIdx = gameState.players._2
       lastPlayedCardOpt = gameState.lastPlayedCardOpt
+      this
     }
 
     def buildGame: GameState = {

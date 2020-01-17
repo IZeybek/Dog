@@ -29,10 +29,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def selectedField(clickedFieldIdx: Int): Int = {
     val clickedCell: CellTrait = gameState.board.cell(clickedFieldIdx)
 
-    if (!clickedCell.isFilled) {
+    if (!clickedCell.isFilled)
       SelectedState.reset
-
-    } else {
+    else {
       val isOwnField = clickedCell.p.get.nameAndIdx._2 == gameStateMaster.actualPlayerIdx
       val isOtherField = if (SelectedState.state.equals(SelectedState.ownPieceSelected) && !isOwnField) true else false
       if (SelectedState.state.equals(SelectedState.nothingSelected) && isOwnField) SelectedState.handle(gameState, clickedFieldIdx)
@@ -69,13 +68,13 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   override def load: String = {
     var returnString: String = "loading successful"
-    val gameState: GameState = Try(fileIo.load) match {
+    val updatedGameState: GameState = Try(fileIo.load) match {
       case Success(value) => value
       case Failure(_) =>
         returnString = "loading failed due to missing save file"
         this.gameState
     }
-    gameStateMaster.UpdateGame().loadGame(gameState)
+    gameState = gameStateMaster.UpdateGame().loadGame(updatedGameState).buildGame
     publish(new BoardChanged)
     returnString
   }
@@ -102,6 +101,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           returnString = s"Player ${gameState.actualPlayer.toStringColor}${Console.RESET}'s turn\n"
         case 1 =>
           gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).buildGame
+        case _ =>
       }
     } else {
       returnString = checkStr
@@ -124,7 +124,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     (bool, if (!bool) handleFail(str) else "")
   }
 
-  override def updateGame(): Unit = gameState = gameStateMaster.UpdateGame().buildGame
+  override def updateGame(): Unit = gameState = {
+    gameState = gameStateMaster.UpdateGame().buildGame
+    board = gameState.board
+    gameState
+  }
 
   /**
    * uses the card and extracts its logic
@@ -254,10 +258,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     newPlayer(playerNum)
   }
 
-  override def toStringActivePlayerHand: String = {
-    val player: Player = gameState.players._1(gameState.players._2)
-    s"${gameState.actualPlayer.toStringColor}'s hand cards: " + player.cardList + "\n"
-  }
+  override def toStringActivePlayerHand: String = s"${gameState.actualPlayer.toStringColor}'s hand cards: " + gameState.actualPlayer.cardList + "\n"
 
   override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
@@ -296,9 +297,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     SelectedState.reset
     msg match {
       case "handcard" =>
-        gameState = gameStateMaster.UpdateGame()
-          .withNextPlayer().buildGame
-        publish(new BoardChanged)
+        do {
+          gameState = gameStateMaster.UpdateGame()
+            .withNextPlayer().buildGame
+          publish(new BoardChanged)
+        } while (gameState.actualPlayer.cardList.isEmpty)
         s"${gameState.actualPlayer.toStringColor} has no hand cards"
       case "pieceonboard" =>
         givePlayerCards(gameState.players._2, Nil)
