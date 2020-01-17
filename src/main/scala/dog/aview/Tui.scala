@@ -9,16 +9,17 @@ import scala.swing.Reactor
 
 class Tui(controller: ControllerTrait) extends Reactor {
 
+  var result = ""
   listenTo(controller)
 
   reactions += {
     case event: BoardChanged =>
       println(controller.toStringBoard)
       println(controller.toStringActivePlayerHand)
+      println(result)
   }
 
   def processInput(input: String): String = {
-    var result: String = ""
     input.split("\\s+").toList match {
 
       case "n" :: "player" :: player =>
@@ -113,7 +114,6 @@ class Tui(controller: ControllerTrait) extends Reactor {
 
           case _ => result = ""
         }
-
     }
     result
   }

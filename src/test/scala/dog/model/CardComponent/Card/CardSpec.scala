@@ -2,10 +2,12 @@ package dog.model.CardComponent.Card
 
 import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.ControllerComponent.controllerBaseImpl.Controller
-import dog.controller.StateComponent.InputCardMaster
+import dog.controller.StateComponent.{GameState, InputCard, InputCardMaster}
+import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl._
+import dog.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {
@@ -32,22 +34,30 @@ class CardLogicSpec extends WordSpec with Matchers {
   "A CardLogic" when {
     "created" should {
       val controller: ControllerTrait = new Controller(new Board(50))
-      val cardLogic = CardLogic
-      val mode = cardLogic.getLogic("move")
+      val cardLogic: CardLogic.type = CardLogic
+      val mode: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = cardLogic.getLogic("move")
       "have a mode" in {
         mode should be(cardLogic.move)
       }
       "have a getLogic" in {
-        cardLogic.getLogic("move") should be(cardLogic.move)
+        mode should be(cardLogic.move)
       }
       "have a Strategy" in {
-        val inputCard = InputCardMaster.UpdateCardInput()
+        val inputCard@dog.controller.StateComponent.InputCard(actualPlayerIdx, otherPlayer, selPieceList, cardIdxAndOption, selectedCard, moveBy) = InputCardMaster.UpdateCardInput()
           .withActualPlayer(2)
           .withOtherPlayer(0)
           .withPieceNum(List(2))
           .withCardNum((0, 0))
           .withSelectedCard(Card("5", "move", "blue"))
           .buildCardInput()
+
+        actualPlayerIdx should be(2)
+        otherPlayer should be(0)
+        selPieceList should be(List(2))
+        cardIdxAndOption should be((0, 0))
+        selectedCard should be(Card("5", "move", "blue"))
+        moveBy should be(5)
+
         cardLogic.setStrategy(mode, controller.gameState, inputCard) should not be null
       }
       "have a move" in {

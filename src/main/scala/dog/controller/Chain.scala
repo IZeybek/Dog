@@ -13,14 +13,16 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
       case "manageround" =>
         checkHandCard.tupled andThen
           loggingFilter.tupled andThen
+          checkAllPlayerHandCards.tupled andThen
+          loggingFilter.tupled andThen
           checkPiecesOnBoardAndPlayable.tupled andThen
           loggingFilter.tupled andThen
           checkSelected.tupled andThen
           loggingFilter.tupled
       case "afterround" =>
-        checkAllPlayerHandCards.tupled andThen
+        checkPiecesOnBoardAndPlayable.tupled andThen
           loggingFilter.tupled andThen
-          checkPiecesOnBoardAndPlayable.tupled andThen
+          checkAllPlayerHandCards.tupled andThen
           loggingFilter.tupled
       case _ => loggingFilter.tupled
     }
@@ -35,7 +37,7 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
   }
 
   def checkHandCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
-    (gameState.players._1(gameState.players._2).cardList.nonEmpty && status, "handcard")
+    (gameState.actualPlayer.cardList.nonEmpty && status, "handcard")
   }
 
   def checkAllPlayerHandCards: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
@@ -46,7 +48,7 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
   def checkPiecesOnBoardAndPlayable: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     var isPieceOnBoard: Boolean = false
-    gameState.actualPlayer.piece.foreach(x => if (gameState.board.cell(x._2.pos).isFilled) isPieceOnBoard = true)
+    gameState.actualPlayer.piece.foreach(x => if (gameState.board.cell(x._2.pos).checkIfPlayer(gameState.actualPlayer)) isPieceOnBoard = true)
     var isPlayable: Boolean = false
     gameState.actualPlayer.cardList.foreach(x => if (x.task.contains("play") || x.task.contains("joker")) isPlayable = true)
     ((isPieceOnBoard || isPlayable) && status, "pieceonboard")
@@ -73,7 +75,7 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
   def tryChain(chain: ((Boolean, String)) => (Boolean, String)): (Boolean, String) = {
     Try(chain(true, "")) match {
-      case Success(value) => (true, "")
+      case Success(_) => (true, "")
       case Failure(exception) => (false, exception.getMessage)
     }
   }

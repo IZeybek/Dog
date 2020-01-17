@@ -23,8 +23,8 @@ class BoardSpec extends WordSpec with Matchers {
       "check if player has to be overridden" in {
         val player = Player(("P1", 0), "green", Map(0 -> Piece(6)), List(0, 1, 2), Nil, 0)
         board = board.fill(Cell(Some(player)), 6)
-        board.checkOverrideOtherPlayer(player, 6) should be(true)
-        board.checkOverrideOtherPlayer(player, 3) should be(false)
+        board.checkOverrideOtherPlayer(6) should be(true)
+        board.checkOverrideOtherPlayer(3) should be(false)
       }
       "fill a board with a Map" in {
         val player = Player.PlayerBuilder().build()

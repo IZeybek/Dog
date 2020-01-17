@@ -43,12 +43,19 @@ object GenGui {
           val load: MenuItem = new MenuItem("Load") {
             onAction = _ => controller.load
           }
+          val debug: MenuItem = new MenuItem("Debug Game") {
+            onAction = _ => {
+              println(controller.toStringBoard)
+              println(controller.toStringPlayerHands)
+            }
+          }
 
 
           items.add(undo)
           items.add(redo)
           items.add(save)
           items.add(load)
+          items.add(debug)
         }
         menus.add(menuList)
       }
@@ -61,9 +68,9 @@ object GenGui {
         //number of Cards can be set here
         bottom = CardMaster.CardPaneBuilder(controller)
           .withCardList(controller.gameState.actualPlayer.cardList)
-            .withCards()
-            .withIcons()
-            .buildCardPane()
+          .withCards()
+          .withIcons()
+          .buildCardPane()
       }
     }
 
