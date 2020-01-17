@@ -56,12 +56,12 @@ object CardLogic {
     //overriding player
 
     val garageDiff = newPos - actPlayer.homePosition
-    if (garageDiff < actPlayer.garage.size && garageDiff > 0) {
+    if (garageDiff <= actPlayer.garage.size && garageDiff > 0) {
 
       val updatedCell = gameState.board.cell(oldPos).removePlayerFromCell()
       val newGameBoard = gameState.board.fill(updatedCell, oldPos)
 
-      players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff))
+      players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff - 1))
 
       (newGameBoard, players, isValid)
 
