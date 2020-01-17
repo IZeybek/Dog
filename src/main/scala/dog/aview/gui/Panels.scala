@@ -95,8 +95,8 @@ object CardDeckPanel {
     val stackPane = new StackPane() {
       padding = Insets(30, 30, 30, 30)
     }
-    val height = if (c.gameState.board.size < 28) 200 else 100
-    val width = if (c.gameState.board.size < 28) 125 else 60
+    val height = if (c.gameState.board.size <= 28) 100 else 200
+    val width = if (c.gameState.board.size <= 28) 60 else 125
     new GridPane {
 
       val cardDeckIcon: ImageView = new ImageView(stdPath + "green_back.png") {
@@ -124,8 +124,8 @@ object PlayerStatusPanel {
 
   def newPlacedCard(c: ControllerTrait): Button = {
     val lastCard = if (c.gameStateMaster.lastPlayedCardOpt.nonEmpty) c.gameStateMaster.lastPlayedCardOpt.get.symbol else "laidcarddeck"
-    val height = if (c.gameState.board.size < 28) 200 else 100
-    val width = if (c.gameState.board.size < 28) 125 else 60
+    val height = if (c.gameState.board.size <= 28) 100 else 200
+    val width = if (c.gameState.board.size <= 28) 60 else 125
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = height
       fitWidth = width
