@@ -54,7 +54,7 @@ object CardLogic {
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
     //overriding player
-    if (board.checkOverrideOtherPlayer(newPos)) {
+
     val garageDiff = newPos - actPlayer.homePosition
     if (garageDiff < actPlayer.garage.size && garageDiff > 0) {
 
@@ -65,7 +65,7 @@ object CardLogic {
 
       (newGameBoard, players, isValid)
 
-    } else  if (board.checkOverrideOtherPlayer(newPos)) { //overriding player
+    } else if (board.checkOverrideOtherPlayer(newPos)) { //overriding player
       //get indexes and pieces
       val overriddenPlayerIdx: Int = board.cell(newPos).getPlayerIdx
       val overriddenPlayerPieceNum: Int = players(overriddenPlayerIdx).getPieceNum(newPos) //get piece of other Player
