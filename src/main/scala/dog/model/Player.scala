@@ -1,5 +1,7 @@
 package dog.model
 
+import dog.model.BoardComponent.BoardTrait
+import dog.model.BoardComponent.boardAdvancedImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 
@@ -8,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 
 case class Player(nameAndIdx: (String, Int),
                   color: String, piece: Map[Int, Piece],
-                  inHouse: List[Int],
+                  inHouse: List[Int], garage: BoardTrait,
                   cardList: List[CardTrait],
                   homePosition: Int) {
 
@@ -52,6 +54,8 @@ case class Player(nameAndIdx: (String, Int),
         inHouse
     })
   }
+
+  def setNewGaragePosition(pieceIdx: Int, newPos: Int): Player = copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)), garage = garage.fill(garage.cell(newPos).addPlayerToCell(this), newPos))
 
 
   def swapPiece(pieceIdx: Int, newPos: Int): Player = {
@@ -118,6 +122,7 @@ object Player {
   var homePosition = 0
   var pieces: Map[Int, Piece] = (0 until pieceAmount).map(i => (i, Piece(homePosition))).toMap
   var inHouse: List[Int] = List(0, 1, 2, 3)
+  var garage: BoardTrait = new Board(inHouse.size)
 
   def reset(): Unit = {
     pieceAmount = 4
@@ -134,6 +139,7 @@ object Player {
       homePosition = homePos
       pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
       inHouse = (0 until piecesAmount).toList
+      garage = new Board(inHouse.size)
       this
     }
 
@@ -170,8 +176,14 @@ object Player {
       this
     }
 
+    // can be used for testing or a player with explicit garage
+    def withGarage(board: BoardTrait): PlayerBuilder = {
+      garage = board
+      this
+    }
+
     def build(): Player = {
-      val player: Player = new Player(name, color, pieces, inHouse, cardsDeck, homePosition)
+      val player: Player = new Player(name, color, pieces, inHouse, garage, cardsDeck, homePosition)
       reset()
       player
     }

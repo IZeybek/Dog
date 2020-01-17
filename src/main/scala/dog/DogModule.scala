@@ -12,7 +12,7 @@ import net.codingwell.scalaguice.ScalaModule
 
 class DogModule extends AbstractModule with ScalaModule {
 
-  val defaultSize: Int = 96
+  val defaultSize: Int = 28
 
   def configure(): Unit = {
     bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)

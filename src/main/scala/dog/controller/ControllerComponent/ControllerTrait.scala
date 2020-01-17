@@ -49,6 +49,8 @@ trait ControllerTrait extends Publisher {
 
   def toStringPlayerHands: String
 
+  def toStringGarage: String
+
   def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player
 
   //Board

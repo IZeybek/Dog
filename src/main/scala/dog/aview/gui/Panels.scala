@@ -95,12 +95,13 @@ object CardDeckPanel {
     val stackPane = new StackPane() {
       padding = Insets(30, 30, 30, 30)
     }
-
+    val height = if (c.gameState.board.size < 28) 200 else 100
+    val width = if (c.gameState.board.size < 28) 125 else 60
     new GridPane {
 
       val cardDeckIcon: ImageView = new ImageView(stdPath + "green_back.png") {
-        fitHeight = 200
-        fitWidth = 125
+        fitHeight = height
+        fitWidth = width
       }
 
 
@@ -123,16 +124,17 @@ object PlayerStatusPanel {
 
   def newPlacedCard(c: ControllerTrait): Button = {
     val lastCard = if (c.gameStateMaster.lastPlayedCardOpt.nonEmpty) c.gameStateMaster.lastPlayedCardOpt.get.symbol else "laidcarddeck"
+    val height = if (c.gameState.board.size < 28) 200 else 100
+    val width = if (c.gameState.board.size < 28) 125 else 60
     new Button("", new ImageView(stdPath + lastCard + ".png") {
-      fitHeight = 200
-      fitWidth = 125
+      fitHeight = height
+      fitWidth = width
 
     }) {
-      style = "-fx-background-radius: 5em; " +
+      style = "-fx-background-color: transparent;" +
+        "-fx-background-radius: 5em; " +
         "-fx-min-width: 30; " +
         "-fx-min-height: 30; " +
-        "-fx-max-width: 100; " +
-        "-fx-max-height: 175;" +
         "-fx-padding:5;"
     }
   }
@@ -194,103 +196,115 @@ object BoardPanel {
   def newBoardPane(controller: ControllerTrait): BorderPane = {
     new BorderPane() {
 
-
       val board: BoardTrait = controller.gameState.board
       val amount: Int = board.size
-      //      println("----------------" + bm(0).getColor)
+
+      val fieldIconSeq: Seq[Button] = generateFieldIconSeq(amount, board, controller)
       var idx = 0
-      val fieldIconSeq: Seq[Button] = Seq.fill(amount)(new Button("", new ImageView(
-        stdPath +
-          (if (board.cell(idx).isFilled)
-            board.cell(idx).getColor
-          else "field") + ".png") {
-        fitWidth = 35
-        fitHeight = 35
-      }) {
-        id = idx.toString
+      val playerSize: Int = controller.gameState.players._1.size
+      var garageFieldIconSeq: Seq[Seq[Button]] = Seq.empty
+      (0 until playerSize)
+        .foreach(x => garageFieldIconSeq = garageFieldIconSeq :+ generateFieldIconSeq(controller.gameState.players._1(x).garage.size, controller.gameState.players._1(x).garage, controller)
+        )
 
-
-        //Padding of FieldButtons
-        val stdStyle: String = "-fx-background-color: transparent;" +
-          "-fx-min-width: 30px; " +
-          "-fx-min-height: 30px; " +
-          "-fx-max-width: 50px; " +
-          "-fx-max-height: 40px;" +
-          "-fx-padding:4;" +
-          "-fx-border-radius:10 ;" +
-          "-fx-border-width:2;"
-
-
-        val blackStyle: String = stdStyle + "-fx-background-color:#000000;"
-        val whiteStyle: String = stdStyle + "-fx-background-color:#ffffff;"
-
-        val red: String = "-fx-border-color:#ff0000;"
-        val white: String = "-fx-border-color:#ffffff;"
-        val yellow: String = "-fx-border-color:#ffff00;"
-        val green: String = "-fx-border-color:#00FF00;"
-        var borderColor = ""
-        var homeColor = ""
-
-        controller.gameState.players._1.foreach(i => if (i.homePosition == idx && homeColor.equals("")) homeColor = i.color)
-
-        borderColor = homeColor match {
-          case "green" => green
-          case "white" => white
-          case "yellow" => yellow
-          case "red" => red
-          case _ => "-fx-border-color:transparent;"
-        }
-
-        this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (
-          if (SelectedState.ownFieldClicked == idx || SelectedState.otherFieldClicked == idx)
-            whiteStyle
-          else
-            stdStyle + borderColor))
-
-        idx = idx + 1
-        //field OnClickListener
-        onAction = _ => {
-          println("pressed field = " + this.getId)
-          controller.selectedField(this.getId.toInt)
-        }
-      })
       val stackPane: StackPane = new StackPane
 
       //      val scrollPane: ScrollPane = new ScrollPane() {
-      //
       //        content() = newBoardGrid(amount, fieldIconSeq)
       //      }
 
-      stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, fieldIconSeq))
+      stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq))
       center = stackPane
 
     }
   }
 
-  def newBoardGrid(amount: Int, fieldIconSeq: Seq[Button]): GridPane = {
+  def generateFieldIconSeq(amount: Int, board: BoardTrait, controller: ControllerTrait): Seq[Button] = {
+    var idx = 0
+    Seq.fill(amount)(new Button("", new ImageView(
+      stdPath +
+        (if (board.cell(idx).isFilled)
+          board.cell(idx).getColor
+        else "field") + ".png") {
+      fitWidth = 35
+      fitHeight = 35
+    }) {
+      id = idx.toString
+      //Padding of FieldButtons
+      val stdStyle: String = "-fx-background-color: transparent;" +
+        "-fx-min-width: 30px; " +
+        "-fx-min-height: 30px; " +
+        "-fx-max-width: 50px; " +
+        "-fx-max-height: 40px;" +
+        "-fx-padding:4;" +
+        "-fx-border-radius:10 ;" +
+        "-fx-border-width:2;"
+
+
+      val blackStyle: String = stdStyle + "-fx-background-color:#000000;"
+      val whiteStyle: String = stdStyle + "-fx-background-color:#ffffff;"
+
+      val red: String = "-fx-border-color:#ff0000;"
+      val white: String = "-fx-border-color:#ffffff;"
+      val yellow: String = "-fx-border-color:#ffff00;"
+      val green: String = "-fx-border-color:#00FF00;"
+      var borderColor = ""
+      var homeColor = ""
+
+      controller.gameState.players._1.foreach(i => if (board.size == i.garage.size || i.homePosition == idx) homeColor = i.color)
+
+      borderColor = homeColor match {
+        case "green" => green
+        case "white" => white
+        case "yellow" => yellow
+        case "red" => red
+        case _ => "-fx-border-color:transparent;"
+      }
+
+      this.style <== when(pressed) choose blackStyle otherwise (when(hover) choose whiteStyle otherwise (
+        if (SelectedState.ownFieldClicked == idx || SelectedState.otherFieldClicked == idx)
+          whiteStyle
+        else
+          stdStyle + borderColor))
+
+      idx = idx + 1
+      //field OnClickListener
+      onAction = _ => {
+        println("pressed field = " + this.getId)
+        controller.selectedField(this.getId.toInt)
+      }
+    })
+  }
+
+  def newBoardGrid(amount: Int, c: ControllerTrait, fieldIconSeq: Seq[Button], garageFieldIconSeq: Seq[Seq[Button]]): GridPane = {
 
     new GridPane {
       setAlignment(Center)
 
-      //      setStyle(bgColor)
-      //      setBackground(Background.Empty)
       //computes and displays Board on view, as an horizontal rectangle
       val leftAndRightEdge: Int = amount / 8
       val topAndBottomEdge: Int = (amount / 4) + leftAndRightEdge
-
+      val garageSize: Int = c.gameState.actualPlayer.garage.size
+      val homePos: List[Int] = List.empty
+      c.gameState.players._1.foreach(x => homePos :+ x.homePosition)
       var fieldIdx = 0
 
       for (i <- 0 until topAndBottomEdge) {
-        add(fieldIconSeq(fieldIdx), i + 1, 0); fieldIdx = fieldIdx + 1
+        if (fieldIdx < garageSize) {
+          add(garageFieldIconSeq.head(fieldIdx), i + 2, 0)
+        }
+        add(fieldIconSeq(fieldIdx), i + 2, 1); fieldIdx = fieldIdx + 1
+
       }
       for (i <- 0 until leftAndRightEdge) {
-        add(fieldIconSeq(fieldIdx), topAndBottomEdge + 1, i + 1); fieldIdx = fieldIdx + 1
+        if (fieldIdx < garageSize) add(garageFieldIconSeq.head(fieldIdx), i + 2, 0)
+        add(fieldIconSeq(fieldIdx), topAndBottomEdge + 2, i + 2); fieldIdx = fieldIdx + 1
       }
       for (i <- topAndBottomEdge until 0 by -1) {
-        add(fieldIconSeq(fieldIdx), i, leftAndRightEdge + 1); fieldIdx = fieldIdx + 1
+        add(fieldIconSeq(fieldIdx), i + 1, leftAndRightEdge + 2); fieldIdx = fieldIdx + 1
       }
       for (i <- leftAndRightEdge until 0 by -1) {
-        add(fieldIconSeq(fieldIdx), 0, i); fieldIdx = fieldIdx + 1
+        add(fieldIconSeq(fieldIdx), 0, i + 1); fieldIdx = fieldIdx + 1
       }
     }
   }

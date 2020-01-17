@@ -277,6 +277,12 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     "\n" + down + "\n" + house + "\t" + title + "\n" + up + "\n"
   }
 
+
+  override def toStringGarage: String = {
+    val player: Player = gameState.actualPlayer
+    s" ${player.garage}\n"
+  }
+
   override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
 
   /**

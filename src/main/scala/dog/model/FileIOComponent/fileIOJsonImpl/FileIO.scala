@@ -30,19 +30,16 @@ class FileIO extends FileIOTrait {
     GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board)
   }
 
-  def jsonToPlayer(elem: JsValue): Player = {
-    println(elem)
-    val idx: Int = (elem \ "idx").as[Int]
-    val name: String = (elem \ "name").as[String]
-    val color: String = (elem \ "color").as[String]
-    val homePosition: Int = (elem \ "homepos").as[Int]
-    val inHouse = (elem \ "inHouse").as[List[Int]]
-    var pieceMap: Map[Int, Piece] = Map.empty
-    (elem \\ "piece").foreach(x => pieceMap = pieceMap.+(jsonToPiece(x)))
-    var card: List[CardTrait] = List.empty[CardTrait]
-    (elem \\ "card").foreach(x => card = card.:+(jsonToCard(x)))
-    Player((name, idx), color, pieceMap, inHouse, card, homePosition)
-  }
+  implicit val playerWrites: Writes[Player] = (player: Player) => Json.obj(
+    "idx" -> player.nameAndIdx._2,
+    "name" -> JsString(player.nameAndIdx._1),
+    "homepos" -> JsNumber(player.homePosition),
+    "inHouse" -> player.inHouse,
+    "garage" -> Json.toJson(Json.toJson(player.garage)),
+    "color" -> JsString(player.color),
+    "piecesVector" -> player.piece.map(x => Json.obj("piece" -> Json.toJson(pieceMap(x._1, x._2)))),
+    "CardList" -> player.cardList.map(x => Json.obj("card" -> Json.toJson(x))),
+  )
 
   def jsonToPiece(elem: JsValue): (Int, Piece) = {
     val pieceNum: Int = (elem \ "pieceNum").as[Int]
@@ -113,15 +110,19 @@ class FileIO extends FileIOTrait {
     },
   )
 
-  implicit val playerWrites: Writes[Player] = (player: Player) => Json.obj(
-    "idx" -> player.nameAndIdx._2,
-    "name" -> JsString(player.nameAndIdx._1),
-    "homepos" -> JsNumber(player.homePosition),
-    "inHouse" -> player.inHouse,
-    "color" -> JsString(player.color),
-    "piecesVector" -> player.piece.map(x => Json.obj("piece" -> Json.toJson(pieceMap(x._1, x._2)))),
-    "CardList" -> player.cardList.map(x => Json.obj("card" -> Json.toJson(x))),
-  )
+  def jsonToPlayer(elem: JsValue): Player = {
+    println(elem)
+    val idx: Int = (elem \ "idx").as[Int]
+    val name: String = (elem \ "name").as[String]
+    val color: String = (elem \ "color").as[String]
+    val homePosition: Int = (elem \ "homepos").as[Int]
+    val inHouse = (elem \ "inHouse").as[List[Int]]
+    var pieceMap: Map[Int, Piece] = Map.empty
+    (elem \\ "piece").foreach(x => pieceMap = pieceMap.+(jsonToPiece(x)))
+    var card: List[CardTrait] = List.empty[CardTrait]
+    (elem \\ "card").foreach(x => card = card.:+(jsonToCard(x)))
+    Player((name, idx), color, pieceMap, inHouse, null, card, homePosition)
+  }
 
   case class pieceMap(pieceNum: Int, piece: Piece)
 

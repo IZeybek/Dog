@@ -15,6 +15,7 @@ class Tui(controller: ControllerTrait) extends Reactor {
     case event: BoardChanged =>
       println(controller.toStringBoard)
       println(controller.toStringActivePlayerHand)
+      println(controller.toStringGarage)
   }
 
   def processInput(input: String): String = {

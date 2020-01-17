@@ -27,6 +27,7 @@ class Controller extends ControllerTrait {
    */
   override def toStringBoard: String = ""
 
+  override def toStringGarage: String = ""
   /**
    * prints the houses of each player
    *
@@ -53,6 +54,7 @@ class Controller extends ControllerTrait {
   override def createNewBoard: BoardTrait = new Board(20)
 
   override def toStringActivePlayerHand: String = ""
+
 
   /**
    * uses the card and extracts its logic

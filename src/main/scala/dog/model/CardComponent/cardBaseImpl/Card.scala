@@ -53,9 +53,17 @@ object CardLogic {
     val oldPos: Int = actPlayer.piecePosition(selPiece)
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
+    val garageDiff = newPos - actPlayer.homePosition
+    if (garageDiff < actPlayer.garage.size && garageDiff > 0) {
 
-    //overriding player
-    if (board.checkOverrideOtherPlayer(actPlayer, newPos)) {
+      val updatedCell = gameState.board.cell(oldPos).removePlayerFromCell()
+      val newGameBoard = gameState.board.fill(updatedCell, oldPos)
+
+      players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff))
+
+      (newGameBoard, players, isValid)
+
+    } else if (board.checkOverrideOtherPlayer(actPlayer, newPos)) { //overriding player
       //get indexes and pieces
       val oPlayerIdx: Int = board.cell(newPos).p.get.nameAndIdx._2
 
@@ -67,12 +75,14 @@ object CardLogic {
       //update Vector when overridden
       players = players.updated(oPlayerIdx, players(oPlayerIdx).overridePlayer(oPlayerPieceNum))
       players = players.updated(actPlayerIdx, actPlayer.setPosition(selPiece, newPos))
+      (board.updateMovePlayer(players(actPlayerIdx), oldPos, newPos), players, isValid)
 
     } else {
       //update Vector when not overridden
       players = players.updated(actPlayerIdx, actPlayer.setPosition(selPiece, newPos))
+      (board.updateMovePlayer(players(actPlayerIdx), oldPos, newPos), players, isValid)
+
     }
-    (board.updateMovePlayer(players(actPlayerIdx), oldPos, newPos), players, isValid)
   }
 
   val swap: (GameState, InputCard) => (BoardTrait, Vector[Player], Int) = (gameState: GameState, inputCard: InputCard) => {

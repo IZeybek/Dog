@@ -44,7 +44,7 @@ class FileIO extends FileIOTrait {
     (elem \\ "piece").foreach(x => piece = piece.+(xmlToPiece(x)))
     var card: List[CardTrait] = List.empty[CardTrait]
     (elem \\ "card").foreach(x => card = card.:+(xmlToCard(x)))
-    Player((name, idx), color, piece, inHouse, card, homePosition)
+    Player((name, idx), color, piece, inHouse, null, card, homePosition)
   }
 
   def xmlToInHouse(elem: Node): Int = {
