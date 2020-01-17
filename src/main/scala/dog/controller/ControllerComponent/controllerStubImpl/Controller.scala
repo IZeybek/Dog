@@ -1,4 +1,4 @@
-package dog.controller.ControllerComponent.controllerMockImpl
+package dog.controller.ControllerComponent.controllerStubImpl
 
 import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.StateComponent.{GameState, GameStateMaster, GameStateMasterTrait, InputCard}
@@ -25,26 +25,26 @@ class Controller extends ControllerTrait {
    *
    * @return the board and houses in a String
    */
-  override def toStringBoard: String = ""
+  override def toStringBoard: String = "Board"
 
   /**
    * prints the houses of each player
    *
    * @return the houses in a String
    */
-  override def toStringHouse: String = ""
+  override def toStringHouse: String = "House"
 
   override def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player] = Vector.empty[Player]
 
   override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector.empty[CardTrait], 0)
 
-  override def toStringCardDeck: String = ""
+  override def toStringCardDeck: String = "CardDeck"
 
   override def drawCardFromDeck: CardTrait = Card("5", "move", "blau")
 
   override def drawCards(amount: Int): List[CardTrait] = Card("5", "move", "blau") :: Nil
 
-  override def toStringPlayerHands: String = ""
+  override def toStringPlayerHands: String = "PlayerHand"
 
   override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = Player.PlayerBuilder().build()
 
@@ -52,7 +52,7 @@ class Controller extends ControllerTrait {
 
   override def createNewBoard: BoardTrait = new Board(20)
 
-  override def toStringActivePlayerHand: String = ""
+  override def toStringActivePlayerHand: String = "ActivePlayerHand"
 
   /**
    * uses the card and extracts its logic
@@ -81,7 +81,7 @@ class Controller extends ControllerTrait {
    *                      e.g. "4" "forward backward" => using parse
    * @return a String that is returned to the TUI for more information
    */
-  override def manageRound(inputCard: InputCard): String = ""
+  override def manageRound(inputCard: InputCard): String = "Success"
 
   override def selectedField(clickedFieldIdx: Int): Int = 0
 

@@ -1,4 +1,4 @@
-package dog.controller.controllerBaseImpl
+package dog.controller.controllerBaseImpl.controllerBaseImpl
 
 import dog.controller.ControllerComponent.controllerBaseImpl.Controller
 import dog.controller.StateComponent.{GameState, InputCard, InputCardMaster}
@@ -341,6 +341,12 @@ class ControllerSpec extends WordSpec with Matchers {
 
 
         controller.gameState.players._1(0).piece(2).pos should be(1)
+      }
+      "print the player hand cards" in {
+        controller.createNewBoard(20)
+        controller.gameStateMaster.UpdateGame().resetGame
+        controller.updateGame()
+        controller.toStringActivePlayerHand should be(s"${Console.YELLOW}Player 1${Console.RESET}'s hand cards: " + controller.gameState.actualPlayer.cardList + "\n")
       }
       "play a Card" in {
         controller.createNewBoard(28)

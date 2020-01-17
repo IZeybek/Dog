@@ -257,10 +257,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     newPlayer(playerNum)
   }
 
-  override def toStringActivePlayerHand: String = {
-    val player: Player = gameState.players._1(gameState.players._2)
-    s"${gameState.actualPlayer.toStringColor}'s hand cards: " + player.cardList + "\n"
-  }
+  override def toStringActivePlayerHand: String = s"${gameState.actualPlayer.toStringColor}'s hand cards: " + gameState.actualPlayer.cardList + "\n"
 
   override def toStringPlayerHands: String = {
     val player: Vector[Player] = gameState.players._1
