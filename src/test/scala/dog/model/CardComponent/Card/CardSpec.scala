@@ -97,7 +97,6 @@ class SpecialCardsDeckSpec extends WordSpec with Matchers {
       "have a SpecialCardsDeck " in {
         specialCard.cardDeck should be(List(Card("1 11 play", "move move play", "red"),
           Card("4", "backward forward", "red"),
-          Card("7", "burn", "red"),
           Card("swapCard", "swap", "red"),
           Card("questionmark", "joker", "red"),
           Card("13 play", "move play", "red")))
@@ -115,6 +114,7 @@ class NormalCardsDeckSpec extends WordSpec with Matchers {
           Card("3", "move", "blue"),
           Card("5", "move", "blue"),
           Card("6", "move", "blue"),
+          Card("7", "move", "blue"),
           Card("8", "move", "blue"),
           Card("9", "move", "blue"),
           Card("10", "move", "blue"),
