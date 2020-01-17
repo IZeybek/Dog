@@ -95,8 +95,8 @@ object CardDeckPanel {
     val stackPane = new StackPane() {
       padding = Insets(30, 30, 30, 30)
     }
-    val height = if (c.gameState.board.size <= 28) 100 else 200
-    val width = if (c.gameState.board.size <= 28) 60 else 125
+    val height = if (c.gameState.board.size <= 44) 100 else 200
+    val width = if (c.gameState.board.size <= 44) 60 else 125
     new GridPane {
 
       val cardDeckIcon: ImageView = new ImageView(stdPath + "green_back.png") {
@@ -124,8 +124,8 @@ object PlayerStatusPanel {
 
   def newPlacedCard(c: ControllerTrait): Button = {
     val lastCard = if (c.gameStateMaster.lastPlayedCardOpt.nonEmpty) c.gameStateMaster.lastPlayedCardOpt.get.symbol else "laidcarddeck"
-    val height = if (c.gameState.board.size <= 28) 100 else 200
-    val width = if (c.gameState.board.size <= 28) 60 else 125
+    val height = if (c.gameState.board.size <= 44) 100 else 200
+    val width = if (c.gameState.board.size <= 44) 60 else 125
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = height
       fitWidth = width
@@ -243,7 +243,7 @@ object BoardPanel {
     }) {
       id = if (!garageColor.equals("") && board.size == controller.gameState.actualPlayer.garage.size)
         (garageColor.charAt(0).toInt).toString + " " + garageColor else idx.toString
-      println(getId)
+      //      println(getId)
       //Padding of FieldButtons
       val stdStyle: String = "-fx-background-color: transparent;" +
         "-fx-min-width: 30px; " +
@@ -316,6 +316,7 @@ object BoardPanel {
       } {
         val diff = fieldIdx - homePos(hIdx)
         val guiPos = topAndBottomEdge - (fieldIdx - leftAndRightEdge - topAndBottomEdge)
+        println(guiPos)
         if (diff >= 0 && diff < garageSize) add(garageFieldIconSeq(hIdx)(diff), guiPos, leftAndRightEdge + 3)
         else if (diff > garageSize && hIdx < homePos.size - 1) hIdx = hIdx + 1
       }
