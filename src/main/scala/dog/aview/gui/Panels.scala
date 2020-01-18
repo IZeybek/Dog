@@ -44,7 +44,7 @@ object CardPanel {
 
       //PlayButton ActionListener
       onAction = _ => {
-        println("----------------------------------------- Clicked IconID : " + getId.toInt)
+        //        println("----------------------------------------- Clicked IconID : " + getId.toInt)
         val actPlayer = controller.gameState.actualPlayer
         val inputCard = InputCardMaster.UpdateCardInput()
           .withActualPlayer(controller.gameStateMaster.actualPlayerIdx)
@@ -90,7 +90,6 @@ object CardDeckPanel {
   val stdPath = "file:src/main/scala/resources/"
 
   def newCardDeck(c: ControllerTrait): StackPane = {
-
     val amountLabel = new Label(c.gameState.cardDeck._2.toString)
     val stackPane = new StackPane() {
       padding = Insets(30, 30, 30, 30)
@@ -123,13 +122,12 @@ object PlayerStatusPanel {
   }
 
   def newPlacedCard(c: ControllerTrait): Button = {
-    val lastCard = if (c.gameStateMaster.lastPlayedCardOpt.nonEmpty) c.gameStateMaster.lastPlayedCardOpt.get.symbol else "laidcarddeck"
+    val lastCard = c.gameState.lastPlayedCard.symbol
     val height = if (c.gameState.board.size <= 44) 100 else 200
     val width = if (c.gameState.board.size <= 44) 60 else 125
     new Button("", new ImageView(stdPath + lastCard + ".png") {
       fitHeight = height
       fitWidth = width
-
     }) {
       style = "-fx-background-color: transparent;" +
         "-fx-background-radius: 5em; " +
@@ -143,9 +141,8 @@ object PlayerStatusPanel {
   val stdPath = "file:src/main/scala/resources/"
 
   def newStatusDisplay(c: ControllerTrait): VBox = {
-    val player: Player = c.gameState.players._1(c.gameState.players._2)
-    val playerStateLabel = new Label(player.toString) {
-
+    val player: Player = c.gameState.actualPlayer
+    val playerStateLabel: Label = new Label(player.toString) {
       style = "-fxf-font-size: 20pt"
       textFill = player.color match {
         case "green" => Green;
@@ -155,8 +152,14 @@ object PlayerStatusPanel {
         case _ => Black
       }
     }
-    var idx = 0
-    val inHouse = Seq.fill(player.piece.size)(new Button("") {
+
+    val message: Label = new Label(c.lastMessage) {
+      style = "-fx-padding:10;-fx-background-radius: 5em;"
+      textFill = White
+    }
+
+    var idx: Int = 0
+    val inHouse: Seq[Button] = Seq.fill(player.piece.size)(new Button("") {
       val color: String = if (player.inHouse.size <= idx) "" else player.color
       idx = idx + 1
       val colorHouses: String = color match {
@@ -181,7 +184,7 @@ object PlayerStatusPanel {
 
     new VBox() {
       alignment = Center
-
+      children.add(message)
       children.add(playerStateLabel)
       children.add(gridHouse)
     }
@@ -204,11 +207,11 @@ object BoardPanel {
       var idx: Int = 0
       val fieldIconSeq: Seq[Button] = for {
         i <- 0 until amount
-      } yield genFieldButton(i, board, controller, (if (playerVector(idx).homePosition == i) {
+      } yield genFieldButton(i, board, controller, if (playerVector(idx).homePosition == i) {
         val color = playerVector(idx).color
         if (idx < playerSize - 1) idx = idx + 1
         color
-      } else ""))
+      } else "")
 
 
       var garageFieldIconSeq: Seq[Seq[Button]] = for {
@@ -242,7 +245,7 @@ object BoardPanel {
       fitHeight = 35
     }) {
       id = if (!garageColor.equals("") && board.size == controller.gameState.actualPlayer.garage.size)
-        (garageColor.charAt(0).toInt).toString + " " + garageColor else idx.toString
+        garageColor.charAt(0).toInt.toString + " " + garageColor else idx.toString
       //      println(getId)
       //Padding of FieldButtons
       val stdStyle: String = "-fx-background-color: transparent;" +
@@ -281,7 +284,7 @@ object BoardPanel {
 
       //field OnClickListener
       onAction = _ => {
-        println("pressed field = " + this.getId)
+        //        println("pressed field = " + this.getId)
         //        val s = this.getId.split("\\s+")
         if (this.getId.toString.split("\\s+").length < 2) controller.selectedField(this.getId.toInt)
       }
@@ -316,7 +319,7 @@ object BoardPanel {
       } {
         val diff = fieldIdx - homePos(hIdx)
         val guiPos = topAndBottomEdge - (fieldIdx - leftAndRightEdge - topAndBottomEdge)
-        println(guiPos)
+        //println(guiPos)
         if (diff >= 0 && diff < garageSize) add(garageFieldIconSeq(hIdx)(diff), guiPos, leftAndRightEdge + 3)
         else if (diff > garageSize && hIdx < homePos.size - 1) hIdx = hIdx + 1
       }

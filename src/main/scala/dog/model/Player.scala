@@ -84,7 +84,6 @@ case class Player(nameAndIdx: (String, Int),
     Try(cardList diff List(card)) match {
       case Success(list) => Some(list)
       case Failure(_) =>
-        println("Es konnte keine Karte entfernt werden!\n")
         None
     }
   }

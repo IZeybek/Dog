@@ -20,9 +20,11 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
           checkSelected.tupled andThen
           loggingFilter.tupled
       case "afterround" =>
-        checkPiecesOnBoardAndPlayable.tupled andThen
+        checkAllPlayerHandCards.tupled andThen
           loggingFilter.tupled andThen
-          checkAllPlayerHandCards.tupled andThen
+          checkPiecesOnBoardAndPlayable.tupled andThen
+          loggingFilter.tupled andThen
+          checkHandCard.tupled andThen
           loggingFilter.tupled
       case _ => loggingFilter.tupled
     }
@@ -70,7 +72,9 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
 
   def checkWon: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
-    (false, "won")
+    var won: Boolean = false
+    0 until gameState.actualPlayer.piece.size foreach (x => if (!gameState.actualPlayer.garage.cell(x).isFilled) won = true)
+    (won, "won")
   }
 
   def tryChain(chain: ((Boolean, String)) => (Boolean, String)): (Boolean, String) = {

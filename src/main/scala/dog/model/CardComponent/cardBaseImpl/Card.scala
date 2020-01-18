@@ -195,7 +195,6 @@ object CardLogic {
     object unpacked extends State {
       override def changeState(): State = {
         state = packed
-        println("packed Joker")
         state
       }
     }
@@ -203,7 +202,6 @@ object CardLogic {
     object packed extends State {
       override def changeState(): State = {
         state = unpacked
-        println("unpacked Joker")
         state
       }
     }

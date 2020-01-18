@@ -52,7 +52,7 @@ class ControllerSpec extends WordSpec with Matchers {
           .withPieceNum(List(0, 0))
           .withCardNum((0, 2))
           .withSelectedCard(cardList.head)
-          .buildCardInput()) should be(s"Player ${controller.gameState.actualPlayer.toStringColor}${Console.RESET}'s turn\n")
+          .buildCardInput()) should be(s"${controller.gameState.actualPlayer.toString}'s turn\n")
 
         controller.gameState.players._2 should be(0)
         controller.gameState.actualPlayer.piecePosition(0) should be(1)
@@ -68,7 +68,7 @@ class ControllerSpec extends WordSpec with Matchers {
           .withPieceNum(List(0, 0))
           .withCardNum((0, 0))
           .withMoveBy(3)
-          .buildCardInput()) should be(s"Player ${controller.gameState.actualPlayer.toStringColor}${Console.RESET}'s turn\n")
+          .buildCardInput()) should be(s"${controller.gameState.actualPlayer.toString}'s turn\n")
 
         controller.gameState.players._2 should be(0)
         controller.gameState.actualPlayer.piecePosition(0) should be(4)
@@ -84,7 +84,7 @@ class ControllerSpec extends WordSpec with Matchers {
           .withPieceNum(List(0, 0))
           .withCardNum((0, 0))
           .withMoveBy(5)
-          .buildCardInput()) should be(s"Player ${controller.gameState.actualPlayer.toStringColor}${Console.RESET}'s turn\n")
+          .buildCardInput()) should be(s"${controller.gameState.actualPlayer.toString}'s turn\n")
 
         controller.gameState.players._2 should be(0)
         controller.gameState.actualPlayer.piecePosition(0) should be(9)

@@ -86,7 +86,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * @return a String that is returned to the TUI for more information
    */
   override def manageRound(inputCard: InputCard): String = {
-    var returnString: String = s"Move was not possible! Please retry player ${gameState.actualPlayer.toStringColor} ;)\n"
+    var returnString: String = s"Move was not possible! Please retry again;)\n"
     val (bool: Boolean, checkStr: String) = check(inputCard, "manageround")
     if (bool) {
       val (newBoard: BoardTrait, newPlayer: Vector[Player], returnValue: Int) = useCardLogic(inputCard)
@@ -98,15 +98,16 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
           JokerState.reset
           check(inputCard, "afterround")
-          returnString = s"Player ${gameState.actualPlayer.toStringColor}${Console.RESET}'s turn\n"
+          returnString = s"${gameState.actualPlayer.toString}'s turn\n"
         case 1 =>
+          returnString = "What a lucky player you are ;)"
           gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).buildGame
         case _ =>
       }
-    } else {
+    } else
       returnString = checkStr
-    }
     SelectedState.reset
+    gameState = gameStateMaster.UpdateGame().withLastMessage(returnString).buildGame
     publish(new BoardChanged)
     returnString
   }
@@ -172,6 +173,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     publish(new BoardChanged)
     board
   }
+
+  override def lastMessage: String = gameState.msg
 
   /**
    * creates a new Board using dependency injection
@@ -295,24 +298,25 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    */
   private def handleFail(msg: String): String = {
     SelectedState.reset
-    msg match {
+    val message: String = msg match {
       case "handcard" =>
-        do {
-          gameState = gameStateMaster.UpdateGame()
-            .withNextPlayer().buildGame
+        while (gameState.actualPlayer.cardList.isEmpty) {
+          gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
           publish(new BoardChanged)
-        } while (gameState.actualPlayer.cardList.isEmpty)
-        s"${gameState.actualPlayer.toStringColor} has no hand cards"
+        }
+        "Last player(s) had no hand cards!"
       case "pieceonboard" =>
         givePlayerCards(gameState.players._2, Nil)
-        gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+        while (gameState.actualPlayer.cardList.isEmpty) {
+          gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
+          publish(new BoardChanged)
+        }
         JokerState.reset
-        publish(new BoardChanged)
-        s"${gameState.actualPlayer.toStringColor} has neither pieces on board nor a card to play"
+        "Last player(s) had neither pieces on board nor a card to play"
       case "won" =>
-        s"${gameState.actualPlayer.toStringColor} won"
+        "Last player(s) won"
       case "selected" =>
-        s"${gameState.actualPlayer.toStringColor} has to select a piece"
+        "Last player(s) has to select a piece or play "
       case "noplayercards" =>
         gameState = gameStateMaster.UpdateGame().withNextRound().buildGame
         val amountCards: Int = gameStateMaster.roundAndCardsToDistribute._2
@@ -320,5 +324,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         "No player has cards. Cards are distributed again to all players"
       case _ => "unknown bug"
     }
+    gameState = gameStateMaster.UpdateGame().withLastMessage(message).buildGame
+    publish(new BoardChanged)
+    message
   }
 }

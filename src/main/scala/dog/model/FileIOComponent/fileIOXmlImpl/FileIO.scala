@@ -26,11 +26,8 @@ class FileIO extends FileIOTrait {
     (elem \\ "player").foreach(x => player = player.:+(xmlToPlayer(x)))
     val board: BoardTrait = xmlToBoard((elem \\ "board").head, player)
     val cardDeckPointer: Int = (elem \\ "gamestate" \ "@cardDeckPointer").text.toInt
-
-    var lastPlayedCard: CardTrait = xmlToCard(elem \\ "lastPlayed")
-    //    val card = xmlToCard( elem \\ "gamestate" \ "@lastPlayed"))
-    println(lastPlayedCard)
-    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board)
+    val lastPlayedCard: CardTrait = xmlToCard(elem \\ "lastPlayed")
+    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board, None)
   }
 
   def xmlToPlayer(elem: Node): Player = {

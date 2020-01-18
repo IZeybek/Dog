@@ -10,7 +10,7 @@ import dog.model.Player
 case class GameState(players: (Vector[Player], Int),
                      cardDeck: (Vector[CardTrait], Int),
                      lastPlayedCardOpt: Option[CardTrait],
-                     board: BoardTrait) {
+                     board: BoardTrait, msgOpt: Option[String]) {
 
   def actualPlayer: Player = players._1(players._2)
 
@@ -18,6 +18,13 @@ case class GameState(players: (Vector[Player], Int),
     lastPlayedCardOpt match {
       case Some(card) => card
       case None => Card("pseudo", "pseudo", "pseudo")
+    }
+  }
+
+  def msg: String = {
+    msgOpt match {
+      case Some(message) => message
+      case None => ""
     }
   }
 }
@@ -47,4 +54,5 @@ class GameStateMaster extends GameStateMasterTrait {
     withShuffle.buildCardVector
   override var cardPointer: Int = cardDeck.length
   override var lastPlayedCardOpt: Option[CardTrait] = None
+  override var message: Option[String] = None
 }

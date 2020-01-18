@@ -28,6 +28,7 @@ class Controller extends ControllerTrait {
   override def toStringBoard: String = "Board"
 
   override def toStringGarage: String = ""
+
   /**
    * prints the houses of each player
    *
@@ -94,4 +95,6 @@ class Controller extends ControllerTrait {
   override def check(inputCard: InputCard, typeChain: String): (Boolean, String) = (true, "")
 
   override def updateGame(): Unit = {}
+
+  override def lastMessage: String = ""
 }

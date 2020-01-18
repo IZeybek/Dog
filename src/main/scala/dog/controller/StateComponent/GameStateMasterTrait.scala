@@ -24,6 +24,8 @@ trait GameStateMasterTrait {
   var board: BoardTrait
   var boardSize: Int
 
+  var message: Option[String]
+
   case class UpdateGame() {
 
     def withAmountDistributedCard(setAmount: Int): UpdateGame = {
@@ -79,6 +81,16 @@ trait GameStateMasterTrait {
       this
     }
 
+    def withLastMessage(setMessage: String): UpdateGame = {
+      message = Some(setMessage)
+      this
+    }
+
+    def withRemoveLastMessage: UpdateGame = {
+      message = None
+      this
+    }
+
     def resetGame: GameState = {
       //Board
       boardSize = 96 // hast to be dividable by 4
@@ -102,7 +114,9 @@ trait GameStateMasterTrait {
       roundAndCardsToDistribute = (0, 6)
       lastPlayedCardOpt = Some(Card("pseudo", "pseudo", "pseudo"))
 
-      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), None, board)
+      message = None
+
+      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), lastPlayedCardOpt, board, None)
     }
 
     def loadGame(gameState: GameState): UpdateGame = {
@@ -117,8 +131,7 @@ trait GameStateMasterTrait {
     }
 
     def buildGame: GameState = {
-      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), lastPlayedCardOpt, board)
+      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), lastPlayedCardOpt, board, message)
     }
   }
-
 }

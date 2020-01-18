@@ -27,7 +27,7 @@ class FileIO extends FileIOTrait {
     val board: BoardTrait = jsonToBoard((json \\ "board").head, playerVector)
     val cardDeckPointer: Int = (json \ "gameState" \ "cardDeckPointer").as[Int]
     val lastPlayedCard: CardTrait = jsonToCard((json \ "gameState" \\ "lastPlacedCard").head)
-    GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board)
+    GameState(players = (playerVector, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board, None)
   }
 
   implicit val playerWrites: Writes[Player] = (player: Player) => Json.obj(
@@ -111,7 +111,6 @@ class FileIO extends FileIOTrait {
   )
 
   def jsonToPlayer(elem: JsValue): Player = {
-    println(elem)
     val idx: Int = (elem \ "idx").as[Int]
     val name: String = (elem \ "name").as[String]
     val color: String = (elem \ "color").as[String]

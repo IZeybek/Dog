@@ -85,4 +85,6 @@ trait ControllerTrait extends Publisher {
   def check(inputCard: InputCard, typeChain: String): (Boolean, String)
 
   def updateGame(): Unit
+
+  def lastMessage: String
 }
