@@ -301,12 +301,12 @@ class ControllerSpec extends WordSpec with Matchers {
         print(controller.toStringBoard)
 
         controller.gameState.board.cell(2).isFilled should be(false)
-        controller.gameState.board.cell(5).isFilled should be(true)
-        controller.gameState.board.cell(5).checkIfPlayer(player1) should be(true)
+        controller.gameState.board.cell(7).isFilled should be(true)
+        controller.gameState.board.cell(7).checkIfPlayer(player1) should be(true)
         controller.gameStateMaster.UpdateGame().withActualPlayer(0).buildGame
         controller.updateGame()
 
-        println(controller.board.cell(5).getPlayerIdx)
+        println(controller.board.cell(7).getPlayerIdx)
         println(controller.gameState.actualPlayer.piecePosition(2))
         //-------------------------------------------------------------------------
 
@@ -326,7 +326,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
         println(controller.manageRound(inputCard3))
 
-        controller.selectedField(5)
+        controller.selectedField(7)
 
         val inputCard4 = InputCardMaster.UpdateCardInput()
           .withActualPlayer(0)
@@ -340,7 +340,7 @@ class ControllerSpec extends WordSpec with Matchers {
         println(controller.manageRound(inputCard4))
 
 
-        controller.gameState.players._1(0).piece(2).pos should be(1)
+        controller.gameState.players._1(0).piece(2).pos should be(3)
       }
       "print the player hand cards" in {
         controller.createNewBoard(20)
