@@ -22,7 +22,7 @@ Falls Sie nach dem richtigen Spiel suchen sollten und sich auf github verirrt ha
 
 ## Entwicklung
 
-Hinter diesem Projekt stecken zwei Studenten der [HTWG Konstanz](https://www.htwg-konstanz.de/ "Keine Angst, die Seite beißt nicht")
+Hinter diesem Projekt stecken zwei Studenten der [HTWG Konstanz](https://www.htwg-konstanz.de/ "Keine Angst, die Seite beißt nicht").
 Der eine heißt Ismail Zeybek und der andere nennt sich Josef Müller. Beide mit verrückten Ideen im Kopf, aber immer demselben Ziel: Das ultimative Scala Projekt. Ach ja, unser Spiel ist in Scala programmiert. Falls Sie gerade eben das erste Mal von dieser Programmiersprache gehört haben, schauen Sie Mal [hier](https://www.scala-lang.org/ "Ist klickbar, vertrauen Sie uns") vorbei.
 
 ## Tools & Sprachen
@@ -30,3 +30,4 @@ Der eine heißt Ismail Zeybek und der andere nennt sich Josef Müller. Beide mit
 * [ ] Java
 * [X] Scala
 * [X] IntelliJ
+* [X] Viel zu wenig Schlaf
