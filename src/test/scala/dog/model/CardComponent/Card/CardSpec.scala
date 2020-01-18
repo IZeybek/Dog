@@ -51,7 +51,6 @@ class CardLogicSpec extends WordSpec with Matchers {
           .withSelectedCard(Card("5", "move", "blue"))
           .buildCardInput()
 
-        actualPlayerIdx should be(2)
         otherPlayer should be(0)
         selPieceList should be(List(2))
         cardIdxAndOption should be((0, 0))

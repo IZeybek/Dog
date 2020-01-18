@@ -290,7 +290,6 @@ class ControllerSpec extends WordSpec with Matchers {
           .withSelectedCard(controller.gameState.actualPlayer.getCard(6))
           .buildCardInput()
 
-        actualPlayerIdx should be(0)
         otherPlayer should be(-1)
         selPieceList should be(List(2))
         cardIdxAndOption should be((6, 0))
