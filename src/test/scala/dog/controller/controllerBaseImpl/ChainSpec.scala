@@ -7,7 +7,7 @@ import dog.controller._
 import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
-import dog.model.{Piece, Player}
+import dog.model.{Piece, Player, PlayerBuilder}
 import dog.util.SelectedState
 import org.scalatest.{Matchers, WordSpec}
 
@@ -17,7 +17,7 @@ class ChainSpec extends WordSpec with Matchers {
     "check if pieces on board" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
-      val player: Player = Player.PlayerBuilder()
+      val player: Player = new PlayerBuilder().Builder()
         .withPieces(Map(0 -> Piece(5)))
         .withCards(List(Card("", "", "")))
         .build()
@@ -35,7 +35,7 @@ class ChainSpec extends WordSpec with Matchers {
     "check if pieces on board (no Pieces On Board)" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
-      val player: Player = Player.PlayerBuilder()
+      val player: Player = new PlayerBuilder().Builder()
         .withPiece(1, 0)
         .withCards(Nil)
         .build()
@@ -53,7 +53,7 @@ class ChainSpec extends WordSpec with Matchers {
     "check if player has hand cards" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
-      var player: Player = Player.PlayerBuilder()
+      var player: Player = new PlayerBuilder().Builder()
         .withCards(Nil)
         .build()
       player.cardList.nonEmpty should be(false)
@@ -66,7 +66,7 @@ class ChainSpec extends WordSpec with Matchers {
       var chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkHandCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
 
-      player = Player.PlayerBuilder()
+      player = new PlayerBuilder().Builder()
         .withCards(List(Card("", "", "")))
         .build()
       gameState = controller.gameStateMaster.UpdateGame()
@@ -78,7 +78,7 @@ class ChainSpec extends WordSpec with Matchers {
     "check if player has card play on hand" in {
       controller.gameStateMaster.UpdateGame().resetGame
 
-      var player: Player = Player.PlayerBuilder()
+      var player: Player = new PlayerBuilder().Builder()
         .withCards(List(Card("1 11 play", "move move play", "red")))
         .withPieces(Map(0 -> Piece(0)))
         .build()
@@ -90,7 +90,7 @@ class ChainSpec extends WordSpec with Matchers {
       var chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
 
-      player = Player.PlayerBuilder()
+      player = new PlayerBuilder().Builder()
         .withCards(Nil)
         .withPieces(Map(0 -> Piece(0)))
         .build()
@@ -105,7 +105,7 @@ class ChainSpec extends WordSpec with Matchers {
       SelectedState.reset
 
       val cardList: List[CardTrait] = Card("questionmark", "joker", "red") :: Nil
-      val player: Player = Player.PlayerBuilder()
+      val player: Player = new PlayerBuilder().Builder()
         .withCards(cardList)
         .withPieces(Map(0 -> Piece(5)))
         .build()

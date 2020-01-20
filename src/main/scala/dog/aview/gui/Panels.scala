@@ -6,6 +6,14 @@ import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
 import dog.util.SelectedState
+import javafx.scene.layout.GridPane
+import scalafx.Includes.when
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos.Center
+import scalafx.scene.control.{Button, Label}
+import scalafx.scene.image.ImageView
+import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
+import scalafx.scene.paint.Color._
 
 object CardPanel {
 

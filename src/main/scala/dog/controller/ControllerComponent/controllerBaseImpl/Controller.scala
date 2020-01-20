@@ -1,9 +1,11 @@
 package dog.controller.ControllerComponent.controllerBaseImpl
 
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
 import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.StateComponent._
-import dog.controller._
+import dog.controller.{BoardChanged, Chain}
 import dog.model.BoardComponent.boardBaseImpl.{Board, BoardCreateStrategyRandom}
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
 import dog.model.CardComponent.CardTrait
@@ -12,6 +14,9 @@ import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.FileIOComponent.FileIOTrait
 import dog.model.{Player, PlayerBuilder}
 import dog.util.{SelectedState, SolveCommand, UndoManager}
+import net.codingwell.scalaguice.InjectorExtensions._
+
+import scala.util.{Failure, Success, Try}
 
 class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 

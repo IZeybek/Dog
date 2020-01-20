@@ -2,6 +2,13 @@ package dog.aview.gui
 
 import dog.controller.BoardChanged
 import dog.controller.ControllerComponent.ControllerTrait
+import scalafx.application.JFXApp
+import scalafx.application.JFXApp.PrimaryStage
+import scalafx.scene.Scene
+import scalafx.scene.control.{Menu, MenuBar, MenuItem}
+import scalafx.scene.layout.BorderPane
+
+import scala.swing.Reactor
 
 class Gui(controller: ControllerTrait) extends JFXApp with Reactor {
 

@@ -6,6 +6,8 @@ import dog.model.CardComponent.CardTrait
 import dog.model.Player
 import dog.util.UndoManager
 
+import scala.swing.Publisher
+
 trait ControllerTrait extends Publisher {
   val undoManager: UndoManager
   var gameState: GameState

@@ -5,6 +5,8 @@ import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 
+import scala.util.{Failure, Success, Try}
+
 
 case class Player(nameAndIdx: (String, Int),
                   color: String, piece: Map[Int, Piece],

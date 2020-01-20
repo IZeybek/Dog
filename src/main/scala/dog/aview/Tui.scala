@@ -4,6 +4,8 @@ import dog.controller.BoardChanged
 import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.StateComponent.InputCardMaster
 
+import scala.swing.Reactor
+
 
 class Tui(controller: ControllerTrait) extends Reactor {
 
