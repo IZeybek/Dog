@@ -1,13 +1,11 @@
 package dog.model.BoardComponent.boardBaseImpl
 
 import dog.model.BoardComponent.{BoardTrait, CellTrait}
-import dog.model.Player
-
-import scala.util.Random
+import dog.model.{Player, PlayerBuilder}
 
 class BoardCreateStrategyRandom extends BoardCreateStrategyTemplate {
 
-  var player: Vector[Player] = (0 until 4).indices.map(_ => Player.PlayerBuilder().build()).toVector
+  var player: Vector[Player] = (0 until 4).indices.map(_ => new PlayerBuilder().Builder().build()).toVector
 
   override def fill(board: BoardTrait): BoardTrait = {
     board.fill((0 until board.size).map(i => (i, update(player(Random.nextInt(player.size - 1))))).toMap)

@@ -5,7 +5,7 @@ import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck}
-import dog.model.Player
+import dog.model.{Player, PlayerBuilder}
 
 trait GameStateMasterTrait {
 
@@ -100,7 +100,7 @@ trait GameStateMasterTrait {
       playerNames = Array("Player 1", "Player 2", "Player 3", "Player 4")
       colors = Array("yellow", "white", "green", "red")
       pieceAmount = 4
-      playerVector = playerNames.indices.map(i => Player.PlayerBuilder()
+      playerVector = playerNames.indices.map(i => new PlayerBuilder().Builder()
         .withColor(colors(i))
         .withName((playerNames(i), i))
         .withPiece(pieceAmount, (boardSize / playerNames.length) * i)

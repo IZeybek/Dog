@@ -27,9 +27,7 @@ class ChainSpec extends WordSpec with Matchers {
         .withActualPlayer(0).buildGame
       val board2 = gameState.board.fill(gameState.board.cell(5).addPlayerToCell(player), 5)
       gameState = controller.gameStateMaster.UpdateGame().withBoard(board2).buildGame
-      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
-        .withActualPlayer(0)
-        .buildCardInput()
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
 
       val chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
@@ -47,9 +45,7 @@ class ChainSpec extends WordSpec with Matchers {
         .withBoard(new Board(20))
         .withActualPlayer(0).buildGame
 
-      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
-        .withActualPlayer(0)
-        .buildCardInput()
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
 
       val chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
@@ -65,9 +61,7 @@ class ChainSpec extends WordSpec with Matchers {
         .withPlayers(Vector(player))
         .withActualPlayer(0)
         .buildGame
-      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
-        .withActualPlayer(0)
-        .buildCardInput()
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
 
       var chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkHandCard.tupled andThen chain.loggingFilter.tupled)._1 should be(false)
@@ -91,9 +85,7 @@ class ChainSpec extends WordSpec with Matchers {
       var gameState: GameState = controller.gameStateMaster.UpdateGame()
         .withPlayers(Vector(player))
         .withActualPlayer(0).buildGame
-      val inputCard: InputCard = InputCardMaster.UpdateCardInput()
-        .withActualPlayer(0)
-        .buildCardInput()
+      val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
 
       var chain: Chain = Chain(gameState, inputCard)
       chain.tryChain(chain.checkPiecesOnBoardAndPlayable.tupled andThen chain.loggingFilter.tupled)._1 should be(true)
@@ -129,7 +121,6 @@ class ChainSpec extends WordSpec with Matchers {
         .withPieceNum(List(0))
         .withCardNum((0, 0))
         .withSelectedCard(cardList.head)
-        .withActualPlayer(0)
         .buildCardInput()
 
       controller.selectedField(5)

@@ -24,7 +24,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.toStringHouse should be("House")
       }
       "create Players" in {
-        controller.createPlayers(List.empty, 0).isEmpty should be(true)
+        controller.createPlayers(List.empty, 0, 6).isEmpty should be(true)
       }
       "create a CardDeck" in {
         val (cards, pointer) = controller.createCardDeck(List.empty)

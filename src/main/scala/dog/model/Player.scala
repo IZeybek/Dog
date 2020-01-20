@@ -5,8 +5,6 @@ import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 
-import scala.util.{Failure, Success, Try}
-
 
 case class Player(nameAndIdx: (String, Int),
                   color: String, piece: Map[Int, Piece],
@@ -113,80 +111,68 @@ case class Piece(pos: Int) {
   def movePiece(moveBy: Int): Piece = copy(pos = pos + moveBy)
 }
 
-object Player {
+class PlayerBuilder {
   var pieceAmount: Int = 4
   var color: String = "blue"
-  var name: (String, Int) = ("Bob", 0)
+  var nameAndIndex: (String, Int) = ("Bobby", 0)
   var cardsDeck: List[CardTrait] = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
   var homePosition = 0
   var pieces: Map[Int, Piece] = (0 until pieceAmount).map(i => (i, Piece(homePosition))).toMap
   var inHouse: List[Int] = List(0, 1, 2, 3)
   var garage: BoardTrait = new Board(5, 0)
 
-  def reset(): Unit = {
-    pieceAmount = 4
-    color = "blue"
-    name = ("Bob", 0)
-    cardsDeck = Card.RandomCardsBuilder().withAmount(6).buildRandomCardList
-    garage = new Board(5, 0)
-    pieces = (0 until pieceAmount).map(i => (i, Piece(homePosition))).toMap
-  }
 
-  case class PlayerBuilder() {
-
-
-    def withColor(c: String): PlayerBuilder = {
+  case class Builder() {
+    def withColor(c: String): Builder = {
       color = c
       this
     }
 
-    def withName(n: (String, Int)): PlayerBuilder = {
-      name = n
+    def withName(setNameAndIdx: (String, Int)): Builder = {
+      nameAndIndex = setNameAndIdx
       this
     }
 
-    def withPiece(piecesAmount: Int, homePos: Int): PlayerBuilder = {
+    def withPiece(piecesAmount: Int, homePos: Int): Builder = {
       pieceAmount = piecesAmount
       homePosition = homePos
       pieces = (0 until piecesAmount).map(i => (i, Piece(homePos))).toMap
       inHouse = (0 until piecesAmount).toList
-
       this
     }
 
 
-    def withPieces(setPieces: Map[Int, Piece], setHomePosition: Int): PlayerBuilder = {
+    def withPieces(setPieces: Map[Int, Piece], setHomePosition: Int): Builder = {
       pieces = setPieces
       pieceAmount = pieces.size
       homePosition = setHomePosition
       this
     }
 
-    def withPieces(setPieces: Map[Int, Piece]): PlayerBuilder = {
+    def withPieces(setPieces: Map[Int, Piece]): Builder = {
       pieces = setPieces
       pieceAmount = pieces.size
       this
     }
-    def withCards(cards: List[CardTrait]): PlayerBuilder = {
+
+    def withCards(cards: List[CardTrait]): Builder = {
       cardsDeck = cards
       this
     }
 
-    def withGeneratedCards(setAmount: Int): PlayerBuilder = {
+    def withGeneratedCards(setAmount: Int): Builder = {
       cardsDeck = Card.RandomCardsBuilder().withAmount(setAmount).buildRandomCardList
       this
     }
 
     // can be used for testing or a player with explicit garage
-    def withGarage(id: Int): PlayerBuilder = {
+    def withGarage(id: Int): Builder = {
       garage = new Board(id, inHouse.size)
       this
     }
 
     def build(): Player = {
-      val player: Player = new Player(name, color, pieces, inHouse, garage, cardsDeck, homePosition)
-      reset()
-      player
+      Player(nameAndIndex, color, pieces, inHouse, garage, cardsDeck, homePosition)
     }
   }
 

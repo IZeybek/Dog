@@ -1,13 +1,13 @@
 package dog.model.BoardComponent
 
 import dog.model.BoardComponent.boardBaseImpl.Cell
-import dog.model.Player
+import dog.model.{Player, PlayerBuilder}
 import org.scalatest.{Matchers, WordSpec}
 
 class CellSpec extends WordSpec with Matchers {
   "A Cell" when {
     "created" should {
-      val player: Player = Player.PlayerBuilder().build()
+      val player: Player = new PlayerBuilder().Builder().build()
       val cellSpecTrue: Cell = Cell(Some(player))
       val cellSpecFalse: Cell = Cell(None)
       "be filled" in {

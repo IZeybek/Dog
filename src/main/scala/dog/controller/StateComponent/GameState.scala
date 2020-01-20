@@ -4,7 +4,7 @@ import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck}
-import dog.model.Player
+import dog.model.{Player, PlayerBuilder}
 
 
 case class GameState(players: (Vector[Player], Int),
@@ -40,7 +40,7 @@ class GameStateMaster extends GameStateMasterTrait {
   override var colors: Array[String] = Array("yellow", "white", "green", "red")
   override var playerNames: Array[String] = Array("Player 1", "Player 2", "Player 3", "Player 4")
   override var roundAndCardsToDistribute: (Int, Int) = (0, 6)
-  override var playerVector: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
+  override var playerVector: Vector[Player] = playerNames.indices.map(i => new PlayerBuilder().Builder()
     .withColor(colors(i))
     .withName((playerNames(i), i))
     .withPiece(pieceAmount, (boardSize / playerNames.length) * i)

@@ -6,7 +6,7 @@ import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
-import dog.model.Player
+import dog.model.{Player, PlayerBuilder}
 import dog.util.{SolveCommand, UndoManager}
 
 class Controller extends ControllerTrait {
@@ -36,19 +36,18 @@ class Controller extends ControllerTrait {
    */
   override def toStringHouse: String = "House"
 
-  override def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player] = Vector.empty[Player]
 
   override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = (Vector.empty[CardTrait], 0)
 
   override def toStringCardDeck: String = "CardDeck"
 
-  override def drawCardFromDeck: CardTrait = Card("5", "move", "blau")
+  //  override def drawCardFromDeck: CardTrait = Card("5", "move", "blau")
 
   override def drawCards(amount: Int): List[CardTrait] = Card("5", "move", "blau") :: Nil
 
   override def toStringPlayerHands: String = "PlayerHand"
 
-  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = Player.PlayerBuilder().build()
+  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = new PlayerBuilder().Builder().build()
 
   override def createNewBoard(size: Int): BoardTrait = new Board(size)
 
@@ -97,4 +96,17 @@ class Controller extends ControllerTrait {
   override def updateGame(): Unit = {}
 
   override def lastMessage: String = ""
+
+  override def actualPlayedCard(cardIdx: Int): CardTrait = Card("", "", "")
+
+  /**
+   * create a Vector[Player]
+   *
+   * @param playerNames is a List of player names
+   * @param amountPiece is the amount of pieces each player gets
+   * @return a Vector
+   */
+  override def createPlayers(playerNames: List[String], amountPiece: Int, amountCards: Int): Vector[Player] = Vector.empty
+
+  override def initGame(playerNames: List[String], amountPieces: Int, amountCards: Int, sizeBoard: Int): Unit = {}
 }

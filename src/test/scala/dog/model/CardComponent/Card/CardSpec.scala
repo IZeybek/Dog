@@ -43,8 +43,7 @@ class CardLogicSpec extends WordSpec with Matchers {
         mode should be(cardLogic.move)
       }
       "have a Strategy" in {
-        val inputCard@dog.controller.StateComponent.InputCard(actualPlayerIdx, otherPlayer, selPieceList, cardIdxAndOption, selectedCard, moveBy) = InputCardMaster.UpdateCardInput()
-          .withActualPlayer(2)
+        val inputCard@dog.controller.StateComponent.InputCard(otherPlayer, selPieceList, cardIdxAndOption, selectedCard, moveBy) = InputCardMaster.UpdateCardInput()
           .withOtherPlayer(0)
           .withPieceNum(List(2))
           .withCardNum((0, 0))

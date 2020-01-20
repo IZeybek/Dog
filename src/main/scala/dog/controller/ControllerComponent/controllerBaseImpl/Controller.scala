@@ -1,7 +1,5 @@
 package dog.controller.ControllerComponent.controllerBaseImpl
 
-import com.google.inject.name.Names
-import com.google.inject.{Guice, Inject, Injector}
 import dog.DogModule
 import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.StateComponent._
@@ -12,11 +10,8 @@ import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.CardLogic.JokerState
 import dog.model.CardComponent.cardBaseImpl.{Card, CardDeck, CardLogic}
 import dog.model.FileIOComponent.FileIOTrait
-import dog.model.Player
+import dog.model.{Player, PlayerBuilder}
 import dog.util.{SelectedState, SolveCommand, UndoManager}
-import net.codingwell.scalaguice.InjectorExtensions._
-
-import scala.util.{Failure, Success, Try}
 
 class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
 
@@ -79,6 +74,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     returnString
   }
 
+  override def initGame(playerNames: List[String], amountPieces: Int, amountCards: Int, sizeBoard: Int): Unit = {
+    createPlayers(playerNames, amountPieces, amountCards)
+    createNewBoard(sizeBoard)
+  }
+
   /**
    * Manages the round
    *
@@ -94,8 +94,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         case 0 =>
           doStep()
           this.board = newBoard
+          val actPlayer: Int = gameState.actualPlayer.nameAndIdx._2
           gameState = gameStateMaster.UpdateGame().withBoard(newBoard).withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).withNextPlayer().buildGame
-          removeSelectedCard(InputCardMaster.actualPlayerIdx, InputCardMaster.cardNum._1)
+          removeSelectedCard(actPlayer, InputCardMaster.cardNum._1)
           JokerState.reset
           check(inputCard, "afterround")
           returnString = s"${gameState.actualPlayer.toString}'s turn\n"
@@ -216,40 +217,39 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
    * create a Vector[Player]
    *
    * @param playerNames is a List of player names
-   * @param pieceAmount is the amount of pieces each player gets
+   * @param amountPiece is the amount of pieces each player gets
    * @return a Vector
    */
-  override def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player] = {
-    val players: Vector[Player] = playerNames.indices.map(i => Player.PlayerBuilder()
+  override def createPlayers(playerNames: List[String], amountPiece: Int, amountCards: Int): Vector[Player] = {
+    val players: Vector[Player] = playerNames.indices.map(i => new PlayerBuilder().Builder()
       .withColor(gameStateMaster.colors(i))
       .withName((playerNames(i), i))
-      .withPiece(pieceAmount, (gameState.board.size / pieceAmount) * i)
+      .withPiece(amountPiece, (gameState.board.size / amountPiece) * i)
+      .withGeneratedCards(amountCards)
       .withGarage(i)
       .build()).toVector
-    gameState = gameStateMaster.UpdateGame()
-      .withPlayers(players)
-      .buildGame
+    gameState = gameStateMaster.UpdateGame().withPlayers(players).buildGame
     players
   }
 
   override def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int) = CardDeck.CardDeckBuilder()
-    .withAmount(List(2, 2))
+    .withAmount(amounts)
     .withShuffle
     .buildCardVectorWithLength
 
   override def drawCards(amount: Int): List[CardTrait] = Card.RandomCardsBuilder().withAmount(amount).buildRandomCardList
 
-  override def drawCardFromDeck: CardTrait = {
-    var cardDeck: (Vector[CardTrait], Int) = gameState.cardDeck
-    if (cardDeck._2 != 0)
-      cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
-    doStep()
-    gameState = gameStateMaster.UpdateGame()
-      .withCardDeck(cardDeck._1)
-      .withCardPointer(cardDeck._2)
-      .buildGame
-    cardDeck._1(cardDeck._2)
-  }
+  //  override def drawCardFromDeck: CardTrait = {
+  //    var cardDeck: (Vector[CardTrait], Int) = gameState.cardDeck
+  //    if (cardDeck._2 != 0)
+  //      cardDeck = cardDeck.copy(cardDeck._1, cardDeck._2 - 1)
+  //    doStep()
+  //    gameState = gameStateMaster.UpdateGame()
+  //      .withCardDeck(cardDeck._1)
+  //      .withCardPointer(cardDeck._2)
+  //      .buildGame
+  //    cardDeck._1(cardDeck._2)
+  //  }
 
   override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = {
     val player: Vector[Player] = gameState.players._1
@@ -289,6 +289,10 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   override def toStringCardDeck: String = CardDeck.toStringCardDeck(gameState.cardDeck)
+
+  override def actualPlayedCard(cardIdx: Int): CardTrait = {
+    gameState.actualPlayer.getCard(cardIdx)
+  }
 
   /**
    * handles the fail

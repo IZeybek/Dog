@@ -31,7 +31,6 @@ object SelectedState {
 
       ownPieceClicked = gameState.board.getPieceIndex(clickedIdx)
       InputCardMaster.UpdateCardInput()
-        .withActualPlayer(gameState.actualPlayer.nameAndIdx._2)
         .withPieceNum(List(ownPieceClicked))
 
       ownFieldClicked = clickedIdx

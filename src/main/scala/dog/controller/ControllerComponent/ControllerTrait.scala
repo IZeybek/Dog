@@ -6,8 +6,6 @@ import dog.model.CardComponent.CardTrait
 import dog.model.Player
 import dog.util.UndoManager
 
-import scala.swing.Publisher
-
 trait ControllerTrait extends Publisher {
   val undoManager: UndoManager
   var gameState: GameState
@@ -35,15 +33,11 @@ trait ControllerTrait extends Publisher {
    */
   def toStringHouse: String
 
-  //Player
-  //@TODO: extend method to dynamic playerADD with color algorithm, later... bitches
-  def createPlayers(playerNames: List[String], pieceAmount: Int): Vector[Player]
-
   def createCardDeck(amounts: List[Int]): (Vector[CardTrait], Int)
 
   def toStringCardDeck: String
 
-  def drawCardFromDeck: CardTrait
+  //  def drawCardFromDeck: CardTrait
 
   def drawCards(amount: Int): List[CardTrait]
 
@@ -87,4 +81,17 @@ trait ControllerTrait extends Publisher {
   def updateGame(): Unit
 
   def lastMessage: String
+
+  def actualPlayedCard(cardIdx: Int): CardTrait
+
+  /**
+   * create a Vector[Player]
+   *
+   * @param playerNames is a List of player names
+   * @param amountPiece is the amount of pieces each player gets
+   * @return a Vector
+   */
+  def createPlayers(playerNames: List[String], amountPiece: Int, amountCards: Int): Vector[Player]
+
+  def initGame(playerNames: List[String], amountPieces: Int, amountCards: Int, sizeBoard: Int): Unit
 }

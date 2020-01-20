@@ -1,14 +1,7 @@
 package dog.aview.gui
 
+import dog.controller.BoardChanged
 import dog.controller.ControllerComponent.ControllerTrait
-import dog.controller.{BoardChanged, GuiChanged}
-import scalafx.application.JFXApp
-import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.Scene
-import scalafx.scene.control.{Menu, MenuBar, MenuItem}
-import scalafx.scene.layout.BorderPane
-
-import scala.swing.Reactor
 
 class Gui(controller: ControllerTrait) extends JFXApp with Reactor {
 
@@ -18,7 +11,6 @@ class Gui(controller: ControllerTrait) extends JFXApp with Reactor {
 
   reactions += {
     case event: BoardChanged => this.stage = GenGui.newGUI(controller)
-    case event: GuiChanged => this.stage = GenGui.newGUI(controller)
   }
 }
 
