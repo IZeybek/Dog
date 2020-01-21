@@ -85,8 +85,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   override def initGame(playerNames: List[String], amountPieces: Int, amountCards: Int, sizeBoard: Int): Unit = {
-    createPlayers(playerNames, amountPieces, amountCards)
     createNewBoard(sizeBoard)
+    createPlayers(playerNames, amountPieces, amountCards)
   }
 
   /**
@@ -181,7 +181,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def createNewBoard(size: Int): BoardTrait = {
     board = new Board(size)
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
-    publish(new BoardChanged)
+    //    publish(new BoardChanged)
     board
   }
 

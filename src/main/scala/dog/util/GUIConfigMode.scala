@@ -6,10 +6,14 @@ trait ConfigState {
 
 object ConfigMode {
   var state: ConfigState = configDeactivated
-
+  var value: Int = 44
   def handle: ConfigState = state.changeState
 
 
+  def saveValue(setValue: Int): Int = {
+    value = setValue
+    value
+  }
   //noinspection DuplicatedCode
   object configActivated extends ConfigState {
     override def changeState: ConfigState = {

@@ -2,7 +2,6 @@ package dog.aview.gui
 
 import dog.controller.BoardChanged
 import dog.controller.ControllerComponent.ControllerTrait
-import dog.controller.{BoardChanged, GuiChanged}
 import dog.util.ConfigMode
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
