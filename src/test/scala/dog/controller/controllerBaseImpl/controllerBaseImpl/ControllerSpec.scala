@@ -164,11 +164,10 @@ class ControllerSpec extends WordSpec with Matchers {
         board.cell(9).checkIfPlayer(player2) should be(true)
         board.cell(9).checkIfPlayer(player1) should be(false)
 
-        controller.gameStateMaster.UpdateGame().withPlayers(Vector(player1, player2)).withBoard(board).buildGame
+        controller.gameStateMaster.UpdateGame().withPlayers(Vector(player1, player2)).withActualPlayer(0).withBoard(board).buildGame
         controller.updateGame()
 
         val inputCard: InputCard = InputCardMaster.UpdateCardInput()
-
           .withOtherPlayer(-1)
           .withPieceNum(List(0))
           .withCardNum((0, 0))
@@ -184,6 +183,8 @@ class ControllerSpec extends WordSpec with Matchers {
         val (boardTrait, players) = (gameState.board, gameState.players._1)
 
         println(player1.piecePosition(0))
+        println(boardTrait.cell(9).p.get)
+        println(player1)
         boardTrait.cell(9).checkIfPlayer(player1) should be(true)
         gameState.players._2 should be(1)
         gameState.players._1(0).piece(0).pos should be(9)
@@ -360,9 +361,9 @@ class ControllerSpec extends WordSpec with Matchers {
       "draw Cards" in {
         controller.drawCards(10).foreach(x => be(x.isInstanceOf[CardTrait]))
       }
-//      "draw Card from Deck" in {
-//        controller.drawCardFromDeck.isInstanceOf[CardTrait] should be(true)
-//      }
+      //      "draw Card from Deck" in {
+      //        controller.drawCardFromDeck.isInstanceOf[CardTrait] should be(true)
+      //      }
     }
   }
 }
