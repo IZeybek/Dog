@@ -18,8 +18,8 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
           checkPiecesOnBoardAndPlayable.tupled andThen
           loggingFilter.tupled andThen
           checkSelected.tupled andThen
-          loggingFilter.tupled andThen
-          checkOverrideOwnPlayer.tupled andThen
+          //          loggingFilter.tupled andThen
+          //          checkOverrideOwnPlayer.tupled andThen
           loggingFilter.tupled
       case "afterround" =>
         checkAllPlayerHandCards.tupled andThen

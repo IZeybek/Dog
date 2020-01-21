@@ -321,7 +321,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         }
         "Last player(s) had no hand cards!"
       case "overrideOwnPlayer" =>
-        //        publish(new BoardChanged)
+        publish(new BoardChanged)
         "Can't override own player, pls don't kill yourself!"
       case "pieceonboard"
       =>
