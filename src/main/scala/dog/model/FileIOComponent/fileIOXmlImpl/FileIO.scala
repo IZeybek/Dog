@@ -25,7 +25,7 @@ class FileIO extends FileIOTrait {
     val board: BoardTrait = xmlToBoard((elem \\ "board").head, player)
     val cardDeckPointer: Int = (elem \\ "gamestate" \ "@cardDeckPointer").text.toInt
     val lastPlayedCard: CardTrait = xmlToCard(elem \\ "lastPlayed")
-    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Option(lastPlayedCard), board, None)
+    GameState(players = (player, actPlayer), (Vector.empty[CardTrait], cardDeckPointer), Some(lastPlayedCard), board, None)
   }
 
   def xmlToPlayer(elem: Node): Player = {
