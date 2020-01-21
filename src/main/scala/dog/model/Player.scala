@@ -145,6 +145,7 @@ class PlayerBuilder {
       pieces = setPieces
       pieceAmount = pieces.size
       homePosition = setHomePosition
+      inHouse = (0 until pieceAmount).toList
       this
     }
 
