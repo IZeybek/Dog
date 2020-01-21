@@ -18,6 +18,8 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
           checkPiecesOnBoardAndPlayable.tupled andThen
           loggingFilter.tupled andThen
           checkSelected.tupled andThen
+          loggingFilter.tupled andThen
+          checkOverrideOwnPlayer.tupled andThen
           loggingFilter.tupled
       case "afterround" =>
         checkAllPlayerHandCards.tupled andThen
@@ -41,6 +43,16 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
   def checkHandCard: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     (gameState.actualPlayer.cardList.nonEmpty && status, "handcard")
   }
+
+  def checkOverrideOwnPlayer: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
+    val selPiece: Int = inputCard.selPieceList.head
+    val oldPos: Int = gameState.actualPlayer.piecePosition(selPiece)
+    val newPos: Int = Math.floorMod(inputCard.moveBy + oldPos, gameState.board.size)
+    println("---->>>> " + newPos)
+    val bool = gameState.board.cell(newPos).checkIfPlayer(gameState.actualPlayer)
+    (!bool && status, "overrideOwnPlayer")
+  }
+
 
   def checkAllPlayerHandCards: (Boolean, String) => (Boolean, String) = (status: Boolean, msg: String) => {
     var hasCards: Boolean = false

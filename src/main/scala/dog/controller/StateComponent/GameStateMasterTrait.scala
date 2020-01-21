@@ -62,7 +62,10 @@ trait GameStateMasterTrait {
 
 
     def withNextRound(): UpdateGame = {
+      if (roundAndCardsToDistribute._1 % 6 != 5)
       roundAndCardsToDistribute = (roundAndCardsToDistribute._1 + 1, roundAndCardsToDistribute._2 - 1)
+      else
+        roundAndCardsToDistribute = (roundAndCardsToDistribute._1 + 1, 6)
       this
     }
 

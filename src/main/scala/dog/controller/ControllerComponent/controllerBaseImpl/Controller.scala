@@ -320,7 +320,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           publish(new BoardChanged)
         }
         "Last player(s) had no hand cards!"
-      case "pieceonboard" =>
+      case "overrideOwnPlayer" =>
+        //        publish(new BoardChanged)
+        "Can't override own player, pls don't kill yourself!"
+      case "pieceonboard"
+      =>
         givePlayerCards(gameState.players._2, Nil)
         while (gameState.actualPlayer.cardList.isEmpty) {
           gameState = gameStateMaster.UpdateGame().withNextPlayer().buildGame
@@ -328,11 +332,14 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         }
         JokerState.reset
         "Last player(s) had neither pieces on board nor a card to play"
-      case "won" =>
+      case "won"
+      =>
         "Last player(s) won"
-      case "selected" =>
+      case "selected"
+      =>
         "Last player(s) has to select a piece or play "
-      case "noplayercards" =>
+      case "noplayercards"
+      =>
         gameState = gameStateMaster.UpdateGame().withNextRound().buildGame
         val amountCards: Int = gameStateMaster.roundAndCardsToDistribute._2
         gameState.players._1.indices.foreach(x => givePlayerCards(x, Card.RandomCardsBuilder().withAmount(amountCards).buildRandomCardList))
