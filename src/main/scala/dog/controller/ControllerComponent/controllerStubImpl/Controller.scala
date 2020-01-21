@@ -6,7 +6,7 @@ import dog.model.BoardComponent.BoardTrait
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
-import dog.model.{Player, PlayerBuilder}
+import dog.model.Player
 import dog.util.{SolveCommand, UndoManager}
 
 class Controller extends ControllerTrait {
@@ -49,7 +49,7 @@ class Controller extends ControllerTrait {
 
   override def toStringPlayerHands: String = "PlayerHand"
 
-  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = new PlayerBuilder().Builder().build()
+  override def givePlayerCards(playerNum: Int, cards: List[CardTrait]): Player = Player(("Charlie", 50), "black", Map.empty, Nil, new Board(20), Nil, 20)
 
   override def createNewBoard(size: Int): BoardTrait = new Board(size)
 

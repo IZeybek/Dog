@@ -4,11 +4,11 @@ import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.ControllerComponent.controllerStubImpl.Controller
 import dog.model.BoardComponent.boardBaseImpl.Board
 import dog.model.CardComponent.cardBaseImpl.Card
-import dog.model.PlayerBuilder
+import dog.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
-class ControllerSpec extends WordSpec with Matchers {
-  "A Controller" when {
+class ControllerStubSpec extends WordSpec with Matchers {
+  "A ControllerStub" when {
     "initialized" should {
       val controller: ControllerTrait = new Controller()
       "have an UndoManager" in {
@@ -32,11 +32,11 @@ class ControllerSpec extends WordSpec with Matchers {
       "print CardDeck" in {
         controller.toStringCardDeck should be("CardDeck")
       }
-      "print CardDeck" in {
+      "print Player hand Cards" in {
         controller.toStringPlayerHands should be("PlayerHand")
       }
       "give Player Cards" in {
-        controller.givePlayerCards(0, Nil) should be(new PlayerBuilder().Builder().build())
+        controller.givePlayerCards(0, Nil) should be(Player(("Charlie", 50), "black", Map.empty, Nil, new Board(20), Nil, 20))
       }
       "draw Cards" in {
         controller.drawCards(0) should be(Card("5", "move", "blau") :: Nil)
