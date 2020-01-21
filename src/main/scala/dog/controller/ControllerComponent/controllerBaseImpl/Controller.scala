@@ -26,6 +26,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
+  override def updateGUI(): String = {
+    publish(new BoardChanged)
+    ""
+  }
+
   override def selectedField(clickedFieldIdx: Int): Int = {
     val clickedCell: CellTrait = gameState.board.cell(clickedFieldIdx)
 
