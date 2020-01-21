@@ -42,4 +42,4 @@ libraryDependencies ++= javaFXModules.map(m =>
   "org.openjfx" % s"javafx-$m" % "11" classifier osName
 )
 
-coverageExcludedPackages := "<empty>;.*ScalaFxGui;.*Dog",
+coverageExcludedPackages := "<empty>;.*ScalaFxGui;.*Dog;gui",
