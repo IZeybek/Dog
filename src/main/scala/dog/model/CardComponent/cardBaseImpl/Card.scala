@@ -54,7 +54,7 @@ object CardLogic {
     val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
 
     //overriding player
-
+    println(newPos)
     val garageDiff = newPos - actPlayer.homePosition
     val ownPlayerOverride = gameState.board.cell(newPos).checkIfPlayer(gameState.actualPlayer)
     if (ownPlayerOverride) {
@@ -67,6 +67,7 @@ object CardLogic {
       val updatedCell = gameState.board.cell(oldPos).removePlayerFromCell()
       val newGameBoard = gameState.board.fill(updatedCell, oldPos)
 
+      players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff - 1))
       players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff - 1))
 
       (newGameBoard, players, isValid)

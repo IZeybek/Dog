@@ -80,6 +80,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         this.gameState
     }
     gameState = gameStateMaster.UpdateGame().loadGame(updatedGameState).buildGame
+    InputCardMaster.UpdateCardInput().reset()
     SelectedState.reset
     JokerState.reset
     publish(new BoardChanged)
@@ -111,6 +112,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           removeSelectedCard(actPlayer, InputCardMaster.cardNum._1)
           JokerState.reset
           SelectedState.reset
+          InputCardMaster.UpdateCardInput().reset()
           check(inputCard, "afterround")
           returnString = s"${gameState.actualPlayer.toString}'s turn\n"
         case 1 =>
