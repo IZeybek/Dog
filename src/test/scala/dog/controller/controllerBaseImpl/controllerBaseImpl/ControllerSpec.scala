@@ -46,12 +46,8 @@ class ControllerSpec extends WordSpec with Matchers {
         gameState.actualPlayer.cardList.head should be(cardList.head)
 
         controller.selectedField(1)
-
         // First Round - Play a Card
         controller.manageRound(InputCardMaster.UpdateCardInput()
-
-          .withPieceNum(List(0, 0))
-          .withCardNum((0, 2))
           .withSelectedCard(cardList.head)
           .buildCardInput()) should be(s"${controller.gameState.actualPlayer.toString}'s turn\n")
 
