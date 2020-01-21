@@ -45,12 +45,12 @@ object CardPanel {
 
       //PlayButton ActionListener
       onAction = _ => {
-        //        println("----------------------------------------- Clicked IconID : " + getId.toInt)
+
         val inputCard = InputCardMaster.UpdateCardInput()
           .withCardNum((cardIdx, getId.toInt))
           .withSelectedCard(controller.actualPlayedCard(cardIdx))
           .buildCardInput()
-        if (inputCard.selPieceList.head != -1) controller.manageRound(inputCard)
+       controller.manageRound(inputCard)
       }
 
     })
@@ -132,13 +132,13 @@ object PlayerStatusPanel {
 
   def configPanel(controller: ControllerTrait): VBox = new VBox() {
     alignment = Center
-    val slider1: Slider = new Slider(44, 100, ConfigMode.value) {
+    val slider1: Slider = new Slider(48, 96, ConfigMode.value) {
       this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
       showTickMarks = true
       showTickLabels = true
       snapToTicks = true
-      blockIncrement = 8
-      majorTickUnit = 8
+      blockIncrement = 16
+      majorTickUnit = 16
       minorTickCount = 0
       onMouseReleased = _ => {
         controller.initGame(List("Player 1", "Player 2", "Player 3", "Player 4"), 4, 6, value.toInt)
@@ -324,7 +324,10 @@ object BoardPanel {
       onAction = _ => {
         //        println("pressed field = " + this.getId)
         //        val s = this.getId.split("\\s+")
-        if (this.getId.toString.split("\\s+").length < 2) controller.selectedField(this.getId.toInt)
+        if (this.getId.toString.split("\\s+").length < 2) {
+          println("-------------- Clicked Field Piece NUM: " + controller.gameState.actualPlayer.getPieceNum(getId.toInt))
+          controller.selectedField(this.getId.toInt)
+        }
       }
     }
   }

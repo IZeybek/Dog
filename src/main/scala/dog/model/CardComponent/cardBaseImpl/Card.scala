@@ -49,18 +49,21 @@ object CardLogic {
     val actPlayer: Player = gameState.actualPlayer
     val board: BoardTrait = gameState.board
     val selPiece: Int = inputC.selPieceList.head
-
+    println("selPiece: " + selPiece)
     val oldPos: Int = actPlayer.piecePosition(selPiece)
-    val newPos: Int = Math.floorMod(inputC.moveBy + oldPos, board.size)
+    println("oldpos: " + oldPos)
+    val newPos: Int = Math.floorMod(oldPos + inputC.moveBy , board.size)
 
     //overriding player
-    println(newPos)
+    println("newpos: " + newPos)
     val garageDiff = newPos - actPlayer.homePosition
     val ownPlayerOverride = gameState.board.cell(newPos).checkIfPlayer(gameState.actualPlayer)
     if (ownPlayerOverride) {
+      println("OOOOWNWWNNNN PLAYER OVERRRIIIDDE")
       (gameState.board, gameState.players._1, -1)
     } else if (actPlayer.homePosition != oldPos
       && garageDiff <= actPlayer.garage.size
+      && !(inputC.moveBy < 0)
       && garageDiff > 0
       && !gameState.actualPlayer.garage.cell(garageDiff - 1).checkIfPlayer(gameState.actualPlayer)) {
 
@@ -68,7 +71,7 @@ object CardLogic {
       val newGameBoard = gameState.board.fill(updatedCell, oldPos)
 
       players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff - 1))
-      players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff - 1))
+//      players = players.updated(actPlayerIdx, actPlayer.setNewGaragePosition(selPiece, garageDiff - 1))
 
       (newGameBoard, players, isValid)
 
@@ -135,10 +138,18 @@ object CardLogic {
       case "11" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(11).buildCardInput())
       case "13" => move(gameState, InputCardMaster.UpdateCardInput().withMoveBy(13).buildCardInput())
       case "play" =>
+
+        println(gameState.actualPlayer.inHouse)
         val nextPiecePlay = gameState.actualPlayer.nextPiece()
-        if (nextPiecePlay >= 0)
-          move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
-        else
+        println(gameState.actualPlayer.inHouse)
+        if (nextPiecePlay >= 0) {
+          var (updatedBoard, updatedPlayers, returnValue): (BoardTrait, Vector[Player], Int) = move(gameState, InputCardMaster.UpdateCardInput().withPieceNum(List(nextPiecePlay)).withMoveBy(0).buildCardInput())
+          val actPlayer = updatedPlayers(gameState.actualPlayer.nameAndIdx._2)
+          if (returnValue != -1) updatedPlayers = updatedPlayers.updated(actPlayer.nameAndIdx._2, actPlayer.updateLastPieceInHouse(nextPiecePlay))
+
+          println(updatedPlayers(actPlayer.nameAndIdx._2).inHouse)
+          (updatedBoard, updatedPlayers, returnValue)
+        } else
           (gameState.board, gameState.players._1, -1)
       case _ => (gameState.board, gameState.players._1, -1)
     }

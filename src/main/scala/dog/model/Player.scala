@@ -43,20 +43,17 @@ case class Player(nameAndIdx: (String, Int),
   }
 
   def setPosition(pieceIdx: Int, newPos: Int): Player = {
-    val oldPos: Int = piece(pieceIdx).pos
-    copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)), inHouse = {
-      if (oldPos == homePosition && newPos == homePosition)
-        inHouse.filter(_ != pieceIdx)
-      else
-        inHouse
-    })
+    copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)))
+  }
+
+  def updateLastPieceInHouse(pieceIdx: Int):Player ={
+    copy(inHouse = inHouse.filter(_ != pieceIdx))
   }
 
   def setNewGaragePosition(pieceIdx: Int, newPos: Int): Player = {
     copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)),
       garage = garage.fill(garage.cell(newPos).addPlayerToCell(this), newPos))
   }
-
 
   def swapPiece(pieceIdx: Int, newPos: Int): Player = {
     copy(piece = piece.updated(pieceIdx, piece(pieceIdx).copy(pos = newPos)), inHouse = {

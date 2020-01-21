@@ -11,17 +11,17 @@ case class InputCard(otherPlayer: Int, selPieceList: List[Int], cardIdxAndOption
 object InputCardMaster {
 
   var otherPlayer: Int = -1
-  var selPieceList: List[Int] = List(0)
-  var cardNum: (Int, Int) = (0, 0)
+  var selPieceList: List[Int] = List(-1)
+  var cardNum: (Int, Int) = (-1,-1)
   var moveBy: Int = 0
-  var selCard: CardTrait = _
+  var selCard: CardTrait = Card("pseudo", "pseudo", "pseudo")
 
   case class UpdateCardInput() {
 
     def reset(): Unit = {
 
       otherPlayer = -1
-      selPieceList = List(0)
+      selPieceList = List(-1)
       cardNum = (-1, -1)
       moveBy = 0
       selCard = Card("pseudo", "pseudo", "pseudo")

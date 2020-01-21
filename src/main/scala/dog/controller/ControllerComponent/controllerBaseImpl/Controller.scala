@@ -80,7 +80,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         this.gameState
     }
     gameState = gameStateMaster.UpdateGame().loadGame(updatedGameState).buildGame
-    InputCardMaster.UpdateCardInput().reset()
+    //    InputCardMaster.UpdateCardInput().reset()
     SelectedState.reset
     JokerState.reset
     publish(new BoardChanged)
@@ -88,6 +88,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   override def initGame(playerNames: List[String], amountPieces: Int, amountCards: Int, sizeBoard: Int): Unit = {
+    JokerState.reset
+    SelectedState.reset
+    InputCardMaster.UpdateCardInput().reset()
     createNewBoard(sizeBoard)
     createPlayers(playerNames, amountPieces, amountCards)
   }
@@ -110,18 +113,21 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           val actPlayer: Int = gameState.actualPlayer.nameAndIdx._2
           gameState = gameStateMaster.UpdateGame().withBoard(newBoard).withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).withNextPlayer().buildGame
           removeSelectedCard(actPlayer, InputCardMaster.cardNum._1)
+
+          check(inputCard, "afterround")
           JokerState.reset
           SelectedState.reset
           InputCardMaster.UpdateCardInput().reset()
-          check(inputCard, "afterround")
           returnString = s"${gameState.actualPlayer.toString}'s turn\n"
         case 1 =>
           returnString = "What a lucky player you are ;)"
           gameState = gameStateMaster.UpdateGame().withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).buildGame
         case _ =>
       }
-    } else
+    } else {
+      SelectedState.reset
       returnString = checkStr
+    }
 
     gameState = gameStateMaster.UpdateGame().withLastMessage(returnString).buildGame
     publish(new BoardChanged)
@@ -333,11 +339,9 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           publish(new BoardChanged)
         }
         "Last player(s) had neither pieces on board nor a card to play"
-      case "won"
-      =>
+      case "won" =>
         "Last player(s) won"
-      case "selected"
-      =>
+      case "selected" =>
         "Last player(s) has to select a piece or play "
       case "noplayercards"
       =>
