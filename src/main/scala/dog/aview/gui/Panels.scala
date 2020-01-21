@@ -4,13 +4,14 @@ import dog.controller.ControllerComponent.ControllerTrait
 import dog.controller.StateComponent.InputCardMaster
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
+import dog.model.CardComponent.cardBaseImpl.Card
 import dog.model.Player
-import dog.util.SelectedState
+import dog.util.{ConfigMode, SelectedState}
 import javafx.scene.layout.GridPane
 import scalafx.Includes.when
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos.Center
-import scalafx.scene.control.{Button, Label}
+import scalafx.scene.control.{Button, Label, Slider}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
 import scalafx.scene.paint.Color._
@@ -111,16 +112,52 @@ object CardDeckPanel {
 
 object PlayerStatusPanel {
 
-  def newStatusPane(controller: ControllerTrait): HBox = new HBox {
-    alignment = Center
-    children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller))
+  def newStatusPane(controller: ControllerTrait): VBox = new VBox() {
 
+    alignment = Center
+    val sliderVBox: VBox = configPanel(controller)
+    val display: HBox = new HBox() {
+      alignment = Center
+      children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller), sliderVBox)
+    }
+
+    val message: Label = new Label(controller.lastMessage) {
+      style = "-fx-padding:0;-fx-background-radius: 5em;-fx-font-size: 17px;"
+      textFill = White
+    }
+    children.addAll(display, message)
     //    top = newStatusDisplay(controller)
     //    center = newPlacedCard(controller)
   }
 
+  def configPanel(controller: ControllerTrait): VBox = new VBox() {
+    alignment = Center
+    val slider1: Slider = new Slider(44, 100, ConfigMode.value) {
+      this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
+      showTickMarks = true
+      showTickLabels = true
+      snapToTicks = true
+      blockIncrement = 8
+      majorTickUnit = 8
+      minorTickCount = 0
+      onMouseReleased = _ => {
+        controller.initGame(List("Player 1", "Player 2", "Player 3", "Player 4"), 4, 6, value.toInt)
+        ConfigMode.saveValue(value.toInt)
+        controller.updateGUI()
+      }
+    }
+    val saveBtn: Button = new Button("save") {
+      this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
+      onAction = _ => {
+        ConfigMode.handle
+        controller.updateGUI()
+      }
+    }
+    children.addAll(slider1, saveBtn)
+  }
+
   def newPlacedCard(c: ControllerTrait): Button = {
-    val lastCard = c.gameState.lastPlayedCard.symbol
+    val lastCard = if (c.gameState.lastPlayedCard.equals(Card("pseudo", "pseudo", "pseudo"))) "laidcarddeck" else c.gameState.lastPlayedCard.symbol
     val height = if (c.gameState.board.size <= 44) 100 else 200
     val width = if (c.gameState.board.size <= 44) 60 else 125
     new Button("", new ImageView(stdPath + lastCard + ".png") {
@@ -141,6 +178,7 @@ object PlayerStatusPanel {
   def newStatusDisplay(c: ControllerTrait): VBox = {
     val player: Player = c.gameState.actualPlayer
     val playerStateLabel: Label = new Label(player.toString) {
+      alignment = Center
       style = "-fxf-font-size: 20pt"
       textFill = player.color match {
         case "green" => Green;
@@ -151,10 +189,6 @@ object PlayerStatusPanel {
       }
     }
 
-    val message: Label = new Label(c.lastMessage) {
-      style = "-fx-padding:10;-fx-background-radius: 5em;"
-      textFill = White
-    }
 
     var idx: Int = 0
     val inHouse: Seq[Button] = Seq.fill(player.piece.size)(new Button("") {
@@ -176,16 +210,22 @@ object PlayerStatusPanel {
     })
 
     val gridHouse = new GridPane {
+      setAlignment(Center)
       setPadding(Insets(10, 20, 20, 20))
       inHouse.indices.foreach(i => add(inHouse(i), i, 0))
     }
-
+    //    new VBox() {
+    //      alignment = Center
     new VBox() {
       alignment = Center
-      children.add(message)
       children.add(playerStateLabel)
       children.add(gridHouse)
     }
+    //
+    //      children.addAll(hBox, message)
+    //    }
+
+
   }
 }
 
@@ -221,12 +261,12 @@ object BoardPanel {
 
 
       val stackPane: StackPane = new StackPane
-
       //      val scrollPane: ScrollPane = new ScrollPane() {
       //        content() = newBoardGrid(amount, fieldIconSeq)
       //      }
-
-      stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq))
+      if (ConfigMode.state.equals(ConfigMode.configDeactivated))
+        stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq))
+      else stackPane.getChildren.addAll(newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq), PlayerStatusPanel.newStatusPane(controller))
       center = stackPane
 
     }

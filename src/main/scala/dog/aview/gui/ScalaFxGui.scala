@@ -2,6 +2,7 @@ package dog.aview.gui
 
 import dog.controller.BoardChanged
 import dog.controller.ControllerComponent.ControllerTrait
+import dog.util.ConfigMode
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -42,6 +43,12 @@ object GenGui {
           val load: MenuItem = new MenuItem("Load") {
             onAction = _ => controller.load
           }
+          val configMode: MenuItem = new MenuItem("config mode") {
+            onAction = _ => {
+              ConfigMode.handle
+              controller.updateGUI()
+            }
+          }
           val debug: MenuItem = new MenuItem("Debug Game") {
             onAction = _ => {
               println(controller.toStringBoard)
@@ -55,6 +62,7 @@ object GenGui {
           items.add(save)
           items.add(load)
           items.add(debug)
+          items.add(configMode)
         }
         menus.add(menuList)
       }

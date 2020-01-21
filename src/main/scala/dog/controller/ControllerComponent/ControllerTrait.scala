@@ -43,6 +43,8 @@ trait ControllerTrait extends Publisher {
 
   def drawCards(amount: Int): List[CardTrait]
 
+  def updateGUI(): String
+
   def toStringPlayerHands: String
 
   def toStringGarage: String

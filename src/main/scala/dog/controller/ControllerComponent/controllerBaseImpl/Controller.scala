@@ -26,6 +26,11 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster
   override var gameState: GameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
 
+  override def updateGUI(): String = {
+    publish(new BoardChanged)
+    ""
+  }
+
   override def selectedField(clickedFieldIdx: Int): Int = {
     val clickedCell: CellTrait = gameState.board.cell(clickedFieldIdx)
 
@@ -80,8 +85,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   }
 
   override def initGame(playerNames: List[String], amountPieces: Int, amountCards: Int, sizeBoard: Int): Unit = {
-    createPlayers(playerNames, amountPieces, amountCards)
     createNewBoard(sizeBoard)
+    createPlayers(playerNames, amountPieces, amountCards)
   }
 
   /**
@@ -103,6 +108,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
           gameState = gameStateMaster.UpdateGame().withBoard(newBoard).withPlayers(newPlayer).withLastPlayedCard(inputCard.selectedCard).withNextPlayer().buildGame
           removeSelectedCard(actPlayer, InputCardMaster.cardNum._1)
           JokerState.reset
+          SelectedState.reset
           check(inputCard, "afterround")
           returnString = s"${gameState.actualPlayer.toString}'s turn\n"
         case 1 =>
@@ -112,7 +118,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
       }
     } else
       returnString = checkStr
-    SelectedState.reset
+
     gameState = gameStateMaster.UpdateGame().withLastMessage(returnString).buildGame
     publish(new BoardChanged)
     returnString
@@ -176,7 +182,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def createNewBoard(size: Int): BoardTrait = {
     board = new Board(size)
     gameState = gameStateMaster.UpdateGame().withBoard(board).buildGame
-    publish(new BoardChanged)
+    //    publish(new BoardChanged)
     board
   }
 

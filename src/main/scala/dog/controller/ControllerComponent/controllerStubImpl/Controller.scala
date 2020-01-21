@@ -14,6 +14,8 @@ class Controller extends ControllerTrait {
   override var gameStateMaster: GameStateMasterTrait = new GameStateMaster()
   override var gameState: GameState = gameStateMaster.UpdateGame().buildGame
 
+  override def updateGUI(): String = ""
+
   override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
 
   override def undoCommand(): Unit = undoManager.undoStep()
