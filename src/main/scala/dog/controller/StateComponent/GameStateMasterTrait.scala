@@ -54,9 +54,7 @@ trait GameStateMasterTrait {
     }
 
     def withNextPlayer(): UpdateGame = {
-      //do {
       actualPlayerIdx = (actualPlayerIdx + 1) % playerVector.size
-      //} while (playerVector(actualPlayerIdx).cardList.isEmpty)
       this
     }
 
@@ -92,6 +90,10 @@ trait GameStateMasterTrait {
     def withRemoveLastMessage: UpdateGame = {
       message = None
       this
+    }
+
+    def buildGame: GameState = {
+      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), lastPlayedCardOpt, board, message)
     }
 
     def resetGame: GameState = {
@@ -131,10 +133,6 @@ trait GameStateMasterTrait {
       actualPlayerIdx = gameState.players._2
       lastPlayedCardOpt = gameState.lastPlayedCardOpt
       this
-    }
-
-    def buildGame: GameState = {
-      GameState((playerVector, actualPlayerIdx), (cardDeck, cardPointer), lastPlayedCardOpt, board, message)
     }
   }
 }

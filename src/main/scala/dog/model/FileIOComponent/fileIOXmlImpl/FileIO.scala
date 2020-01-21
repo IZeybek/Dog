@@ -12,8 +12,6 @@ import dog.model.{Piece, Player}
 
 import scala.xml.{Elem, Node, NodeSeq, PrettyPrinter}
 
-//@TODO implement last played Card
-//@TODO implement card deck
 class FileIO extends FileIOTrait {
   override def load: GameState = {
     val file: Elem = scala.xml.XML.loadFile("gamestate.xml")

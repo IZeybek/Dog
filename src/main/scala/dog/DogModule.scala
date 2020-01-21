@@ -29,5 +29,4 @@ class DogModule extends AbstractModule with ScalaModule {
     bind[FileIOTrait].to[fileIOXmlImpl.FileIO]
     //    bind[FileIOTrait].to[fileIOJsonImpl.FileIO]
   }
-
 }
