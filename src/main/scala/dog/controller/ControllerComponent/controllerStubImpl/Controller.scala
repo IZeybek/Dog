@@ -29,7 +29,7 @@ class Controller extends ControllerTrait {
    */
   override def toStringBoard: String = "Board"
 
-  override def toStringGarage: String = ""
+  override def toStringGarage: String = "Garage"
 
   /**
    * prints the houses of each player

@@ -1,6 +1,6 @@
 package dog.controller
 
-import dog.controller.StateComponent.{GameState, GameStateMaster, InputCard, InputCardMaster}
+import dog.controller.StateComponent.{GameState, InputCard}
 import dog.util.SelectedState
 
 import scala.util.{Failure, Success, Try}
@@ -87,11 +87,11 @@ case class Chain(gameState: GameState, inputCard: InputCard) {
 
 //we could make similar compositions of the functions
 
-object MainTest {
-  def main(args: Array[String]): Unit = {
-    val gameState: GameState = new GameStateMaster().UpdateGame().buildGame
-    val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
-    val chain: Chain = Chain(gameState, inputCard)
-    println(chain.tryChain(chain.apply("manageround")))
-  }
-}
+//object MainTest {
+//  def main(args: Array[String]): Unit = {
+//    val gameState: GameState = new GameStateMaster().UpdateGame().buildGame
+//    val inputCard: InputCard = InputCardMaster.UpdateCardInput().buildCardInput()
+//    val chain: Chain = Chain(gameState, inputCard)
+//    println(chain.tryChain(chain.apply("manageround")))
+//  }
+//}
