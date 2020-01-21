@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane
 import scalafx.Includes.when
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos.Center
-import scalafx.scene.control.{Button, Label}
+import scalafx.scene.control.{Button, Label, Slider}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
 import scalafx.scene.paint.Color._
@@ -116,10 +116,20 @@ object PlayerStatusPanel {
 
   def newStatusPane(controller: ControllerTrait): HBox = new HBox {
     alignment = Center
-    children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller))
+    val sliderVBox: VBox = configPanel(controller)
+    children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller), sliderVBox)
 
     //    top = newStatusDisplay(controller)
     //    center = newPlacedCard(controller)
+  }
+
+  def configPanel(controller: ControllerTrait): VBox = new VBox() {
+    alignment = Center
+    val slider1: Slider = new Slider(100, 100, 10) {
+      showTickMarks = true
+      
+    }
+    children.addAll(slider1)
   }
 
   def newPlacedCard(c: ControllerTrait): Button = {
