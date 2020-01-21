@@ -5,12 +5,12 @@ import dog.controller.StateComponent.InputCardMaster
 import dog.model.BoardComponent.BoardTrait
 import dog.model.CardComponent.CardTrait
 import dog.model.Player
-import dog.util.SelectedState
+import dog.util.{ConfigMode, SelectedState}
 import javafx.scene.layout.GridPane
 import scalafx.Includes.when
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos.Center
-import scalafx.scene.control.{Button, Label}
+import scalafx.scene.control.{Button, Label, Slider}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
 import scalafx.scene.paint.Color._
@@ -113,10 +113,33 @@ object PlayerStatusPanel {
 
   def newStatusPane(controller: ControllerTrait): HBox = new HBox {
     alignment = Center
-    children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller))
+    val sliderVBox: VBox = configPanel(controller)
+    children.addAll(newStatusDisplay(controller), newPlacedCard(controller), CardDeckPanel.newCardDeck(controller), sliderVBox)
 
     //    top = newStatusDisplay(controller)
     //    center = newPlacedCard(controller)
+  }
+
+  def configPanel(controller: ControllerTrait): VBox = new VBox() {
+    alignment = Center
+    val slider1: Slider = new Slider(44, 100, 44) {
+      this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
+      showTickMarks = true
+      showTickLabels = true
+      snapToTicks = true
+      blockIncrement = 8
+      majorTickUnit = 8
+      minorTickCount = 0
+      onMouseReleased = _ => println(value.toInt)
+    }
+    val saveBtn: Button = new Button("save") {
+      this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
+      onAction = _ => {
+        ConfigMode.handle
+        controller.updateGUI()
+      }
+    }
+    children.addAll(slider1, saveBtn)
   }
 
   def newPlacedCard(c: ControllerTrait): Button = {
@@ -225,8 +248,9 @@ object BoardPanel {
       //      val scrollPane: ScrollPane = new ScrollPane() {
       //        content() = newBoardGrid(amount, fieldIconSeq)
       //      }
-
-      stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq))
+      if (ConfigMode.state.equals(ConfigMode.configDeactivated))
+        stackPane.getChildren.addAll(PlayerStatusPanel.newStatusPane(controller), newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq))
+      else stackPane.getChildren.addAll(newBoardGrid(amount, controller, fieldIconSeq, garageFieldIconSeq), PlayerStatusPanel.newStatusPane(controller))
       center = stackPane
 
     }
