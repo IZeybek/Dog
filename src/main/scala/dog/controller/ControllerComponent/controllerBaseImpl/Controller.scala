@@ -80,6 +80,8 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
         this.gameState
     }
     gameState = gameStateMaster.UpdateGame().loadGame(updatedGameState).buildGame
+    SelectedState.reset
+    JokerState.reset
     publish(new BoardChanged)
     returnString
   }
@@ -165,7 +167,6 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     val player: Vector[Player] = gameState.players._1
     val oldCard = player(playerIdx).getCard(cardIdx)
     val newPlayer: Vector[Player] = player.updated(playerIdx, player(playerIdx).removeCard(oldCard))
-    doStep()
     gameState = gameStateMaster.UpdateGame()
       .withLastPlayedCard(oldCard)
       .withPlayers(newPlayer)
