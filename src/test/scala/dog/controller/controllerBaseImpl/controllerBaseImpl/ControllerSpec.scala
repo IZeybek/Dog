@@ -7,6 +7,7 @@ import dog.model.BoardComponent.boardBaseImpl.{Board, Cell}
 import dog.model.CardComponent.CardTrait
 import dog.model.CardComponent.cardBaseImpl.Card
 import dog.model.{Piece, Player, PlayerBuilder}
+import dog.util.SelectedState
 import org.scalatest.{Matchers, WordSpec}
 
 class ControllerSpec extends WordSpec with Matchers {
@@ -264,6 +265,9 @@ class ControllerSpec extends WordSpec with Matchers {
 
         //------------------------------------------------------------------------- Joker unpacked
 
+        SelectedState.reset
+        controller.selectedField(2)
+
         val inputCard1 = InputCardMaster.UpdateCardInput()
           .withPieceNum(List(2))
           .withCardNum((0, 0))
@@ -279,8 +283,6 @@ class ControllerSpec extends WordSpec with Matchers {
         println(controller.gameState.actualPlayer.cardList)
 
         //------------------------------------------------------------------------- Joker packed
-
-        controller.selectedField(2)
 
         val inputCard2@InputCard(otherPlayer, selPieceList, cardIdxAndOption, selectedCard, moveBy) = InputCardMaster.UpdateCardInput()
           .withPieceNum(List(2))
