@@ -16,7 +16,7 @@ Bewegung kommt durch Karten in Spiel, die Ihnen so manche Überraschung bereiten
 Partnerschaftlich unterstützt man dabei seinen Teamkollegen. 
 Denn den Sieg fährt man nur gemeinsam ein. Einfach spannend und ein toller Spaß. Nicht nur beim Entwickeln des Spiels, sondern auch beim Spielen selbst
 
-![Our Game](src/main/scala/resources/Dog_Game.png)
+[![Our Game](src/main/scala/resources/Dog_Game.png)](https://lmgtfy.com/?q=dog+spiel)
 
 Falls Sie nach dem richtigen Spiel suchen sollten und sich auf github verirrt haben, [hier](https://www.amazon.de/Schmidt-Spiele-49201-Dog/dp/B01INZMDM6 "Hier dürfen Sie klicken") der Link
 
