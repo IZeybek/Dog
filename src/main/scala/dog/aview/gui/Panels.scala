@@ -125,10 +125,15 @@ object PlayerStatusPanel {
 
   def configPanel(controller: ControllerTrait): VBox = new VBox() {
     alignment = Center
-    val slider1: Slider = new Slider(0, 96, 8) {
+    val slider1: Slider = new Slider(44, 100, 44) {
       this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
       showTickMarks = true
-
+      showTickLabels = true
+      snapToTicks = true
+      blockIncrement = 8
+      majorTickUnit = 8
+      minorTickCount = 0
+      onMouseReleased = _ => println(value.toInt)
     }
     val saveBtn: Button = new Button("save") {
       this.visible = if (ConfigMode.state.equals(ConfigMode.configActivated)) true else false
