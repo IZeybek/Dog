@@ -56,12 +56,10 @@ object CardLogic {
     //overriding player
 
     val garageDiff = newPos - actPlayer.homePosition
-    //    val ownPlayerOverride = gameState.board.cell(newPos).checkIfPlayer(gameState.actualPlayer)
-    //    if (!ownPlayerOverride) {
-    //      (gameState.board, gameState.players._1, -1)
-    //    }
-    //    else
-    if (actPlayer.homePosition != oldPos && garageDiff <= actPlayer.garage.size && garageDiff > 0) {
+    val ownPlayerOverride = gameState.board.cell(newPos).checkIfPlayer(gameState.actualPlayer)
+    if (ownPlayerOverride) {
+      (gameState.board, gameState.players._1, -1)
+    } else if (actPlayer.homePosition != oldPos && garageDiff <= actPlayer.garage.size && garageDiff > 0) {
 
       val updatedCell = gameState.board.cell(oldPos).removePlayerFromCell()
       val newGameBoard = gameState.board.fill(updatedCell, oldPos)
@@ -150,10 +148,15 @@ object CardLogic {
     if (JokerState.state.equals(JokerState.unpacked)) {
       JokerState.handle
       val (updatedBoard, updatedPlayers, returnValue): (BoardTrait, Vector[Player], Int) = setStrategy(getLogic(inputCard.selectedCard.task), gameState, inputCard)
-      actPlayer = updatedPlayers(gameState.players._2)
-      val players: Vector[Player] = updatedPlayers.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
-      InputCardMaster.UpdateCardInput().withCardNum(JokerState.cachedCardList._2, 0).buildCardInput()
-      (updatedBoard, players, returnValue)
+      if (returnValue != -1) {
+        actPlayer = updatedPlayers(gameState.players._2)
+        val players: Vector[Player] = updatedPlayers.updated(actPlayer.nameAndIdx._2, actPlayer.copy(cardList = JokerState.cachedCardList._1))
+        InputCardMaster.UpdateCardInput().withCardNum(JokerState.cachedCardList._2, 0).buildCardInput()
+        (updatedBoard, players, returnValue)
+      } else {
+        JokerState.handle
+        (gameState.board, gameState.players._1, -1)
+      }
     } else {
       JokerState.handle
       JokerState.cachedCardList = (gameState.actualPlayer.cardList, inputCard.cardIdxAndOption._1)
