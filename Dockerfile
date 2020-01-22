@@ -1,4 +1,3 @@
-
 FROM openjdk:11
 ARG SBT_VERSION=1.3.7
 
@@ -10,6 +9,6 @@ RUN \
     apt-get update && \
     apt-get install -y sbt libxrender1 libxtst6 libxi6 openjfx
 
-WORKDIR /Dog
-ADD . /Dog
-CMD sbt run WizardChess
+WORKDIR /Sources
+ADD . /Sources
+CMD sbt run Dog
