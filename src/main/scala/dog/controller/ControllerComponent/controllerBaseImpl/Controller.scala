@@ -37,7 +37,7 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
     if (!clickedCell.isFilled)
       SelectedState.reset
     else {
-      val isOwnField = clickedCell.p.get.nameAndIdx._2 == gameStateMaster.actualPlayerIdx
+      val isOwnField = clickedCell.p.get.nameAndIdx._2 == gameState.actualPlayer.nameAndIdx._2
       val isOtherField = if (SelectedState.state.equals(SelectedState.ownPieceSelected) && !isOwnField) true else false
       if (SelectedState.state.equals(SelectedState.nothingSelected) && isOwnField) SelectedState.handle(gameState, clickedFieldIdx)
       else if (SelectedState.state.equals(SelectedState.ownPieceSelected) && isOtherField) SelectedState.handle(gameState, clickedFieldIdx)
@@ -50,11 +50,18 @@ class Controller @Inject()(var board: BoardTrait) extends ControllerTrait {
   override def doStep(): Unit = undoManager.doStep(new SolveCommand(this))
 
   override def undoCommand(): Unit = {
+    resetAllStates()
     undoManager.undoStep()
     publish(new BoardChanged)
   }
+  def resetAllStates() : Unit = {
+    SelectedState.reset
+    JokerState.reset
+    InputCardMaster.UpdateCardInput().reset()
+  }
 
   override def redoCommand(): Unit = {
+    resetAllStates()
     undoManager.redoStep()
     publish(new BoardChanged)
   }
