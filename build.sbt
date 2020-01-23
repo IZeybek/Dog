@@ -41,5 +41,3 @@ lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "s
 libraryDependencies ++= javaFXModules.map(m =>
   "org.openjfx" % s"javafx-$m" % "11" classifier osName
 )
-
-coverageExcludedPackages := "<empty>;.*ScalaFxGui;.*Dog;gui\\*",
